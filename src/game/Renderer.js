@@ -335,18 +335,59 @@ export class WorldRenderer {
     ctx.closePath();
     ctx.fill();
 
-    // 4. WATERFALL BACKDROP IN HUNDRU FALLS
+    // 4. CASCADING WATERFALL IN HUNDRU FALLS (Natural Gorge & Billowing Mist)
     if (theme === 'hundru') {
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
-      for (let i = 0; i < 4; i++) {
-        const fallX = ((i * 380 - camX * 0.25) % (this.width + 200)) - 50;
-        ctx.fillRect(fallX, 120, 28, this.height - 120);
-        // Cascading white spray
+      for (let i = 0; i < 3; i++) {
+        const fallX = ((i * 440 + 120 - camX * 0.22) % (this.width + 300)) - 80;
+        const fallWidth = 44 + (i % 2) * 16;
+        
+        // Dark rocky canyon fissure behind water
+        ctx.fillStyle = '#00332C';
+        ctx.beginPath();
+        ctx.moveTo(fallX - 8, 90);
+        ctx.lineTo(fallX + fallWidth + 8, 90);
+        ctx.lineTo(fallX + fallWidth + 12, this.height);
+        ctx.lineTo(fallX - 12, this.height);
+        ctx.closePath();
+        ctx.fill();
+
+        // Multi-stop falling water torrent gradient
+        const fallGrad = ctx.createLinearGradient(fallX, 90, fallX + fallWidth, 90);
+        fallGrad.addColorStop(0, 'rgba(128, 222, 234, 0.45)');
+        fallGrad.addColorStop(0.3, 'rgba(255, 255, 255, 0.85)');
+        fallGrad.addColorStop(0.7, 'rgba(224, 247, 250, 0.80)');
+        fallGrad.addColorStop(1, 'rgba(128, 222, 234, 0.45)');
+        ctx.fillStyle = fallGrad;
+        ctx.fillRect(fallX, 90, fallWidth, this.height - 90);
+
+        // Animated vertical flowing water streaks
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.lineWidth = 2;
+        const flowY = (this.time * 260) % 36;
+        ctx.beginPath();
+        for (let sy = 90 + flowY; sy < this.height - 40; sy += 36) {
+          ctx.moveTo(fallX + 8, sy);
+          ctx.lineTo(fallX + 8, sy + 18);
+          ctx.moveTo(fallX + fallWidth * 0.5, sy + 10);
+          ctx.lineTo(fallX + fallWidth * 0.5, sy + 28);
+          ctx.moveTo(fallX + fallWidth - 10, sy + 4);
+          ctx.lineTo(fallX + fallWidth - 10, sy + 22);
+        }
+        ctx.stroke();
+
+        // Billowing foaming water spray & mist clouds at cascade base
+        const mistPulse = Math.sin(this.time * 6 + i * 2) * 6;
+        ctx.fillStyle = 'rgba(224, 247, 250, 0.55)';
+        ctx.beginPath();
+        ctx.arc(fallX + fallWidth * 0.5, this.height - 60 + mistPulse, 38, 0, Math.PI * 2);
+        ctx.arc(fallX + 6, this.height - 45 - mistPulse, 28, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth - 6, this.height - 50 + mistPulse * 0.5, 32, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
         ctx.beginPath();
-        ctx.arc(fallX + 14, this.height - 80 + Math.sin(this.time * 8 + i) * 6, 26, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth * 0.5, this.height - 40, 24, 0, Math.PI * 2);
         ctx.fill();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
       }
     }
 
@@ -676,35 +717,54 @@ export class WorldRenderer {
       if (drawX + p.width < camX - 80 || drawX > camX + this.width + 80) continue;
 
       if (p.surfaceType === 'water') {
-        // ANIMATED RUSHING WATER PLATFORM (Hundru Falls / Damodar Basin)
-        ctx.fillStyle = '#0288D1';
-        ctx.fillRect(drawX, drawY, p.width, p.height);
+        // ANIMATED RUSHING RIVER STREAM PLATFORM (River stone base + crystal rapids)
+        // 1. Riverbed granite foundation
+        ctx.fillStyle = '#37474F';
+        ctx.fillRect(drawX, drawY + 14, p.width, p.height - 14);
+        ctx.fillStyle = '#263238';
+        ctx.fillRect(drawX, drawY + p.height - 8, p.width, 8);
 
-        // Water surface foam
-        ctx.fillStyle = '#E1F5FE';
-        ctx.fillRect(drawX, drawY, p.width, 6);
+        // Stone bank cracks
+        ctx.strokeStyle = '#1E272C';
+        ctx.lineWidth = 1.5;
+        for (let bx = drawX + 20; bx < drawX + p.width - 10; bx += 35) {
+          ctx.beginPath();
+          ctx.moveTo(bx, drawY + 16);
+          ctx.lineTo(bx + 4, drawY + p.height);
+          ctx.stroke();
+        }
 
-        // Animated flow wave chevrons
+        // 2. Crystal rushing water channel
+        const waterGrad = ctx.createLinearGradient(drawX, drawY, drawX, drawY + 18);
+        waterGrad.addColorStop(0, '#E1F5FE');
+        waterGrad.addColorStop(0.3, '#29B6F6');
+        waterGrad.addColorStop(1, '#0277BD');
+        ctx.fillStyle = waterGrad;
+        ctx.fillRect(drawX, drawY, p.width, 18);
+
+        // 3. Animated flow wave chevrons & foam ripples
         const speedDir = (p.currentSpeed && p.currentSpeed < 0) ? -1 : 1;
-        const waveShift = ((this.waterFlowOffset * speedDir) % 40);
-        ctx.strokeStyle = '#B3E5FC';
+        const waveShift = ((this.waterFlowOffset * speedDir) % 36);
+        ctx.strokeStyle = '#FFFFFF';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        for (let wx = drawX + waveShift - 40; wx < drawX + p.width + 20; wx += 30) {
-          if (wx >= drawX && wx <= drawX + p.width - 15) {
-            ctx.moveTo(wx, drawY + 3);
-            ctx.lineTo(wx + 8 * speedDir, drawY + 8);
-            ctx.lineTo(wx + 16 * speedDir, drawY + 3);
+        for (let wx = drawX + waveShift - 36; wx < drawX + p.width + 20; wx += 28) {
+          if (wx >= drawX + 4 && wx <= drawX + p.width - 14) {
+            ctx.moveTo(wx, drawY + 2);
+            ctx.lineTo(wx + 7 * speedDir, drawY + 7);
+            ctx.lineTo(wx + 14 * speedDir, drawY + 2);
           }
         }
         ctx.stroke();
 
-        // Water spray bubbles on corners
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-        ctx.beginPath();
-        ctx.arc(drawX + 8, drawY + 3, 3, 0, Math.PI * 2);
-        ctx.arc(drawX + p.width - 8, drawY + 3, 3, 0, Math.PI * 2);
-        ctx.fill();
+        // 4. White water foam bubbles along river crest
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        for (let fx = drawX + 6; fx < drawX + p.width - 6; fx += 18) {
+          const bBob = Math.sin(this.time * 8 + fx * 0.1) * 2;
+          ctx.beginPath();
+          ctx.arc(fx, drawY + 4 + bBob, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
 
       } else if (p.surfaceType === 'conveyor') {
         // ANIMATED INDUSTRIAL CONVEYOR BELT (Jamshedpur Steel / Dhanbad Mines)

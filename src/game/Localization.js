@@ -59,8 +59,16 @@ export const Localization = {
       rankA: 'A Rank — Master Explorer',
       rankB: 'B Rank — Skilled Traveler',
       
+      // Control Modes
+      controlMode: 'Input & Control Mode',
+      modeAuto: 'Auto-Detect',
+      modePC: 'PC Keyboard & Mouse',
+      modeMobile: 'Mobile On-Screen Touch',
+      modePS5: 'PlayStation 5 (DualSense)',
+
       // Lobby UI
       playBtn: '▶ PLAY GAME',
+      storyBtn: '🎬 Story Intro',
       levelSelectBtn: '🗺️ Level Select',
       characterBtn: '👤 Character Viewer',
       creditsBtn: '📜 Credits',
@@ -105,8 +113,8 @@ export const Localization = {
       // Loading Screen
       loadingLabel: 'Restoring Regional Pathways...',
       tipHeader: 'Gameplay Guide:',
-      tip1: 'Press Down (S / ↓) while airborne to perform a fast-fall descent.',
-      tip2: 'Dash (Shift / K) grants temporary invulnerability and can destroy grounded enemies.',
+      tip1: 'Press Down (S / ↓ or L2) while airborne to perform a fast-fall descent.',
+      tip2: 'Dash (Shift / K or ▢) grants temporary invulnerability and can destroy grounded enemies.',
       tip3: 'Look for bouncy Palas flowers—they propel you into secret high canopies!',
       tip4: 'Lit Checkpoint Lanterns save your progress and restore your courage.',
 
@@ -118,6 +126,16 @@ export const Localization = {
       checkpointVoice: 'Lantern lit! Checkpoint secured!',
       victoryVoice: 'Gateway restored! Regional pathway reconnected!',
       shardVoice: 'Echo Shard acquired!',
+
+      // Cinematic Story Intro
+      storyAct1Tag: 'ACT I: THE SACRED HOMELAND',
+      storyAct1Text: 'In the ancient highlands of Jharkhand, sacred Sal forests, the roaring Hundru waterfalls, and tribal valleys lived in eternal harmony, bound together by the eight sacred Torana Gateways.',
+      storyAct2Tag: 'ACT II: THE RIFT OF ECHOES',
+      storyAct2Text: 'Without warning, a cosmic fracture—the Rift of Echoes—tore open the heavens! The sacred gateways shattered, locking the living memories of the land into crystalline Echo Shards and isolating each region in temporal silence.',
+      storyAct3Tag: 'ACT III: THE ELDER MANDATE',
+      storyAct3Text: 'At the Ranchi Plateau, Sage Guru Kripal summoned young adventurer Kabir: “The spirits of Bhagwan Birsa Munda and our ancestors have chosen you. Traverse the 8 sacred regions, recover the Echo Shards, and restore our gateways!”',
+      storyAct4Tag: 'ACT IV: RECONNECTING JHARKHAND',
+      storyAct4Text: 'Fastening his saffron headband, Kabir gazed toward the plateau horizon: “With the soil of Jharkhand beneath my boots, I will restore every Torana and reconnect our homeland as one!”',
 
       // Credits
       creditsTitle: 'PRODUCTION CREDITS',
@@ -209,8 +227,16 @@ export const Localization = {
       rankA: 'A श्रेणी — कुशल खोजी',
       rankB: 'B श्रेणी — कर्मठ यात्री',
 
+      // Control Modes
+      controlMode: 'नियंत्रण साधन (Control Mode)',
+      modeAuto: 'स्वतः पहचान (Auto)',
+      modePC: 'पीसी कीबोर्ड एवं माउस',
+      modeMobile: 'मोबाइल ऑन-स्क्रीन टच',
+      modePS5: 'प्लेस्टेशन ५ (PS5 DualSense)',
+
       // Lobby UI
       playBtn: '▶ खेल शुरू करें',
+      storyBtn: '🎬 कथा झाँकी (Story)',
       levelSelectBtn: '🗺️ क्षेत्र चयन (Levels)',
       characterBtn: '👤 नायक अवलोकन (Character)',
       creditsBtn: '📜 आभार एवं श्रेय (Credits)',
@@ -255,8 +281,8 @@ export const Localization = {
       // Loading Screen
       loadingLabel: 'क्षेत्रीय मार्गों का पुनरुद्धार...',
       tipHeader: 'मार्गदर्शन सुझाव:',
-      tip1: 'हवा में रहते हुए नीचे (S / ↓) दबाकर तीव्र पतन (Fast-fall) करें।',
-      tip2: 'डैश (Shift / K) से कुछ पलों के लिए अमरता मिलती है और शत्रु परास्त होते हैं।',
+      tip1: 'हवा में रहते हुए नीचे (S / ↓ या L2) दबाकर तीव्र पतन (Fast-fall) करें।',
+      tip2: 'डैश (Shift / K या ▢) से कुछ पलों के लिए अमरता मिलती है और शत्रु परास्त होते हैं।',
       tip3: 'पलाश के पुष्पों को खोजें—वे आपको गुप्त छतरी तक उछालते हैं!',
       tip4: 'प्रज्वलित दीप स्तम्भ आपकी प्रगति सुरक्षित करते हैं।',
 
@@ -268,6 +294,16 @@ export const Localization = {
       checkpointVoice: 'दीप स्तम्भ प्रज्वलित! ठिकाना सुरक्षित!',
       victoryVoice: 'तोरण द्वार पुनः स्थापित! मार्ग जुड़ गया!',
       shardVoice: 'गूँज टुकड़ा प्राप्त हुआ!',
+
+      // Cinematic Story Intro
+      storyAct1Tag: 'अध्याय १: पावन मातृभूमि',
+      storyAct1Text: 'झारखंड के पावन पठार पर, साल के घने वन, हुंडरू का गर्जना करता जलप्रपात और जनजातीय घाटियां आठ पावन तोरण द्वारों के पावन सूत्र से एक सूत्र में बंधी थीं।',
+      storyAct2Tag: 'अध्याय २: गूँज की दरार',
+      storyAct2Text: 'अचानक आकाश में एक रहस्यमयी दरार—गूँज की दरार—उभर आई! प्राचीन तोरण द्वार बिखर गए, जंगलों और नदियों की स्मृतियां चमकते गूँज टुकड़ों (Echo Shards) में कैद हो गईं।',
+      storyAct3Tag: 'अध्याय ३: गुरु का आदेश',
+      storyAct3Text: 'राँची के पठार पर, वरिष्ठ गुरु कृपाल ने साहसी कबीर को पुकारा: “भगवान बिरसा और हमारे पुरखों ने तुम्हें चुना है। आठों क्षेत्रों की यात्रा करो, गूँज के टुकड़े एकत्र करो और तोरण द्वारों को पुनः स्थापित करो!”',
+      storyAct4Tag: 'अध्याय ४: झारखंड का पुनर्मिलन',
+      storyAct4Text: 'अपना केसरिया पटका बाँधकर कबीर ने संकल्प लिया: “झारखंड की पावन माटी के बल पर, मैं सभी तोरण द्वारों को पुनः स्थापित कर पूरे झारखंड को पुनः जोड़ दूंगा!”',
 
       // Credits
       creditsTitle: 'निर्माण एवं श्रेय',
@@ -359,8 +395,16 @@ export const Localization = {
       rankA: 'A पदवी — होनहार खोजी',
       rankB: 'B पदवी — साहसी राही',
 
+      // Control Modes
+      controlMode: 'कंट्रोल तरीका (Control Mode)',
+      modeAuto: 'अपने से बुझेक (Auto)',
+      modePC: 'कंप्यूटर कीबोर्ड आ माउस',
+      modeMobile: 'मोबाइल स्क्रीन टच',
+      modePS5: 'प्लेस्टेशन ५ (PS5 DualSense)',
+
       // Lobby UI
       playBtn: '▶ खेल शुरू करू',
+      storyBtn: '🎬 पुरान कहानी (Story)',
       levelSelectBtn: '🗺️ इलाका चुनू',
       characterBtn: '👤 कबीर बाबू के देखा',
       creditsBtn: '📜 जोहार आ आभार',
@@ -405,8 +449,8 @@ export const Localization = {
       // Loading Screen
       loadingLabel: 'इलाका कर रस्ता सब जुड़त हे...',
       tipHeader: 'कबीर बाबू ले सलाह:',
-      tip1: 'हवा में रह के नीचा (S / ↓) दबाबा त तुरते नीचा उतरबा।',
-      tip2: 'झपट्टा (Shift / K) मारले कुछ पल ले अमर होइ जाबा आ दुश्मन साफ!',
+      tip1: 'हवा में रह के नीचा (S / ↓ या L2) दबाबा त तुरते नीचा उतरबा।',
+      tip2: 'झपट्टा (Shift / K या ▢) मारले कुछ पल ले अमर होइ जाबा आ दुश्मन साफ!',
       tip3: 'पलाश कर फूल में कूदा—ऊ तोके ऊपर कर छाँह में फेंक देई!',
       tip4: 'दीया जरल त राउर डेरा पक्का भेल!',
 
@@ -418,6 +462,16 @@ export const Localization = {
       checkpointVoice: 'दीया बरत हे! ठिकाना पक्का होल!',
       victoryVoice: 'तोरण दुआर खुल गेलक! राउर विजय होल!',
       shardVoice: 'इको शार्ड मिल गेलक!',
+
+      // Cinematic Story Intro
+      storyAct1Tag: 'पहिला अध्याय: पावन माटी',
+      storyAct1Text: 'झारखंड कर पावन पठार में, सखुआ कर घना बन, हुंडरू कर गरजता झरना आ सब भाई-बंधु आठ गो पावन तोरण दुआर से एके डोरी में बंधल रहैं।',
+      storyAct2Tag: 'दूसरा अध्याय: गूँज कर दरार',
+      storyAct2Text: 'एकाएक अकास में एक महा-विपत्ति—गूँज कर दरार—फाट उठलक! पावन तोरण दुआर टूट के बिखर गेलक, माटी कर इयाद इको शार्ड में जम गेल, आ हमर सब आठो इलाका अलग होइ गेल।',
+      storyAct3Tag: 'तीसरा अध्याय: गुरु कर हुकुम',
+      storyAct3Text: 'राँची कर पठार पर, सयान गुरु कृपाल कबीर बाबू के बोलवलें: “भगवान बिरसा आ हमर पुरखा कर आसीरबाद तोर साथे हे। आठो इलाका में जा, गूँज कर टुकड़ा मन के बटोर, आ पावन दीया के बार के रस्ता खोल!”',
+      storyAct4Tag: 'चौथा अध्याय: माटी कर पुनर्मिलन',
+      storyAct4Text: 'अपन केसरिया पगड़ी बाँध के, कबीर बाबू संकल्प लेलें: “झारखंड कर माटी कर शक्ति से, हम सब तोरण दुआर के फेरु से जोड़ब, आ पूरा झारखंड के एके बनाय देब! जोहार झारखंड!”',
 
       // Credits
       creditsTitle: 'बनावेक वाला आ जोहार',

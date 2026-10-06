@@ -155,6 +155,7 @@ export class Player {
       this.invulnerableTimer = Math.max(this.invulnerableTimer, this.dashDuration);
       if (audio) audio.playDash();
       if (camera) camera.addShake(3.0);
+      if (input && input.vibrate) input.vibrate(120, 0.4, 0.7);
       if (particles) {
         particles.spawnDashTrail(this.x + this.width / 2, this.y + this.height / 2, this.facing);
       }
@@ -207,6 +208,7 @@ export class Player {
         this.scaleX = 0.7; // Squash launch
         this.scaleY = 1.35;
         if (audio) audio.playJump();
+        if (input && input.vibrate) input.vibrate(40, 0.2, 0.3);
         if (particles) particles.spawnDust(this.x + this.width / 2, this.y + this.height);
       }
 

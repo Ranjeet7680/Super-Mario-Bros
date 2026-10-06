@@ -29,6 +29,25 @@
       </div>
     </div>
 
+    <!-- 1.5. CINEMATIC INTRO STORY SCREEN -->
+    <div id="storyScreen" class="screen-overlay hidden">
+      <div class="story-letterbox-top"></div>
+      <div class="story-container">
+        <div class="story-slide-badge" id="storySceneTag">ACT I: THE SACRED HOMELAND</div>
+        <div class="story-visual-canvas-box">
+          <canvas id="storyCanvas" width="800" height="340"></canvas>
+        </div>
+        <div class="story-dialogue-box">
+          <p id="storyText" class="story-text">Long ago, the sacred soil of Jharkhand flourished in eternal harmony...</p>
+        </div>
+        <div class="story-actions">
+          <button id="storyNextBtn" class="primary-btn pulse-glow">[Space / Enter] Next ▶</button>
+          <button id="storySkipBtn" class="secondary-btn">Skip Story ✕</button>
+        </div>
+      </div>
+      <div class="story-letterbox-bottom"></div>
+    </div>
+
     <!-- 2. MAIN LOBBY SCREEN (Section 06 of Architecture Bible) -->
     <div id="lobbyScreen" class="screen-overlay hidden">
       <!-- Lobby Header -->
@@ -38,6 +57,7 @@
           <span class="brand-title" data-i18n="gameTitle">RRR — JHARKHAND QUEST</span>
         </div>
         <div class="lobby-controls">
+          <button id="lobbyControlToggle" class="hud-btn" title="Toggle Input Mode">🎮 Controls: AUTO</button>
           <button id="lobbyLangToggle" class="hud-btn">🇮🇳 हिंदी</button>
           <button id="lobbySoundToggle" class="hud-btn">🔊</button>
           <button id="lobbyVoiceToggle" class="hud-btn" title="Toggle Voice Acting">🗣️ Voice: ON</button>
@@ -55,6 +75,7 @@
 
         <!-- Secondary Navigation Menu -->
         <div class="lobby-menu-bar">
+          <button id="btnOpenStory" class="lobby-sub-btn" data-i18n="storyBtn">🎬 Story Intro</button>
           <button id="btnOpenWorldMap" class="lobby-sub-btn" data-i18n="levelSelectBtn">🗺️ Level Select</button>
           <button id="btnOpenCharacter" class="lobby-sub-btn" data-i18n="characterBtn">👤 Character Viewer</button>
           <button id="btnOpenSettings" class="lobby-sub-btn" data-i18n="settings">⚙️ Settings</button>
@@ -109,6 +130,7 @@
       </div>
 
       <div class="hud-right">
+        <button id="hudControlToggle" class="hud-btn" title="Toggle Mobile / PC / Gamepad Mode">📱/💻 Mode</button>
         <button id="langToggle" class="hud-btn" title="Toggle Language">🇮🇳 हिंदी</button>
         <button id="soundToggle" class="hud-btn" title="Toggle Sound">🔊</button>
         <button id="voiceToggle" class="hud-btn" title="Toggle Voice Acting">🗣️</button>
@@ -330,6 +352,16 @@
           </label>
 
           <label class="setting-item">
+            <span data-i18n="controlMode">Input & Control Mode</span>
+            <select id="controlModeSelect" class="settings-select">
+              <option value="auto">Auto-Detect</option>
+              <option value="pc">PC Keyboard & Mouse</option>
+              <option value="mobile">Mobile On-Screen Touch</option>
+              <option value="ps5">PlayStation 5 (DualSense)</option>
+            </select>
+          </label>
+
+          <label class="setting-item">
             <span data-i18n="textSpeed">Text Speed</span>
             <select id="textSpeedSelect" class="settings-select">
               <option value="normal" data-i18n="speedNormal">Normal</option>
@@ -340,13 +372,22 @@
         </div>
 
         <div class="controls-guide">
-          <h4>Controls Guide</h4>
+          <h4>🎮 PlayStation 5 (DualSense) Controls</h4>
           <ul>
-            <li><strong>Run:</strong> A / D or Left / Right Arrows (or Left Stick)</li>
-            <li><strong>Variable Jump:</strong> W or Space (or Gamepad A)</li>
-            <li><strong>Dash / Stomp:</strong> Shift or K or X (or Gamepad X / RB)</li>
-            <li><strong>Fast Fall:</strong> S or Down Arrow</li>
-            <li><strong>Talk:</strong> E or F (or Gamepad Y)</li>
+            <li><strong>Move / Crouch:</strong> Left Stick or D-Pad (◀ / ▶ / ▼)</li>
+            <li><strong>Jump:</strong> ✕ (Cross)</li>
+            <li><strong>Dash Attack / Stomp:</strong> ▢ (Square) or R1 / Circle</li>
+            <li><strong>Speak / Read Lore:</strong> △ (Triangle)</li>
+            <li><strong>Fast Fall:</strong> L2 or D-Pad Down (▼)</li>
+            <li><strong>Pause / Menu:</strong> Options button</li>
+          </ul>
+          <h4 style="margin-top: 8px;">💻 PC Keyboard & Mobile Touch</h4>
+          <ul>
+            <li><strong>Run:</strong> A / D or Left / Right Arrows (or Virtual ◀ / ▶)</li>
+            <li><strong>Jump:</strong> W or Space (or Virtual ⬆️)</li>
+            <li><strong>Dash:</strong> Shift or K or X (or Virtual ⚡)</li>
+            <li><strong>Fast Fall:</strong> S or Down Arrow (or Virtual ▼)</li>
+            <li><strong>Talk:</strong> E or F (or Virtual 🗣️)</li>
           </ul>
         </div>
 

@@ -18,6 +18,7 @@ import { EchoShard, CheckpointLantern, SpringFlower, NpcElder, LoreTablet, GoalG
 import { LevelRegistry } from './game/LevelData.js';
 import { Localization } from './game/Localization.js';
 import { DialogueManager } from './game/DialogueManager.js';
+import { StoryManager } from './game/StoryManager.js';
 import { WorldRenderer, ParticleSystem } from './game/Renderer.js';
 import { VoiceEngine } from './engine/Voice.js';
 
@@ -38,6 +39,7 @@ class GameApp {
     this.dialogue = new DialogueManager(this.audio, this.voice);
     this.renderer = new WorldRenderer(this.width, this.height);
     this.particles = new ParticleSystem();
+    this.story = new StoryManager(this.audio, this.voice, () => this.startLevelTransition(this.currentLevelIndex));
 
     // App State: 'boot' | 'lobby' | 'loading' | 'gameplay'
     this.appState = 'boot';
@@ -173,7 +175,17 @@ class GameApp {
     // Lobby Buttons
     document.getElementById('lobbyPlayBtn').addEventListener('click', () => {
       this.audio.playBtnClick();
-      this.startLevelTransition(this.currentLevelIndex);
+      if (!localStorage.getItem('rrr_intro_seen')) {
+        localStorage.setItem('rrr_intro_seen', 'true');
+        this.story.startStory();
+      } else {
+        this.startLevelTransition(this.currentLevelIndex);
+      }
+    });
+
+    document.getElementById('btnOpenStory')?.addEventListener('click', () => {
+      this.audio.playBtnClick();
+      this.story.startStory();
     });
 
     document.getElementById('btnOpenWorldMap').addEventListener('click', () => {
@@ -367,7 +379,55 @@ class GameApp {
     window.addEventListener('keydown', unlockAudioAndSpeech, { passive: true });
     window.addEventListener('touchstart', unlockAudioAndSpeech, { passive: true });
 
+    // Control Mode Toggles (Auto / PC / Mobile / PS5)
+    const cycleControlMode = () => {
+      const nextMode = this.input.cycleControlMode();
+      this.updateControlModeUI();
+      this.audio.playBtnClick();
+      this.showBanner(`Control Mode: ${nextMode.toUpperCase()}`);
+    };
+    document.getElementById('lobbyControlToggle')?.addEventListener('click', cycleControlMode);
+    document.getElementById('hudControlToggle')?.addEventListener('click', cycleControlMode);
+
+    const controlSelect = document.getElementById('controlModeSelect');
+    if (controlSelect) {
+      controlSelect.value = this.input.controlMode;
+      controlSelect.addEventListener('change', (e) => {
+        this.input.setControlMode(e.target.value);
+        this.updateControlModeUI();
+        this.audio.playBtnClick();
+        this.showBanner(`Control Mode: ${e.target.value.toUpperCase()}`);
+      });
+    }
+
+    this.updateControlModeUI();
     this.updateLocalizationUI();
+  }
+
+  updateControlModeUI() {
+    const mode = this.input.controlMode;
+    const modeLabels = {
+      auto: '🎮 Auto',
+      pc: '⌨️ PC',
+      mobile: '📱 Mobile',
+      ps5: '🎮 PS5'
+    };
+    const label = modeLabels[mode] || `🎮 ${mode.toUpperCase()}`;
+
+    const lobbyToggle = document.getElementById('lobbyControlToggle');
+    if (lobbyToggle) lobbyToggle.textContent = label;
+
+    const hudToggle = document.getElementById('hudControlToggle');
+    if (hudToggle) hudToggle.textContent = label;
+
+    const controlSelect = document.getElementById('controlModeSelect');
+    if (controlSelect && controlSelect.value !== mode) {
+      controlSelect.value = mode;
+    }
+
+    if (this.controlsHint) {
+      this.controlsHint.textContent = this.input.getControlsPrompt();
+    }
   }
 
   updateWorldMapUI() {
@@ -400,16 +460,27 @@ class GameApp {
     const bindBtn = (id, action) => {
       const el = document.getElementById(id);
       if (!el) return;
-      el.addEventListener('touchstart', (e) => {
+
+      const press = (e) => {
         e.preventDefault();
         this.audio.resumeContext();
         this.audio.startBGM();
         this.input.setTouch(action, true);
-      });
-      el.addEventListener('touchend', (e) => {
+      };
+
+      const release = (e) => {
         e.preventDefault();
         this.input.setTouch(action, false);
-      });
+      };
+
+      el.addEventListener('touchstart', press, { passive: false });
+      el.addEventListener('touchend', release, { passive: false });
+      el.addEventListener('touchcancel', release, { passive: false });
+
+      // Mouse support for desktop testing and hybrid touch laptops
+      el.addEventListener('mousedown', press);
+      el.addEventListener('mouseup', release);
+      el.addEventListener('mouseleave', release);
     };
 
     bindBtn('btnTouchLeft', 'left');
@@ -641,12 +712,14 @@ class GameApp {
     // Damage heart flash
     if (this.player.health < prevHealth) {
       this.hudHearts.classList.add('flash-damage');
+      this.input.vibrate(300, 0.8, 0.9);
       setTimeout(() => this.hudHearts.classList.remove('flash-damage'), 400);
     }
 
     // Bottom pit check
     if (this.player.y > this.level.height + 60) {
       this.player.takeDamage(1, this.audio, this.camera);
+      this.input.vibrate(400, 0.9, 1.0);
       if (!this.player.isDead) {
         this.player.resetToCheckpoint(this.activeCheckpoint.x, this.activeCheckpoint.y);
       }
@@ -669,7 +742,10 @@ class GameApp {
         this.score += s.isRare ? 500 : 100;
 
         if (s.isRare) {
+          this.input.vibrate(220, 0.6, 0.9);
           this.voice.speak(Localization.get('shardVoice'), 'player', Localization.currentLang);
+        } else {
+          this.input.vibrate(70, 0.2, 0.4);
         }
 
         this.hudShards.classList.add('pulse-shard');
@@ -681,6 +757,7 @@ class GameApp {
     for (const cp of this.checkpoints) {
       cp.update(dt, this.player, this.audio, this.particles, () => {
         this.activeCheckpoint = { x: cp.x, y: cp.y - 20 };
+        this.input.vibrate(180, 0.4, 0.7);
         this.showBanner(Localization.get('checkpoint'));
         this.voice.speak(Localization.get('checkpointVoice'), 'mentor', Localization.currentLang);
       });
@@ -699,6 +776,7 @@ class GameApp {
     // Lore Tablet
     this.loreTablet.update(this.player, () => {
       this.score += 1000;
+      this.input.vibrate(350, 0.5, 0.8);
       this.showBanner(Localization.get('secretFound'), 3.0);
       this.particles.spawnTextPopup(this.loreTablet.x + 20, this.loreTablet.y - 20, '+1000 Secret!', '#FFEA00');
     });
@@ -706,6 +784,7 @@ class GameApp {
     // Goal Gateway
     this.goalGateway.update(dt, this.player, this.audio, () => {
       this.player.hasWon = true;
+      this.input.vibrate(500, 0.8, 1.0);
       this.showVictoryScreen();
     });
 

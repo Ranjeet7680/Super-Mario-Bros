@@ -1,7 +1,11 @@
 /**
  * Input Management Engine
- * Abstracted input handling for Keyboard, Gamepad, and Virtual Touch controls.
+ * Comprehensive multi-platform support:
+ * - PC Keyboard & Mouse
+ * - Full PlayStation 5 (DualSense) & standard Gamepad API support with vibration haptics
+ * - Virtual Mobile Touch Controls with customizable mode switch (Auto / PC / Mobile / PS5)
  * Adheres to Section 4 & 24 of the Game Architecture Bible.
+ * Authors: RAJRANJEET7680
  */
 
 export class Input {
@@ -10,7 +14,7 @@ export class Input {
     this.justPressed = {};
     this.justReleased = {};
 
-    // Action mappings
+    // Action states
     this.actions = {
       left: false,
       right: false,
@@ -19,8 +23,11 @@ export class Input {
       jump: false,
       jumpDown: false,
       dash: false,
+      dashDown: false,
       interact: false,
-      pause: false
+      interactDown: false,
+      pause: false,
+      pauseDown: false
     };
 
     this.prevActions = { ...this.actions };
@@ -35,13 +42,57 @@ export class Input {
       interact: false
     };
 
+    // Control Mode: 'auto' | 'pc' | 'mobile' | 'ps5'
+    this.controlMode = localStorage.getItem('rrr_control_mode') || 'auto';
+    this.hasGamepad = false;
+    this.isPS5 = false;
+    this.gamepadId = '';
+
     this.initKeyboard();
     this.initGamepad();
+    this.applyControlMode();
+  }
+
+  setControlMode(mode) {
+    this.controlMode = mode;
+    try {
+      localStorage.setItem('rrr_control_mode', mode);
+    } catch (e) {}
+    this.applyControlMode();
+    return this.controlMode;
+  }
+
+  cycleControlMode() {
+    const modes = ['auto', 'pc', 'mobile', 'ps5'];
+    const nextIdx = (modes.indexOf(this.controlMode) + 1) % modes.length;
+    return this.setControlMode(modes[nextIdx]);
+  }
+
+  applyControlMode() {
+    const touchEl = document.getElementById('touch-controls');
+    if (!touchEl) return;
+
+    if (this.controlMode === 'mobile') {
+      touchEl.classList.remove('force-hidden');
+      touchEl.classList.add('force-visible');
+    } else if (this.controlMode === 'pc' || this.controlMode === 'ps5') {
+      touchEl.classList.remove('force-visible');
+      touchEl.classList.add('force-hidden');
+    } else {
+      // Auto: Let media queries handle it or show on touch device
+      touchEl.classList.remove('force-visible');
+      touchEl.classList.remove('force-hidden');
+    }
+  }
+
+  setTouch(action, isPressed) {
+    if (this.touchState[action] !== undefined) {
+      this.touchState[action] = isPressed;
+    }
   }
 
   initKeyboard() {
     window.addEventListener('keydown', (e) => {
-      // Prevent browser default scrolling for game keys
       if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'KeyW', 'KeyS'].includes(e.code)) {
         e.preventDefault();
       }
@@ -60,74 +111,142 @@ export class Input {
       this.keys = {};
       this.justPressed = {};
       this.justReleased = {};
+      Object.keys(this.touchState).forEach(k => this.touchState[k] = false);
     });
   }
 
   initGamepad() {
     window.addEventListener('gamepadconnected', (e) => {
-      console.log(`[Input] Gamepad connected: ${e.gamepad.id}`);
+      this.hasGamepad = true;
+      this.gamepadId = e.gamepad.id || '';
+      const idLower = this.gamepadId.toLowerCase();
+      this.isPS5 = idLower.includes('dualsense') || 
+                   idLower.includes('wireless controller') || 
+                   idLower.includes('054c') ||
+                   idLower.includes('playstation');
+      console.log(`[Input] Controller connected: ${this.gamepadId} (PS5 DualSense: ${this.isPS5})`);
     });
+
     window.addEventListener('gamepaddisconnected', () => {
-      console.log(`[Input] Gamepad disconnected`);
+      this.hasGamepad = false;
+      this.isPS5 = false;
+      this.gamepadId = '';
+      console.log(`[Input] Controller disconnected`);
     });
   }
 
+  /**
+   * PlayStation 5 DualSense Haptic Feedback / Gamepad Vibration
+   */
+  vibrate(duration = 120, weakMagnitude = 0.4, strongMagnitude = 0.5) {
+    if (!navigator.getGamepads) return;
+    const gamepads = navigator.getGamepads();
+    if (!gamepads) return;
+
+    for (let i = 0; i < gamepads.length; i++) {
+      const gp = gamepads[i];
+      if (gp && gp.vibrationActuator && gp.vibrationActuator.playEffect) {
+        try {
+          gp.vibrationActuator.playEffect('dual-rumble', {
+            startDelay: 0,
+            duration: duration,
+            weakMagnitude: weakMagnitude,
+            strongMagnitude: strongMagnitude
+          }).catch(() => {});
+        } catch (e) {}
+      }
+    }
+  }
+
+  getControlsPrompt() {
+    if (this.controlMode === 'ps5' || (this.controlMode === 'auto' && this.isPS5)) {
+      return '[✕] Jump | [▢ or R1] Dash | [△] Talk | [▼ or L2] Fast Fall | [OPTIONS] Pause';
+    } else if (this.controlMode === 'mobile') {
+      return '[◀ / ▶] Run | [⬆️] Jump | [⚡] Dash | [▼] Fast Fall | [🗣️] Talk';
+    } else if (this.controlMode === 'auto' && this.hasGamepad) {
+      return '[A / ✕] Jump | [X / ▢] Dash | [Y / △] Talk | [LB/RB] Fast Action | [START] Pause';
+    } else {
+      return '[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk';
+    }
+  }
+
   update() {
-    // Preserve previous actions for justPressed detection
     this.prevActions = { ...this.actions };
 
-    // Poll keyboard
-    const kLeft = this.keys['KeyA'] || this.keys['ArrowLeft'] || this.touchState.left;
-    const kRight = this.keys['KeyD'] || this.keys['ArrowRight'] || this.touchState.right;
+    // 1. Keyboard Inputs
+    const kLeft = this.keys['KeyA'] || this.keys['ArrowLeft'];
+    const kRight = this.keys['KeyD'] || this.keys['ArrowRight'];
     const kUp = this.keys['KeyW'] || this.keys['ArrowUp'];
-    const kDown = this.keys['KeyS'] || this.keys['ArrowDown'] || this.touchState.down;
-    const kJump = this.keys['Space'] || this.keys['KeyW'] || this.keys['ArrowUp'] || this.touchState.jump;
-    const kDash = this.keys['ShiftLeft'] || this.keys['ShiftRight'] || this.keys['KeyK'] || this.keys['KeyX'] || this.touchState.dash;
-    const kInteract = this.keys['KeyE'] || this.keys['KeyF'] || this.touchState.interact;
+    const kDown = this.keys['KeyS'] || this.keys['ArrowDown'];
+    const kJump = this.keys['Space'] || this.keys['KeyW'] || this.keys['ArrowUp'];
+    const kDash = this.keys['ShiftLeft'] || this.keys['ShiftRight'] || this.keys['KeyK'] || this.keys['KeyX'];
+    const kInteract = this.keys['KeyE'] || this.keys['KeyF'];
     const kPause = this.keys['Escape'] || this.keys['KeyP'];
 
-    // Poll Gamepad if present
-    let gpLeft = false, gpRight = false, gpDown = false, gpJump = false, gpDash = false, gpInteract = false, gpPause = false;
-    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
-    if (gamepads && gamepads[0]) {
-      const gp = gamepads[0];
-      const deadZone = 0.25;
-      const axisX = gp.axes[0] || 0;
-      const axisY = gp.axes[1] || 0;
+    // 2. Mobile Virtual Touch Inputs
+    const tLeft = this.touchState.left;
+    const tRight = this.touchState.right;
+    const tDown = this.touchState.down;
+    const tJump = this.touchState.jump;
+    const tDash = this.touchState.dash;
+    const tInteract = this.touchState.interact;
 
-      gpLeft = axisX < -deadZone || gp.buttons[14]?.pressed;
-      gpRight = axisX > deadZone || gp.buttons[15]?.pressed;
-      gpDown = axisY > deadZone || gp.buttons[13]?.pressed;
+    // 3. PlayStation 5 & Standard Gamepad Polling
+    let gpLeft = false, gpRight = false, gpDown = false;
+    let gpJump = false, gpDash = false, gpInteract = false, gpPause = false;
 
-      gpJump = gp.buttons[0]?.pressed || gp.buttons[1]?.pressed; // A / B
-      gpDash = gp.buttons[2]?.pressed || gp.buttons[5]?.pressed; // X / RB
-      gpInteract = gp.buttons[3]?.pressed || gp.buttons[4]?.pressed; // Y / LB
-      gpPause = gp.buttons[9]?.pressed; // Start / Menu
+    if (navigator.getGamepads) {
+      const gamepads = navigator.getGamepads();
+      if (gamepads && gamepads[0]) {
+        const gp = gamepads[0];
+        this.hasGamepad = true;
+        const idLower = (gp.id || '').toLowerCase();
+        this.isPS5 = idLower.includes('dualsense') || idLower.includes('wireless controller') || idLower.includes('054c');
+
+        const deadZone = 0.22;
+        const axisX = gp.axes[0] || 0;
+        const axisY = gp.axes[1] || 0;
+
+        // Directional controls: Left Analog Stick OR D-Pad
+        // PS5 D-Pad: buttons[14]=Left, buttons[15]=Right, buttons[12]=Up, buttons[13]=Down
+        gpLeft = axisX < -deadZone || Boolean(gp.buttons[14]?.pressed);
+        gpRight = axisX > deadZone || Boolean(gp.buttons[15]?.pressed);
+        gpDown = axisY > deadZone || Boolean(gp.buttons[13]?.pressed) || Boolean(gp.buttons[6]?.pressed); // Down or L2
+
+        // PS5 Button Map:
+        // buttons[0] = Cross (✕) -> Jump
+        // buttons[1] = Circle (◯) -> Action / Dash
+        // buttons[2] = Square (▢) -> Dash / Attack
+        // buttons[3] = Triangle (△) -> Talk / Interact
+        // buttons[4] = L1 -> Dash / Dodge
+        // buttons[5] = R1 -> Dash
+        // buttons[7] = R2 -> Dash
+        // buttons[9] = Options / Start -> Pause
+        gpJump = Boolean(gp.buttons[0]?.pressed); // Cross
+        gpDash = Boolean(gp.buttons[2]?.pressed || gp.buttons[1]?.pressed || gp.buttons[4]?.pressed || gp.buttons[5]?.pressed || gp.buttons[7]?.pressed); // Square, Circle, L1, R1, R2
+        gpInteract = Boolean(gp.buttons[3]?.pressed); // Triangle
+        gpPause = Boolean(gp.buttons[9]?.pressed || gp.buttons[8]?.pressed); // Options / Share
+      }
     }
 
-    this.actions.left = Boolean(kLeft || gpLeft);
-    this.actions.right = Boolean(kRight || gpRight);
+    // Merge active input channels
+    this.actions.left = Boolean(kLeft || tLeft || gpLeft);
+    this.actions.right = Boolean(kRight || tRight || gpRight);
     this.actions.up = Boolean(kUp);
-    this.actions.down = Boolean(kDown || gpDown);
-    this.actions.jump = Boolean(kJump || gpJump);
-    this.actions.dash = Boolean(kDash || gpDash);
-    this.actions.interact = Boolean(kInteract || gpInteract);
+    this.actions.down = Boolean(kDown || tDown || gpDown);
+    this.actions.jump = Boolean(kJump || tJump || gpJump);
+    this.actions.dash = Boolean(kDash || tDash || gpDash);
+    this.actions.interact = Boolean(kInteract || tInteract || gpInteract);
     this.actions.pause = Boolean(kPause || gpPause);
 
-    // Single-frame triggers
+    // Frame-exact edge triggers
     this.actions.jumpDown = this.actions.jump && !this.prevActions.jump;
     this.actions.dashDown = this.actions.dash && !this.prevActions.dash;
     this.actions.interactDown = this.actions.interact && !this.prevActions.interact;
     this.actions.pauseDown = this.actions.pause && !this.prevActions.pause;
 
-    // Reset single frame maps
+    // Reset single-frame key caches
     this.justPressed = {};
     this.justReleased = {};
-  }
-
-  setTouch(action, isPressed) {
-    if (this.touchState.hasOwnProperty(action)) {
-      this.touchState[action] = isPressed;
-    }
   }
 }

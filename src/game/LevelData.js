@@ -59,7 +59,7 @@ export const Level_1_1 = {
     { x: 3140, y: 490, width: 220, height: 110, surfaceType: 'stone' },
 
     // Assist mode recovery ledge
-    { x: 2680, y: 575, width: 440, height: 25, surfaceType: 'ground', isAssist: true },
+    { x: 2680, y: 505, width: 440, height: 45, surfaceType: 'ground', isAssist: true },
 
     // Section 8: Gateway Finale (Torana Arch) (3380 - 3800)
     { x: 3380, y: 460, width: 420, height: 140, surfaceType: 'ground' }
@@ -153,7 +153,7 @@ export const Level_2_1 = {
     { x: 3230, y: 460, width: 180, height: 140, surfaceType: 'stone' },
 
     // Assist recovery
-    { x: 2750, y: 575, width: 440, height: 25, surfaceType: 'stone', isAssist: true },
+    { x: 2750, y: 505, width: 440, height: 45, surfaceType: 'stone', isAssist: true },
 
     // Section 8: Subarnarekha Torana Outflow (3450 - 4000)
     { x: 3450, y: 460, width: 550, height: 140, surfaceType: 'stone' }
@@ -247,7 +247,7 @@ export const Level_3_1 = {
     { x: 3340, y: 480, width: 200, height: 120, surfaceType: 'ground' },
 
     // Assist
-    { x: 2850, y: 575, width: 440, height: 25, surfaceType: 'ground', isAssist: true },
+    { x: 2850, y: 505, width: 440, height: 45, surfaceType: 'ground', isAssist: true },
 
     // Section 8: Queen of Chotanagpur Torana (3580 - 4100)
     { x: 3580, y: 460, width: 520, height: 140, surfaceType: 'stone' }
@@ -340,7 +340,7 @@ export const Level_4_1 = {
     { x: 3450, y: 470, width: 180, height: 130, surfaceType: 'ground' },
 
     // Assist
-    { x: 2950, y: 575, width: 440, height: 25, surfaceType: 'ground', isAssist: true },
+    { x: 2950, y: 505, width: 440, height: 45, surfaceType: 'ground', isAssist: true },
 
     // Section 8: Sacred Sal Grove Gateway (3680 - 4200)
     { x: 3680, y: 460, width: 520, height: 140, surfaceType: 'ground' }
@@ -434,7 +434,7 @@ export const Level_5_1 = {
     { x: 3340, y: 470, width: 190, height: 130, surfaceType: 'stone' },
 
     // Assist
-    { x: 2880, y: 575, width: 440, height: 25, surfaceType: 'stone', isAssist: true },
+    { x: 2880, y: 505, width: 440, height: 45, surfaceType: 'stone', isAssist: true },
 
     // Section 8: Baidyanath Great Torana (3580 - 4200)
     { x: 3580, y: 460, width: 620, height: 140, surfaceType: 'stone' }
@@ -528,7 +528,7 @@ export const Level_6_1 = {
     { x: 3390, y: 480, width: 200, height: 120, surfaceType: 'stone' },
 
     // Assist
-    { x: 2900, y: 575, width: 440, height: 25, surfaceType: 'stone', isAssist: true },
+    { x: 2900, y: 505, width: 440, height: 45, surfaceType: 'stone', isAssist: true },
 
     // Section 8: Jubilee Park Torana Arch (3650 - 4300)
     { x: 3650, y: 460, width: 650, height: 140, surfaceType: 'stone' }
@@ -622,7 +622,7 @@ export const Level_7_1 = {
     { x: 3400, y: 470, width: 210, height: 130, surfaceType: 'stone' },
 
     // Assist
-    { x: 2920, y: 575, width: 440, height: 25, surfaceType: 'stone', isAssist: true },
+    { x: 2920, y: 505, width: 440, height: 45, surfaceType: 'stone', isAssist: true },
 
     // Section 8: Mineral Gateway Exit (3680 - 4400)
     { x: 3680, y: 460, width: 720, height: 140, surfaceType: 'stone' }
@@ -717,7 +717,7 @@ export const Level_8_1 = {
     { x: 3660, y: 460, width: 220, height: 140, surfaceType: 'stone' },
 
     // Assist
-    { x: 2980, y: 575, width: 440, height: 25, surfaceType: 'stone', isAssist: true },
+    { x: 2980, y: 505, width: 440, height: 45, surfaceType: 'stone', isAssist: true },
 
     // Section 8: The Grand Jharkhand Reconnect Torana (3920 - 4500)
     { x: 3920, y: 460, width: 580, height: 140, surfaceType: 'stone' }

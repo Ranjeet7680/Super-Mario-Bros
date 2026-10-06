@@ -77,25 +77,79 @@ export class AudioManager {
     this.musicGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.15);
   }
 
-  // --- Sound Effects ---
+  // --- High-Fidelity Acoustic Sound Effects ---
+
+  playFootstep(surface = 'grass', isLeft = true) {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    const pitch = isLeft ? 1.0 : 1.08;
+
+    // Filtered noise tap for realistic surface friction
+    const bufferSize = Math.floor(this.ctx.sampleRate * 0.04);
+    const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    const noise = this.ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const filter = this.ctx.createBiquadFilter();
+    filter.type = surface === 'stone' ? 'highpass' : 'bandpass';
+    filter.frequency.setValueAtTime((surface === 'stone' ? 800 : 450) * pitch, now);
+
+    const gain = this.ctx.createGain();
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.sfxGain);
+    noise.start(now);
+
+    // Subtle low thud of shoe sole
+    const osc = this.ctx.createOscillator();
+    const oGain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(90 * pitch, now);
+    osc.frequency.exponentialRampToValueAtTime(40, now + 0.04);
+    oGain.gain.setValueAtTime(0.12, now);
+    oGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    osc.connect(oGain);
+    oGain.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.04);
+  }
 
   playJump() {
     if (!this.initialized || this.isMuted) return;
     const now = this.ctx.currentTime;
+
+    // Voice 1: Tonal launch curve
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(170, now);
-    osc.frequency.exponentialRampToValueAtTime(480, now + 0.16);
-
-    gain.gain.setValueAtTime(0.42, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
-
+    osc.frequency.setValueAtTime(160, now);
+    osc.frequency.exponentialRampToValueAtTime(540, now + 0.18);
+    gain.gain.setValueAtTime(0.38, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.20);
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.18);
+    osc.stop(now + 0.20);
+
+    // Voice 2: Aerodynamic air whoosh
+    const osc2 = this.ctx.createOscillator();
+    const gain2 = this.ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(240, now);
+    osc2.frequency.exponentialRampToValueAtTime(720, now + 0.16);
+    gain2.gain.setValueAtTime(0.18, now);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.17);
+    osc2.connect(gain2);
+    gain2.connect(this.sfxGain);
+    osc2.start(now);
+    osc2.stop(now + 0.17);
   }
 
   playLand() {
@@ -105,22 +159,41 @@ export class AudioManager {
     const gain = this.ctx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(95, now);
-    osc.frequency.exponentialRampToValueAtTime(32, now + 0.12);
+    osc.frequency.setValueAtTime(115, now);
+    osc.frequency.exponentialRampToValueAtTime(28, now + 0.14);
 
-    gain.gain.setValueAtTime(0.35, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+    gain.gain.setValueAtTime(0.40, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.14);
 
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.12);
+    osc.stop(now + 0.14);
+  }
+
+  playSpring() {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(220, now);
+    osc.frequency.exponentialRampToValueAtTime(880, now + 0.26);
+
+    gain.gain.setValueAtTime(0.48, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.32);
   }
 
   playDash() {
     if (!this.initialized || this.isMuted) return;
     const now = this.ctx.currentTime;
-    const bufferSize = this.ctx.sampleRate * 0.18;
+    const bufferSize = Math.floor(this.ctx.sampleRate * 0.22);
     const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
@@ -131,55 +204,55 @@ export class AudioManager {
 
     const filter = this.ctx.createBiquadFilter();
     filter.type = 'bandpass';
-    filter.frequency.setValueAtTime(700, now);
-    filter.frequency.linearRampToValueAtTime(2800, now + 0.14);
+    filter.frequency.setValueAtTime(800, now);
+    filter.frequency.exponentialRampToValueAtTime(3200, now + 0.16);
 
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.45, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+    gain.gain.setValueAtTime(0.50, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.22);
 
     noise.connect(filter);
     filter.connect(gain);
     gain.connect(this.sfxGain);
     noise.start(now);
+
+    // Sub-bass shockwave impact
+    const sub = this.ctx.createOscillator();
+    const subGain = this.ctx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(140, now);
+    sub.frequency.exponentialRampToValueAtTime(45, now + 0.18);
+    subGain.gain.setValueAtTime(0.35, now);
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+    sub.connect(subGain);
+    subGain.connect(this.sfxGain);
+    sub.start(now);
+    sub.stop(now + 0.18);
   }
 
   playShard(index = 0) {
     if (!this.initialized || this.isMuted) return;
     const now = this.ctx.currentTime;
-    // Raag Bhupali Harmonic Scale: Sa, Re, Ga, Pa, Dha, Sa
+    // Raag Bhupali Pentatonic Scale: Sa, Re, Ga, Pa, Dha, Sa'
     const pentatonic = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99];
     const freq = pentatonic[index % pentatonic.length];
 
-    // Primary crystal chime
-    const osc1 = this.ctx.createOscillator();
-    const osc2 = this.ctx.createOscillator();
-    const osc3 = this.ctx.createOscillator();
-    const gain = this.ctx.createGain();
+    // Rich multi-overtone celestial crystal chime
+    [1, 2, 3, 4.02].forEach((mult, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = i === 1 ? 'triangle' : 'sine';
+      osc.frequency.setValueAtTime(freq * mult, now);
 
-    osc1.type = 'sine';
-    osc1.frequency.setValueAtTime(freq, now);
+      const amp = [0.42, 0.24, 0.16, 0.08][i];
+      gain.gain.setValueAtTime(amp, now);
+      gain.gain.exponentialRampToValueAtTime(0.0005, now + 0.65);
 
-    osc2.type = 'triangle';
-    osc2.frequency.setValueAtTime(freq * 2, now); // Octave overtone
-
-    osc3.type = 'sine';
-    osc3.frequency.setValueAtTime(freq * 3, now); // Fifth harmonic
-
-    gain.gain.setValueAtTime(0.40, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
-
-    osc1.connect(gain);
-    osc2.connect(gain);
-    osc3.connect(gain);
-    gain.connect(this.sfxGain);
-
-    osc1.start(now);
-    osc2.start(now);
-    osc3.start(now);
-    osc1.stop(now + 0.55);
-    osc2.stop(now + 0.55);
-    osc3.stop(now + 0.55);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(now);
+      osc.stop(now + 0.65);
+    });
   }
 
   playStomp() {
@@ -189,10 +262,10 @@ export class AudioManager {
     const gain = this.ctx.createGain();
 
     osc.type = 'square';
-    osc.frequency.setValueAtTime(320, now);
-    osc.frequency.exponentialRampToValueAtTime(65, now + 0.16);
+    osc.frequency.setValueAtTime(340, now);
+    osc.frequency.exponentialRampToValueAtTime(60, now + 0.16);
 
-    gain.gain.setValueAtTime(0.45, now);
+    gain.gain.setValueAtTime(0.48, now);
     gain.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
 
     osc.connect(gain);
@@ -204,20 +277,32 @@ export class AudioManager {
   playHurt() {
     if (!this.initialized || this.isMuted) return;
     const now = this.ctx.currentTime;
+
+    // Body impact crunch
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
-
     osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(150, now);
-    osc.frequency.linearRampToValueAtTime(55, now + 0.28);
-
-    gain.gain.setValueAtTime(0.5, now);
-    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.28);
-
+    osc.frequency.setValueAtTime(170, now);
+    osc.frequency.linearRampToValueAtTime(45, now + 0.30);
+    gain.gain.setValueAtTime(0.55, now);
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.30);
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.28);
+    osc.stop(now + 0.30);
+
+    // Vocal grunt resonance
+    const vocal = this.ctx.createOscillator();
+    const vGain = this.ctx.createGain();
+    vocal.type = 'triangle';
+    vocal.frequency.setValueAtTime(190, now);
+    vocal.frequency.exponentialRampToValueAtTime(80, now + 0.22);
+    vGain.gain.setValueAtTime(0.30, now);
+    vGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+    vocal.connect(vGain);
+    vGain.connect(this.sfxGain);
+    vocal.start(now);
+    vocal.stop(now + 0.22);
   }
 
   playCheckpoint() {
@@ -229,12 +314,34 @@ export class AudioManager {
       const gain = this.ctx.createGain();
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, now + idx * 0.08);
-      gain.gain.setValueAtTime(0.3, now + idx * 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.5);
+      gain.gain.setValueAtTime(0.32, now + idx * 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.55);
       osc.connect(gain);
       gain.connect(this.sfxGain);
       osc.start(now + idx * 0.08);
-      osc.stop(now + idx * 0.08 + 0.5);
+      osc.stop(now + idx * 0.08 + 0.55);
+    });
+  }
+
+  playStoryChime(act = 0) {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    // Mystic Tibetan singing bowl & temple gong
+    const baseFreqs = [220, 293.66, 329.63, 440];
+    const base = baseFreqs[act % baseFreqs.length];
+
+    [1, 1.498, 2.01, 3.02].forEach((ratio, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(base * ratio, now);
+      const amp = [0.28, 0.18, 0.12, 0.06][i];
+      gain.gain.setValueAtTime(amp, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(now);
+      osc.stop(now + 1.2);
     });
   }
 

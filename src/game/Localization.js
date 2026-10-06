@@ -108,6 +108,8 @@ export const Localization = {
       animWalk: 'Walk',
       animRun: 'Sprint',
       animJump: 'Jump Leap',
+      animDash: 'Sonic Dash',
+      animHurt: 'Hurt Recoil',
       animVictory: 'Victory Pose',
 
       // Loading Screen
@@ -276,6 +278,8 @@ export const Localization = {
       animWalk: 'चाल (Walk)',
       animRun: 'दौड़ (Run)',
       animJump: 'ऊँची छलांग (Jump)',
+      animDash: 'तीव्र गति (Dash)',
+      animHurt: 'चोट/झटका (Hurt)',
       animVictory: 'विजय मुद्रा (Victory)',
 
       // Loading Screen
@@ -444,6 +448,8 @@ export const Localization = {
       animWalk: 'डगर चाल (Walk)',
       animRun: 'धड़कन दौड़ (Run)',
       animJump: 'ऊँच उछाल (Jump)',
+      animDash: 'झपट्टा (Dash)',
+      animHurt: 'चोट धक्का (Hurt)',
       animVictory: 'जीत कर जयकारा (Victory)',
 
       // Loading Screen

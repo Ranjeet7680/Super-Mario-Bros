@@ -662,15 +662,65 @@ class GameApp {
   }
 
   updateCharacterPreview(dt) {
-    this.previewCtx.clearRect(0, 0, 220, 260);
+    const pw = this.previewCanvas.width;
+    const ph = this.previewCanvas.height;
+    this.previewCtx.clearRect(0, 0, pw, ph);
 
+    // 1. Showcase Background Glow
+    const bgGrad = this.previewCtx.createRadialGradient(pw / 2, ph / 2, 20, pw / 2, ph / 2, pw / 2);
+    bgGrad.addColorStop(0, '#261b2e');
+    bgGrad.addColorStop(0.7, '#140e1c');
+    bgGrad.addColorStop(1, '#0a070f');
+    this.previewCtx.fillStyle = bgGrad;
+    this.previewCtx.fillRect(0, 0, pw, ph);
+
+    // 2. Pedestal Stage Ring
+    const stageY = 226;
+    this.previewCtx.fillStyle = 'rgba(255, 179, 0, 0.15)';
+    this.previewCtx.beginPath();
+    this.previewCtx.ellipse(pw / 2, stageY + 4, 65, 14, 0, 0, Math.PI * 2);
+    this.previewCtx.fill();
+
+    this.previewCtx.strokeStyle = 'rgba(255, 215, 0, 0.4)';
+    this.previewCtx.lineWidth = 1.5;
+    this.previewCtx.stroke();
+
+    // 3. Update preview player
     this.previewPlayer.state = this.previewAnimState;
     this.previewPlayer.animTime += dt;
     this.previewPlayer.scarfWave += dt * 8;
+    this.previewPlayer.isGrounded = !['jumpRise', 'jumpFall'].includes(this.previewAnimState);
 
+    // Handle preview simulated velocity
+    if (this.previewAnimState === 'walk') this.previewPlayer.vx = 80;
+    else if (this.previewAnimState === 'run') this.previewPlayer.vx = 200;
+    else if (this.previewAnimState === 'dash') this.previewPlayer.vx = 440;
+    else this.previewPlayer.vx = 0;
+
+    // Handle blinking & idle acting in preview
+    this.previewPlayer.blinkTimer += dt;
+    if (this.previewPlayer.blinkTimer > 3.2) {
+      this.previewPlayer.isBlinking = true;
+      if (this.previewPlayer.blinkTimer > 3.36) {
+        this.previewPlayer.isBlinking = false;
+        this.previewPlayer.blinkTimer = 0;
+      }
+    } else {
+      this.previewPlayer.isBlinking = false;
+    }
+
+    if (this.previewAnimState === 'idle') {
+      this.previewPlayer.idleActTimer += dt;
+      if (this.previewPlayer.idleActTimer < 3.8) this.previewPlayer.idleActState = 'breathe';
+      else if (this.previewPlayer.idleActTimer < 7.0) this.previewPlayer.idleActState = 'lookAround';
+      else if (this.previewPlayer.idleActTimer < 10.0) this.previewPlayer.idleActState = 'adjustGear';
+      else this.previewPlayer.idleActTimer = 0;
+    }
+
+    // 4. Render Kabir on Pedestal
     this.previewCtx.save();
-    this.previewCtx.translate(110, 200);
-    this.previewCtx.scale(1.8, 1.8);
+    this.previewCtx.translate(pw / 2, stageY);
+    this.previewCtx.scale(2.2, 2.2); // Crisp high-definition hero display
     this.previewPlayer.x = -14;
     this.previewPlayer.y = -46;
     this.previewPlayer.draw(this.previewCtx);

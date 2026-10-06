@@ -1,0 +1,19 @@
+{
+  "name": "rrr-jharkhand-quest",
+  "version": "1.0.0",
+  "description": "Playable Vertical Slice of RRR (Rewind. Reimagine. Reconnect) - Jharkhand Quest 2D Platformer",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "platformer",
+    "jharkhand",
+    "game-architecture",
+    "rrr",
+    "indie-game"
+  ],
+  "author": "RAJRANJEET7680",
+  "license": "MIT"
+}

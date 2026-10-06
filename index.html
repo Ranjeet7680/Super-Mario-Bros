@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>RRR — Jharkhand Quest | 2D Platform Adventure</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="game-wrapper">
+    <!-- Top HUD Overlay -->
+    <header id="hud">
+      <div class="hud-left">
+        <span id="hudWorld" class="hud-tag">World 1-1: Ranchi Plateau</span>
+        <span id="hudHearts" class="hud-hearts">❤️❤️❤️</span>
+      </div>
+
+      <div class="hud-center">
+        <span id="hudShards" class="hud-pill">💎 0/13</span>
+        <span id="hudScore" class="hud-pill">⭐ 0</span>
+        <span id="hudTime" class="hud-pill">⏱️ 0s</span>
+      </div>
+
+      <div class="hud-right">
+        <button id="langToggle" class="hud-btn" title="Toggle Language">🇮🇳 हिंदी</button>
+        <button id="soundToggle" class="hud-btn" title="Toggle Sound">🔊</button>
+        <button id="pauseBtn" class="hud-btn" title="Pause / Settings">⏸️</button>
+      </div>
+    </header>
+
+    <!-- Canvas Viewport -->
+    <main id="viewport-container">
+      <canvas id="gameCanvas" width="960" height="540"></canvas>
+    </main>
+
+    <!-- Bottom Controls Hint Bar -->
+    <footer id="controls-hint">
+      <span data-i18n="controlsHint">[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk</span>
+    </footer>
+
+    <!-- Mobile Virtual Touch Controls (Visible on touch devices) -->
+    <div id="touch-controls">
+      <div class="touch-dpad">
+        <button id="btnTouchLeft" class="touch-btn">◀</button>
+        <button id="btnTouchDown" class="touch-btn">▼</button>
+        <button id="btnTouchRight" class="touch-btn">▶</button>
+      </div>
+      <div class="touch-actions">
+        <button id="btnTouchTalk" class="touch-btn round-btn talk-btn">🗣️</button>
+        <button id="btnTouchDash" class="touch-btn round-btn dash-btn">⚡</button>
+        <button id="btnTouchJump" class="touch-btn round-btn jump-btn">⬆️</button>
+      </div>
+    </div>
+
+    <!-- Pause & Accessibility Settings Modal -->
+    <div id="pauseModal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <h2 data-i18n="pause">PAUSED</h2>
+        
+        <div class="settings-group">
+          <h3 data-i18n="accessibility">Accessibility & Settings</h3>
+          
+          <label class="setting-item">
+            <span data-i18n="screenShake">Screen Shake</span>
+            <input type="checkbox" id="shakeToggle" checked>
+          </label>
+
+          <label class="setting-item">
+            <span data-i18n="highContrast">High Contrast Mode</span>
+            <input type="checkbox" id="contrastToggle">
+          </label>
+
+          <label class="setting-item">
+            <span data-i18n="assistMode">Assist Mode (Recovery Ledges)</span>
+            <input type="checkbox" id="assistToggle">
+          </label>
+
+          <label class="setting-item">
+            <span data-i18n="soundVolume">Audio Volume</span>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7">
+          </label>
+        </div>
+
+        <div class="controls-guide">
+          <h4>Controls Guide</h4>
+          <ul>
+            <li><strong>Run:</strong> A / D or Left / Right Arrows (or Left Stick)</li>
+            <li><strong>Variable Jump:</strong> W or Space (or Gamepad A)</li>
+            <li><strong>Dash / Stomp Attack:</strong> Shift or K or X (or Gamepad X / RB)</li>
+            <li><strong>Fast Fall:</strong> S or Down Arrow</li>
+            <li><strong>Talk / Interact:</strong> E or F (or Gamepad Y)</li>
+          </ul>
+        </div>
+
+        <div class="modal-actions">
+          <button id="resumeBtn" class="primary-btn" data-i18n="resume">Resume</button>
+          <button id="restartBtn" class="secondary-btn" data-i18n="restart">Restart Level</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Victory / Gateway Cleared Modal -->
+    <div id="victoryModal" class="modal-backdrop hidden">
+      <div class="modal-card victory-card">
+        <div class="victory-header">
+          <div class="victory-icon">🌟</div>
+          <h2 data-i18n="levelClear">GATEWAY RESTORED!</h2>
+          <p data-i18n="levelClearSub" class="sub-text">World 1-1 Conquered • Ranchi Pathway Reconnected</p>
+        </div>
+
+        <div class="results-stats">
+          <div class="stat-row">
+            <span data-i18n="statsShards">Echo Shards:</span>
+            <strong id="resShards">13 / 13</strong>
+          </div>
+          <div class="stat-row">
+            <span data-i18n="statsTime">Completion Time:</span>
+            <strong id="resTime">48.2s</strong>
+          </div>
+          <div class="stat-row">
+            <span data-i18n="score">Score:</span>
+            <strong id="resScore">3200</strong>
+          </div>
+          <div class="stat-row rank-row">
+            <span data-i18n="statsRank">Explorer Rank:</span>
+            <strong id="resRank" class="rank-badge">S Rank — Legend of Chota Nagpur</strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="playAgainBtn" class="primary-btn" data-i18n="playAgain">Play Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

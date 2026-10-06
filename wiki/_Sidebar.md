@@ -1,6 +1,7 @@
 ### 🎮 Architecture Wiki
 
 * [[Home]]
+* [[Complete-UI-and-Acting-Architecture]]
 * [[Core-Mechanics]]
 * [[The-8-Worlds]]
 * [[System-Architecture]]

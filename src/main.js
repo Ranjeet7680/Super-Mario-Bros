@@ -2,7 +2,8 @@
  * RRR — Jharkhand Quest: Complete Production Game Coordinator
  * Implements Full Player Journey:
  * Boot/Logo -> Main Lobby -> Level Select / Character Showcase / Settings / Credits ->
- * Loading Screen -> Gameplay with Title Card -> Boss/Goal -> Victory Results & Return to Camp.
+ * Loading Screen -> Gameplay with Title Card -> Boss/Goal -> Victory Results & Next Level Progression.
+ * Full 8 Jharkhand Regions & End-to-End Nagpuri Local Language Voice Acting.
  * Adheres to RRR Complete Architecture 20,000 FINAL Blueprint.
  * Authors: RAJRANJEET7680
  */
@@ -10,10 +11,11 @@
 import { Input } from './engine/Input.js';
 import { AudioManager } from './engine/Audio.js';
 import { Camera } from './engine/Camera.js';
+import { Physics } from './engine/Physics.js';
 import { Player } from './game/Player.js';
 import { PatrolBeetle, ForestCharger } from './game/Enemies.js';
 import { EchoShard, CheckpointLantern, SpringFlower, NpcElder, LoreTablet, GoalGateway } from './game/Entities.js';
-import { Level_1_1 } from './game/LevelData.js';
+import { LevelRegistry } from './game/LevelData.js';
 import { Localization } from './game/Localization.js';
 import { DialogueManager } from './game/DialogueManager.js';
 import { WorldRenderer, ParticleSystem } from './game/Renderer.js';
@@ -40,8 +42,15 @@ class GameApp {
     // App State: 'boot' | 'lobby' | 'loading' | 'gameplay'
     this.appState = 'boot';
 
-    // Game Level State
-    this.level = Level_1_1;
+    // Multi-Level Progression State
+    this.levels = LevelRegistry;
+    this.currentLevelIndex = 0;
+    this.unlockedLevelIndex = parseInt(localStorage.getItem('rrr_unlocked_level') || '0', 10);
+    if (isNaN(this.unlockedLevelIndex) || this.unlockedLevelIndex < 0) {
+      this.unlockedLevelIndex = 0;
+    }
+
+    this.level = this.levels[this.currentLevelIndex];
     this.player = new Player(this.level.playerSpawn.x, this.level.playerSpawn.y);
     this.activeCheckpoint = { x: this.level.playerSpawn.x, y: this.level.playerSpawn.y };
     this.camera.setBounds(0, this.level.width, 0, this.level.height);
@@ -83,12 +92,17 @@ class GameApp {
     this.initUI();
     this.initTouchControls();
     this.initBootSequence();
+    this.updateWorldMapUI();
 
     // Start Main Loop
     requestAnimationFrame((t) => this.loop(t));
   }
 
   initLevel() {
+    this.level = this.levels[this.currentLevelIndex];
+    this.camera.setBounds(0, this.level.width, 0, this.level.height);
+
+    // Initialize level entities
     this.shards = this.level.shards.map(s => new EchoShard(s.x, s.y, s.id, s.isRare));
     this.totalShards = this.shards.length;
 
@@ -102,8 +116,18 @@ class GameApp {
     this.loreTablet = new LoreTablet(this.level.loreTablet.x, this.level.loreTablet.y);
     this.goalGateway = new GoalGateway(this.level.goalGateway.x, this.level.goalGateway.y);
 
+    this.activeCheckpoint = { x: this.level.playerSpawn.x, y: this.level.playerSpawn.y };
     this.player.resetToCheckpoint(this.level.playerSpawn.x, this.level.playerSpawn.y);
     this.player.outfit = this.selectedOutfit;
+    this.hasTalkedToElder = false;
+
+    // Reset platform base coordinates
+    for (const p of this.level.platforms) {
+      if (p.moving) {
+        p.baseX = p.x;
+        p.baseY = p.y;
+      }
+    }
   }
 
   initBootSequence() {
@@ -149,11 +173,12 @@ class GameApp {
     // Lobby Buttons
     document.getElementById('lobbyPlayBtn').addEventListener('click', () => {
       this.audio.playBtnClick();
-      this.startLevelTransition();
+      this.startLevelTransition(this.currentLevelIndex);
     });
 
     document.getElementById('btnOpenWorldMap').addEventListener('click', () => {
       this.audio.playBtnClick();
+      this.updateWorldMapUI();
       document.getElementById('worldMapModal').classList.remove('hidden');
     });
 
@@ -186,10 +211,13 @@ class GameApp {
       document.getElementById('creditsModal').classList.add('hidden');
     });
 
-    // Level Select Action
-    document.getElementById('btnLaunchWorld1').addEventListener('click', () => {
-      document.getElementById('worldMapModal').classList.add('hidden');
-      this.startLevelTransition();
+    // World Map Level Selection Launchers
+    document.querySelectorAll('.node-play-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const targetWorldIndex = parseInt(e.target.getAttribute('data-world-index') || '0', 10);
+        document.getElementById('worldMapModal').classList.add('hidden');
+        this.startLevelTransition(targetWorldIndex);
+      });
     });
 
     // Character Viewer Outfits & Animations
@@ -213,15 +241,16 @@ class GameApp {
       });
     });
 
-    // Language Toggles (Both in Lobby & in Gameplay HUD)
-    const toggleLang = () => {
-      const nextLang = Localization.currentLang === 'en' ? 'hi' : 'en';
-      Localization.setLanguage(nextLang);
+    // 3-Way Language Cycling: EN -> HI -> NAG
+    const cycleLanguage = () => {
+      const nextLang = Localization.cycleLanguage();
       this.updateLocalizationUI();
       this.audio.playBtnClick();
+      // Voice introduction in the selected language
+      this.voice.speak(Localization.get('startVoice'), 'mentor', nextLang);
     };
-    document.getElementById('langToggle').addEventListener('click', toggleLang);
-    document.getElementById('lobbyLangToggle').addEventListener('click', toggleLang);
+    document.getElementById('langToggle').addEventListener('click', cycleLanguage);
+    document.getElementById('lobbyLangToggle').addEventListener('click', cycleLanguage);
 
     // Sound Toggles
     const toggleSound = () => {
@@ -313,9 +342,17 @@ class GameApp {
       this.dialogue.setTextSpeed(e.target.value);
     });
 
+    // Play Again button
     document.getElementById('playAgainBtn').addEventListener('click', () => {
       document.getElementById('victoryModal').classList.add('hidden');
       this.restartGame();
+    });
+
+    // NEXT LEVEL Progression Action Button
+    document.getElementById('nextLevelBtn').addEventListener('click', () => {
+      document.getElementById('victoryModal').classList.add('hidden');
+      const nextIndex = (this.currentLevelIndex + 1) % this.levels.length;
+      this.startLevelTransition(nextIndex);
     });
 
     // Universal audio & speech synthesis unlock on first gesture
@@ -331,6 +368,32 @@ class GameApp {
     window.addEventListener('touchstart', unlockAudioAndSpeech, { passive: true });
 
     this.updateLocalizationUI();
+  }
+
+  updateWorldMapUI() {
+    for (let i = 0; i < 8; i++) {
+      const worldNum = i + 1;
+      const nodeEl = document.getElementById(`nodeWorld${worldNum}`);
+      const badgeEl = document.getElementById(`badgeWorld${worldNum}`);
+      const btnEl = document.getElementById(`btnLaunchWorld${worldNum}`);
+
+      if (!nodeEl || !badgeEl || !btnEl) continue;
+
+      const isUnlocked = i <= this.unlockedLevelIndex;
+      if (isUnlocked) {
+        nodeEl.classList.remove('locked');
+        nodeEl.classList.add('active');
+        badgeEl.className = 'badge-status unlocked';
+        badgeEl.textContent = Localization.get('unlockedBadge');
+        btnEl.classList.remove('hidden');
+      } else {
+        nodeEl.classList.remove('active');
+        nodeEl.classList.add('locked');
+        badgeEl.className = 'badge-status locked';
+        badgeEl.textContent = Localization.get('lockedBadge');
+        btnEl.classList.add('hidden');
+      }
+    }
   }
 
   initTouchControls() {
@@ -363,24 +426,36 @@ class GameApp {
       el.textContent = Localization.get(key);
     });
 
-    const isEn = Localization.currentLang === 'en';
-    document.getElementById('langToggle').textContent = isEn ? '🇮🇳 हिंदी' : '🇬🇧 EN';
-    document.getElementById('lobbyLangToggle').textContent = isEn ? '🇮🇳 हिंदी' : '🇬🇧 EN';
-    this.hudWorld.textContent = Localization.get('worldTitle');
+    const lang = Localization.currentLang;
+    let label = '🇮🇳 हिंदी';
+    if (lang === 'hi') label = '🇮🇳 नागपुरी';
+    else if (lang === 'nag') label = '🇬🇧 EN';
+
+    document.getElementById('langToggle').textContent = label;
+    document.getElementById('lobbyLangToggle').textContent = label;
+    this.hudWorld.textContent = Localization.get(this.level.regionKey) || this.level.name;
 
     const isVoice = this.voice ? this.voice.enabled : true;
     const lobbyVoice = document.getElementById('lobbyVoiceToggle');
     if (lobbyVoice) lobbyVoice.textContent = isVoice ? Localization.get('voiceOn') : Localization.get('voiceOff');
   }
 
-  startLevelTransition() {
+  startLevelTransition(levelIndex = null) {
+    if (levelIndex !== null) {
+      this.currentLevelIndex = levelIndex;
+    }
+    this.level = this.levels[this.currentLevelIndex];
+
     // 1. Hide Lobby
     document.getElementById('lobbyScreen').classList.add('hidden');
 
     // 2. Show Loading Screen
     const loadingScreen = document.getElementById('loadingScreen');
     const loadingBar = document.getElementById('loadingBarFill');
+    const loadingRegionTitle = document.getElementById('loadingRegionTitle');
     const tipText = document.getElementById('loadingTipText');
+
+    loadingRegionTitle.textContent = Localization.get(this.level.regionKey) || this.level.name;
 
     const tips = [
       Localization.get('tip1'),
@@ -395,7 +470,7 @@ class GameApp {
 
     let progress = 0;
     const loadInterval = setInterval(() => {
-      progress += 20;
+      progress += 25;
       loadingBar.style.width = `${progress}%`;
 
       if (progress >= 100) {
@@ -403,9 +478,9 @@ class GameApp {
         setTimeout(() => {
           loadingScreen.classList.add('hidden');
           this.beginGameplay();
-        }, 300);
+        }, 250);
       }
-    }, 180);
+    }, 150);
   }
 
   beginGameplay() {
@@ -416,10 +491,21 @@ class GameApp {
     this.hudEl.classList.remove('hidden');
     this.controlsHint.classList.remove('hidden');
 
-    // Cinematic Title Card Whoosh
+    // Update Title Card for the current world
     const tc = document.getElementById('titleCardOverlay');
+    const tcTitle = document.getElementById('tcTitle');
+    const tcSubtitle = document.getElementById('tcSubtitle');
+
+    tcTitle.textContent = Localization.get(this.level.regionKey);
+    tcSubtitle.textContent = this.level.name;
+
     tc.classList.remove('hidden');
     this.audio.playTitleCardWhoosh();
+
+    // Spoken entrance voice greeting in the selected language
+    setTimeout(() => {
+      this.voice.speak(Localization.get('startVoice'), 'mentor', Localization.currentLang);
+    }, 600);
 
     setTimeout(() => {
       tc.classList.add('hidden');
@@ -441,8 +527,6 @@ class GameApp {
     this.score = 0;
     this.shardsCollected = 0;
     this.gameTime = 0;
-    this.activeCheckpoint = { x: this.level.playerSpawn.x, y: this.level.playerSpawn.y };
-    this.player = new Player(this.level.playerSpawn.x, this.level.playerSpawn.y);
     this.initLevel();
   }
 
@@ -495,12 +579,11 @@ class GameApp {
   }
 
   renderLobbyBackground(dt) {
-    // Parallax scenic background behind lobby menu
     this.renderer.update(dt);
     this.ctx.clearRect(0, 0, this.width, this.height);
-    this.renderer.drawParallaxBackground(this.ctx, 200, 0);
+    this.renderer.drawParallaxBackground(this.ctx, 200, 0, 'ranchi');
 
-    // Draw bonfire / camp ledge
+    // Bonfire ledge
     this.ctx.fillStyle = '#4E342E';
     this.ctx.fillRect(0, 480, this.width, 60);
     this.ctx.fillStyle = '#4CAF50';
@@ -516,7 +599,7 @@ class GameApp {
 
     this.previewCtx.save();
     this.previewCtx.translate(110, 200);
-    this.previewCtx.scale(1.8, 1.8); // 1.8x showcase zoom
+    this.previewCtx.scale(1.8, 1.8);
     this.previewPlayer.x = -14;
     this.previewPlayer.y = -46;
     this.previewPlayer.draw(this.previewCtx);
@@ -533,7 +616,10 @@ class GameApp {
 
     this.gameTime += dt;
     this.renderer.update(dt);
-    this.particles.update(dt);
+    this.particles.update(dt, this.level.theme);
+
+    // Update moving platform coordinates before collisions
+    Physics.updatePlatforms(this.level.platforms, this.gameTime);
 
     if (this.bannerTimer > 0) {
       this.bannerTimer -= dt;
@@ -541,14 +627,15 @@ class GameApp {
 
     const prevHealth = this.player.health;
 
-    // Player Update
+    // Player Update with wind force parameter
     this.player.update(
       this.input,
       this.level.platforms,
       dt,
       this.audio,
       this.camera,
-      this.particles
+      this.particles,
+      this.level.windForce || 0
     );
 
     // Damage heart flash
@@ -581,7 +668,10 @@ class GameApp {
         this.shardsCollected++;
         this.score += s.isRare ? 500 : 100;
 
-        // Scale pulse animation on shard count
+        if (s.isRare) {
+          this.voice.speak(Localization.get('shardVoice'), 'player', Localization.currentLang);
+        }
+
         this.hudShards.classList.add('pulse-shard');
         setTimeout(() => this.hudShards.classList.remove('pulse-shard'), 200);
       });
@@ -592,6 +682,7 @@ class GameApp {
       cp.update(dt, this.player, this.audio, this.particles, () => {
         this.activeCheckpoint = { x: cp.x, y: cp.y - 20 };
         this.showBanner(Localization.get('checkpoint'));
+        this.voice.speak(Localization.get('checkpointVoice'), 'mentor', Localization.currentLang);
       });
     }
 
@@ -622,6 +713,20 @@ class GameApp {
   }
 
   showVictoryScreen() {
+    // Unlock next region in progress
+    if (this.currentLevelIndex + 1 > this.unlockedLevelIndex) {
+      this.unlockedLevelIndex = Math.min(this.levels.length - 1, this.currentLevelIndex + 1);
+      try {
+        localStorage.setItem('rrr_unlocked_level', this.unlockedLevelIndex.toString());
+      } catch (e) {
+        // Safe localStorage fallback
+      }
+      this.updateWorldMapUI();
+    }
+
+    // Spoken regional victory callout
+    this.voice.speak(Localization.get('victoryVoice'), 'mentor', Localization.currentLang);
+
     setTimeout(() => {
       document.getElementById('resShards').textContent = `${this.shardsCollected} / ${this.totalShards}`;
       document.getElementById('resTime').textContent = `${this.gameTime.toFixed(1)}s`;
@@ -635,6 +740,14 @@ class GameApp {
       }
       document.getElementById('resRank').textContent = rank;
 
+      // Update Next Level button label
+      const nextBtn = document.getElementById('nextLevelBtn');
+      if (this.currentLevelIndex >= this.levels.length - 1) {
+        nextBtn.textContent = 'Grand Triumph — Replay World 1 ▶';
+      } else {
+        nextBtn.textContent = Localization.get('nextLevelBtn');
+      }
+
       document.getElementById('victoryModal').classList.remove('hidden');
     }, 600);
   }
@@ -643,6 +756,7 @@ class GameApp {
     this.hudShards.textContent = `💎 ${this.shardsCollected}/${this.totalShards}`;
     this.hudTime.textContent = `⏱️ ${this.gameTime.toFixed(0)}s`;
     this.hudScore.textContent = `⭐ ${this.score}`;
+    this.hudWorld.textContent = Localization.get(this.level.regionKey) || this.level.name;
 
     let hearts = '';
     for (let i = 0; i < this.player.maxHealth; i++) {
@@ -657,8 +771,8 @@ class GameApp {
 
     this.ctx.clearRect(0, 0, this.width, this.height);
 
-    // 1. Parallax Sky & Mountain Ridges
-    this.renderer.drawParallaxBackground(this.ctx, camX, camY);
+    // 1. Dynamic Parallax Background according to World Theme
+    this.renderer.drawParallaxBackground(this.ctx, camX, camY, this.level.theme);
 
     // 2. World Space Rendering
     this.ctx.save();
@@ -689,15 +803,18 @@ class GameApp {
 
     this.ctx.restore();
 
-    // 8. World Banner Notification
+    // 8. Ambient Weather Particle Overlay (Rain streaks, mountain wind drift, water spray)
+    this.particles.drawAmbientWeather(this.ctx, this.level.theme);
+
+    // 9. World Banner Notification
     if (this.bannerTimer > 0) {
       this.ctx.save();
       const alpha = Math.min(1.0, this.bannerTimer * 2);
       this.ctx.fillStyle = `rgba(33, 33, 33, ${0.85 * alpha})`;
-      this.ctx.fillRect(this.width / 2 - 200, 70, 400, 36);
+      this.ctx.fillRect(this.width / 2 - 220, 70, 440, 36);
       this.ctx.strokeStyle = `rgba(255, 179, 0, ${alpha})`;
       this.ctx.lineWidth = 2;
-      this.ctx.strokeRect(this.width / 2 - 200, 70, 400, 36);
+      this.ctx.strokeRect(this.width / 2 - 220, 70, 440, 36);
 
       this.ctx.fillStyle = `rgba(255, 235, 59, ${alpha})`;
       this.ctx.font = 'bold 15px sans-serif';
@@ -706,7 +823,7 @@ class GameApp {
       this.ctx.restore();
     }
 
-    // 9. Cinematic Dialogue Overlay
+    // 10. Cinematic Dialogue Overlay
     this.dialogue.draw(this.ctx, this.width, this.height);
   }
 }

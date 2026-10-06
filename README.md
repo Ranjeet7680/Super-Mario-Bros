@@ -9,12 +9,13 @@
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Ranjeet7680/Super-Mario-Bros)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20HTML5%20Canvas-brightgreen.svg)](#)
-[![Languages](https://img.shields.io/badge/Languages-English%20%7C%20%E0%A4%B9%E0%A4%BF%E0%A4%82%E0%A4%A6%E0%A4%82%E0%A5%80-orange.svg)](#)
+[![Languages](https://img.shields.io/badge/Languages-English%20%7C%20%E0%A4%B9%E0%A4%BF%E0%A4%82%E0%A4%A6%E0%A4%82%E0%A5%80%20%7C%20%E0%A4%A8%E0%A4%BE%E0%A4%97%E0%A4%AA%E0%A5%81%E0%A4%B0%E0%A5%80-orange.svg)](#)
+[![Voice Acting](https://img.shields.io/badge/Voice%20Acting-Nagpuri%20%7C%20Hindi%20%7C%20English-blue.svg)](#)
 
 </div>
 
 > **Team / Creator:** RAJRANJEET7680  
-> **Production Status:** Milestone 1 & 2 Playable Vertical Slice (World 1-1: Ranchi Plateau Gateway)  
+> **Production Status:** Full 8 Jharkhand Regions Live & Playable with Next Level Progression & End-to-End Nagpuri Voice Acting  
 > **Architecture Docs:** `Super_Mario_Bros_Jharkhand_Full_Game_Architecture.pdf` & `RRR_Fully_Detailed_20000_Word_Game_Architecture.pdf`  
 > **Wiki Documentation:** Check the [`/wiki`](wiki/Home.md) folder for full game architecture guides.
 
@@ -64,8 +65,10 @@ This project implements the design specifications and production blueprints defi
   - **Background Score:** Real-time synthesized regional folk music based on the Raag Bhupali pentatonic scale with dholak/tabla percussive grooves.
   - **Dynamic SFX:** Variable-pitch jump glides, soft landing thuds, crystal resonant Echo Shard chimes, white-noise dash whooshes, stomp pops, damage crunches, brass checkpoint chimes, and victory fanfares.
 
-### 4. Bilingual Localization & Dialogue Engine (`src/game/DialogueManager.js`, `Localization.js`)
-- **Instant Language Switching:** Seamlessly toggle between **English** and **Hindi (हिंदी)** in real-time.
+### 4. Trilingual Localization & End-to-End Nagpuri Voice Acting (`src/game/DialogueManager.js`, `Localization.js`, `Voice.js`)
+- **3-Way Real-Time Language Switching:** Seamlessly cycle between **English**, **Hindi (हिंदी)**, and indigenous **Nagpuri (नागपुरी)** anywhere in the Lobby or in-game HUD.
+- **Web Speech API Voice Acting Engine:** Full spoken character dialogue and contextual voice callouts for Guru Kripal & Kabir with dynamic WebAudio BGM ducking.
+- **Authentic Regional Dialect:** Native Chotanagpuri idioms, greetings (*"जोहार! (Johar!)"*), and voice triggers for checkpoints, rare shards, and Torana level completion.
 - **Bollywood-Style Cinematic Direction:**
   - Dramatic black letterbox bars slide into view during NPC interactions.
   - Expressive character emotion portraits (Guru Kripal & Kabir).
@@ -75,16 +78,16 @@ This project implements the design specifications and production blueprints defi
 - **Patrol Beetle:** Forest beetle patrolling platform ledges with twitching antennae. Stompable from above or defeatable via dash attack.
 - **Forest Charger:** Regional wild charger that senses the player, pauses to stamp the ground with a flashing `!` alert telegraph, and charges across the corridor before tiring out.
 
-### 6. World 1-1: Ranchi Plateau Gateway (`src/game/LevelData.js`, `Renderer.js`)
-- **8 Distinct Micro-Sections:**
-  1. *Safe Opening Landmark:* Ranchi plateau viewpoint, meeting with Mentor Guru Kripal.
-  2. *Teaching Room:* Low plateau steps, teaching jump timing and first Echo Shards.
-  3. *First Test:* Pacing Patrol Beetles and gap jumping.
-  4. *Checkpoint Shrine 1:* Traditional brass lantern with festive prayer banner.
-  5. *Escalation:* Forest Charger run with elevated safety platforms.
-  6. *Secret High Canopy Route:* Bouncy spring flowers launch the player into high branches to find 3 rare Gold Echo Shards and an ancient Sohrai Mural Lore Tablet.
-  7. *Combined Challenge:* Floating stone blocks over a cascade gap with mixed hazards.
-  8. *Gateway Finale:* Stone Torana archway that reconnects the regional transit route!
+### 6. The 8 Live Playable Jharkhand Regional Worlds & Next Level Flow (`src/game/LevelData.js`, `Renderer.js`)
+- **World 1-1 (Ranchi Plateau Gateway):** Red soil (*Murram*) trails, teaching jumps, spring flowers, and ancient Sohrai murals.
+- **World 2-1 (Hundru Falls Wilds):** Towering waterfall gorge, animated water current platforms (`currentSpeed: ±80-110px/s`), vertical spring water lifts, and mist particles.
+- **World 3-1 (Netarhat Sunset Hills):** Queen of Chotanagpur crimson twilight, directional mountain wind zones (`windForce: 75px/s`), and floating cloud timber bridges.
+- **World 4-1 (Betla Forest Frontier):** Deep emerald jungle canopy, charger patrol lanes, and ancient Chero dynasty fort ruins.
+- **World 5-1 (Deoghar Heritage-City):** Baidyanath temple courtyards, Shivaganga ghats, and rhythmic floating stone platforms.
+- **World 6-1 (Jamshedpur Industrial Run):** Steel mills, animated reversible conveyor belts (`currentSpeed: ±100-120px/s`), overhead crane lifts, and spark particles.
+- **World 7-1 (Dhanbad Coal-Mine Depths):** Underground coal shafts, minecart rail tracks, collapsing timber ledges, and safety lamp pools.
+- **World 8-1 (Damodar Storm Summit):** Grand tempest climax combining headwinds (`windForce: 95px/s`), water surges, periodic lightning flashes, and the final Grand Torana Arch.
+- **Seamless Next Level Progression:** Victory modal features the golden pulsing `Next Level ▶` action button that advances through regions and permanently unlocks them in the Ranchi Camp Level Select.
 
 ### 7. UI / UX & Accessibility Suite
 - Real-time HUD: Health hearts (`❤️❤️❤️`), Echo Shards (`💎`), Score (`⭐`), and Timer (`⏱️`).

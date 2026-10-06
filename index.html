@@ -154,81 +154,88 @@
           <div class="world-node active" id="nodeWorld1">
             <div class="node-header">
               <span class="node-num">01</span>
-              <span class="badge-status unlocked" data-i18n="unlockedBadge">⭐ Ready</span>
+              <span class="badge-status unlocked" id="badgeWorld1" data-i18n="unlockedBadge">⭐ Ready</span>
             </div>
             <h3 data-i18n="world1Title">World 1: Ranchi Plateau</h3>
             <p data-i18n="world1Desc">Red-soil trails, teaching jumps, and the first Echo Shards.</p>
-            <button class="node-play-btn" id="btnLaunchWorld1">START REGION</button>
+            <button class="node-play-btn" id="btnLaunchWorld1" data-world-index="0">START REGION</button>
           </div>
 
           <!-- World 2 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld2">
             <div class="node-header">
               <span class="node-num">02</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld2" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world2Title">World 2: Hundru Falls</h3>
             <p data-i18n="world2Desc">Towering waterfall cliffs, mist, and rushing water currents.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld2" data-world-index="1">START REGION</button>
           </div>
 
           <!-- World 3 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld3">
             <div class="node-header">
               <span class="node-num">03</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld3" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world3Title">World 3: Netarhat Hills</h3>
             <p data-i18n="world3Desc">Highland winds, twilight vistas, and floating cloud bridges.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld3" data-world-index="2">START REGION</button>
           </div>
 
           <!-- World 4 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld4">
             <div class="node-header">
               <span class="node-num">04</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld4" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world4Title">World 4: Betla Forest</h3>
             <p data-i18n="world4Desc">Dense canopy routes, hanging vines, and hidden wildlife.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld4" data-world-index="3">START REGION</button>
           </div>
 
           <!-- World 5 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld5">
             <div class="node-header">
               <span class="node-num">05</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld5" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world5Title">World 5: Deoghar Heritage</h3>
             <p data-i18n="world5Desc">Sacred courtyards, rhythm platforms, and bell chime puzzles.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld5" data-world-index="4">START REGION</button>
           </div>
 
           <!-- World 6 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld6">
             <div class="node-header">
               <span class="node-num">06</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld6" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world6Title">World 6: Jamshedpur Steel</h3>
             <p data-i18n="world6Desc">Steel mills, reversible conveyors, and overhead crane lifts.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld6" data-world-index="5">START REGION</button>
           </div>
 
           <!-- World 7 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld7">
             <div class="node-header">
               <span class="node-num">07</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld7" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world7Title">World 7: Dhanbad Mines</h3>
             <p data-i18n="world7Desc">Underground rail carts, track switches, and timber collapses.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld7" data-world-index="6">START REGION</button>
           </div>
 
           <!-- World 8 -->
-          <div class="world-node locked">
+          <div class="world-node locked" id="nodeWorld8">
             <div class="node-header">
               <span class="node-num">08</span>
-              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+              <span class="badge-status locked" id="badgeWorld8" data-i18n="lockedBadge">🔒 Locked</span>
             </div>
             <h3 data-i18n="world8Title">World 8: Damodar Storm</h3>
             <p data-i18n="world8Desc">The tempest climax combining all learned environmental systems.</p>
+            <button class="node-play-btn hidden" id="btnLaunchWorld8" data-world-index="7">START REGION</button>
           </div>
         </div>
       </div>
@@ -397,7 +404,8 @@
         </div>
 
         <div class="modal-actions">
-          <button id="playAgainBtn" class="primary-btn" data-i18n="playAgain">Play Again</button>
+          <button id="nextLevelBtn" class="primary-btn pulse-glow" data-i18n="nextLevelBtn">Next Level ▶</button>
+          <button id="playAgainBtn" class="secondary-btn" data-i18n="playAgain">Play Again</button>
           <button id="victoryLobbyBtn" class="secondary-btn" data-i18n="returnToLobby">Return to Camp</button>
         </div>
       </div>

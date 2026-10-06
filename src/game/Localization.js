@@ -1,11 +1,15 @@
 /**
  * Localization system for RRR - Jharkhand Quest
- * Supports English and Hindi with extensible architecture for regional languages (Nagpuri, Mundari, Santali)
+ * Full multilingual architecture supporting:
+ * - English (en)
+ * - Hindi (hi)
+ * - Jharkhand Local Regional Language: Nagpuri / नागपुरी (nag)
  * Authors: RAJRANJEET7680
  */
 
 export const Localization = {
-  currentLang: 'en', // 'en' | 'hi'
+  currentLang: 'en', // 'en' | 'hi' | 'nag'
+  availableLangs: ['en', 'hi', 'nag'],
 
   strings: {
     en: {
@@ -20,7 +24,8 @@ export const Localization = {
       checkpoint: 'Lantern Shrine Lit!',
       secretFound: 'Hidden Route Discovered!',
       levelClear: 'GATEWAY RESTORED!',
-      levelClearSub: 'World 1-1 Conquered • Ranchi Pathway Reconnected',
+      levelClearSub: 'Region Conquered • Regional Pathway Reconnected',
+      nextLevelBtn: 'Next Level ▶',
       playAgain: 'Play Again',
       controlsHint: '[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk',
       dialoguePrompt: 'Press [E] to Speak',
@@ -63,7 +68,7 @@ export const Localization = {
       lobbyTitle: 'RANCHI BASE CAMP',
       lobbySubtitle: 'Chapter I: The Rift of Echoes Awakens',
 
-      // Level Select
+      // Level Select (All 8 Worlds)
       worldSelectTitle: 'The 8 Jharkhand Regions',
       world1Title: 'World 1: Ranchi Plateau Gateway',
       world1Desc: 'Red-soil trails, teaching jumps, and the first Echo Shards.',
@@ -107,6 +112,12 @@ export const Localization = {
 
       // Title Card
       stageObjective: 'Objective: Collect the Echo Shards and unlock the Gateway Torana.',
+
+      // Voice callouts
+      startVoice: 'Gateway open! Proceed forward!',
+      checkpointVoice: 'Lantern lit! Checkpoint secured!',
+      victoryVoice: 'Gateway restored! Regional pathway reconnected!',
+      shardVoice: 'Echo Shard acquired!',
 
       // Credits
       creditsTitle: 'PRODUCTION CREDITS',
@@ -163,7 +174,8 @@ export const Localization = {
       checkpoint: 'दीप स्तम्भ प्रज्वलित!',
       secretFound: 'गुप्त मार्ग खोजा गया!',
       levelClear: 'प्रवेशद्वार पुनः स्थापित!',
-      levelClearSub: 'विश्व १-१ पूर्ण • राँची मार्ग पुनः जुड़ा',
+      levelClearSub: 'क्षेत्र विजय पूर्ण • क्षेत्रीय मार्ग पुनः जुड़ा',
+      nextLevelBtn: 'अगला स्तर ▶',
       playAgain: 'पुनः खेलें',
       controlsHint: '[A/D या ←/→] दौड़ें | [W या Space] छलांग | [Shift या K] डै़श | [S या ↓] तीव्र पतन | [E] बात करें',
       dialoguePrompt: 'बात करने के लिए [E] दबाएं',
@@ -251,6 +263,12 @@ export const Localization = {
       // Title Card
       stageObjective: 'उद्देश्य: गूँज के टुकड़े एकत्र करें और तोरण द्वार खोलें।',
 
+      // Voice callouts
+      startVoice: 'प्रवेशद्वार खुल गया! आगे बढ़ें!',
+      checkpointVoice: 'दीप स्तम्भ प्रज्वलित! ठिकाना सुरक्षित!',
+      victoryVoice: 'तोरण द्वार पुनः स्थापित! मार्ग जुड़ गया!',
+      shardVoice: 'गूँज टुकड़ा प्राप्त हुआ!',
+
       // Credits
       creditsTitle: 'निर्माण एवं श्रेय',
       devLead: 'मुख्य वास्तुशिल्प एवं प्रोग्रामिंग: RAJRANJEET7680',
@@ -268,7 +286,7 @@ export const Localization = {
           speaker: 'गुरु कृपाल',
           role: 'mentor',
           emotion: 'calm',
-          text: 'राँची के पठार पर तुम्हारा स्वागत है, कबीर। आकाश की ओर देखो... गूँज की दरार (Rift of Echoes) ने हमारे क्षेत्रों के संपर्कों को तोड़ दिया है।'
+          text: 'राँची के पठार पर तुम्हारा स्वागत है, कबीर। आकाश की ओर देखो... गूँज की दरार ने हमारे क्षेत्रों के संपर्कों को तोड़ दिया है।'
         },
         {
           speaker: 'कबीर',
@@ -280,18 +298,168 @@ export const Localization = {
           speaker: 'गुरु कृपाल',
           role: 'mentor',
           emotion: 'warning',
-          text: 'तुम्हें लाल मिट्टी की पगडंडियों पर बिखरे गूँज के टुकड़ों (Echo Shards) को एकत्र करना होगा। इनमें हमारे जंगलों और नदियों की स्मृतियां समाहित हैं।'
+          text: 'तुम्हें लाल मिट्टी की पगडंडियों पर बिखरे गूँज के टुकड़ों को एकत्र करना होगा। इनमें हमारे जंगलों और नदियों की स्मृतियां समाहित हैं।'
         },
         {
           speaker: 'गुरु कृपाल',
           role: 'mentor',
           emotion: 'calm',
-          text: 'आगे वन के भृंग (Patrol Beetles) और आक्रामक वराह (Chargers) विचलित हैं। अपनी गति और छलांग से उन पर विजय पाओ। बिरसा की पावन भूमि तुम्हारा पथ आलोकित करे!'
+          text: 'आगे वन के भृंग और आक्रामक वराह विचलित हैं। अपनी गति और छलांग से उन पर विजय पाओ। बिरसा की पावन भूमि तुम्हारा पथ आलोकित करे!'
         }
       ],
 
       loreTabletTitle: 'प्राचीन सोहराय भित्तिचित्र शिलालेख',
       loreTabletText: '“जब नेतरहाट की पहाड़ियों से पठारी हवाएं गूँजेंगी और हुंडरू का जल गर्जना करेगा, तब स्मृति के सूत्र पूरे झारखंड को पुनः एक कर देंगे।” (+1000 गूँज अंक!)'
+    },
+
+    nag: {
+      gameTitle: 'आर.आर.आर — झारखंड क्वेस्ट',
+      subtitle: 'रिवाइंड • रीइमेजिन • रीकनेक्ट',
+      worldTitle: 'पहिला खण्ड: राँची पठार कर दुआर',
+      regionName: 'राँची पठार',
+      shards: 'इको शार्ड (गूँज कर टुकड़ा)',
+      health: 'जिंदगी',
+      score: 'नंबर',
+      time: 'बेरा',
+      checkpoint: 'दीया बरत हे! ठिकाना पक्का होल!',
+      secretFound: 'गुप्त रस्ता भेंटायल! (+1000 अंक)',
+      levelClear: 'तोरण दुआर खुल गेलक! राउर विजय होल!',
+      levelClearSub: 'इलाका कर रस्ता जुड़ गेल • झारखंड कर माटी धन्य होल',
+      nextLevelBtn: 'आगिला स्तर ▶',
+      playAgain: 'फेरु खेलू',
+      controlsHint: '[A/D या ←/→] दौड़ा | [W या Space] कूदा | [Shift या K] झपट्टा | [S या ↓] नीचा | [E] गोठियावा',
+      dialoguePrompt: 'गोठियायेक ले [E] दबाऊ',
+      skipText: '[Space / E] आगू बढ़ा',
+      pause: 'विराम (Paused)',
+      resume: 'चालू राखू',
+      restart: 'फेरु से शुरू करू',
+      settings: 'सेटिंग्स',
+      accessibility: 'सुलभता आ सेटिंग्स',
+      screenShake: 'स्क्रीन हिलाना (Screen Shake)',
+      highContrast: 'साफ देखेक वाला मोड (High Contrast)',
+      assistMode: 'मदद वाला मोड (अतिरिक्त मंच)',
+      soundVolume: 'आवाज कर जोर',
+      voiceActing: 'झारखंडी बोली (Voice Acting)',
+      voiceOn: '🗣️ बोली: चालू',
+      voiceOff: '🔇 बोली: बंद',
+      fullscreen: 'बड़का स्क्रीन (Fullscreen)',
+      graphicsPreset: 'फोटो कर निखार',
+      presetLow: 'हल्का',
+      presetMed: 'मझोला',
+      presetHigh: 'चकाचक',
+      textSpeed: 'अक्षर कर चाल',
+      speedNormal: 'सामान्य',
+      speedFast: 'तेज',
+      speedInstant: 'तुरंते',
+      close: 'बंद करू',
+      statsShards: 'बटोरल गूँज टुकड़ा:',
+      statsTime: 'लागल बेरा:',
+      statsRank: 'खोजकर्ता पदवी:',
+      rankS: 'S पदवी — छोटानागपुर कर वीर सपूत',
+      rankA: 'A पदवी — होनहार खोजी',
+      rankB: 'B पदवी — साहसी राही',
+
+      // Lobby UI
+      playBtn: '▶ खेल शुरू करू',
+      levelSelectBtn: '🗺️ इलाका चुनू',
+      characterBtn: '👤 कबीर बाबू के देखा',
+      creditsBtn: '📜 जोहार आ आभार',
+      returnToLobby: 'डेरा घुरी',
+      lobbyTitle: 'राँची बेस कैंप',
+      lobbySubtitle: 'पहिला खण्ड: गूँज कर दरार जाग उठलक',
+
+      // Level Select (All 8 Worlds)
+      worldSelectTitle: 'झारखंड कर ८ पावन इलाका',
+      world1Title: 'पहिला खण्ड: राँची पठार कर दुआर',
+      world1Desc: 'लाल माटी कर डगर, उछल-कूद आ पहला गूँज टुकड़ा।',
+      world2Title: 'दूसरा खण्ड: हुंडरू जलप्रपात कर बन',
+      world2Desc: 'बड़का चट्टान, पानी कर फुहार आ तेज बहाव।',
+      world3Title: 'तीसरा खण्ड: नेतरहाट साँझ कर पहिया',
+      world3Desc: 'पहाड़ कर तेज बसात, साँझ कर रूप आ बादर कर पुल।',
+      world4Title: 'चौथा खण्ड: बेतला जंगल कर सीमना',
+      world4Desc: 'घना साल कर गाछ, लटकल लतर आ चेरो राजा कर खंडहर।',
+      world5Title: 'पाँचवा खण्ड: देवघर कर पावन नगरी',
+      world5Desc: 'बाबा बैद्यनाथ कर आँगन, घंटी कर धुन आ झूमता मंच।',
+      world6Title: 'छठा खण्ड: जमशेदपुर कर लोहा कारखाना',
+      world6Desc: 'लोहा कर भट्ठी, चलता पट्टा (कन्वेयर) आ क्रेन कर झूला।',
+      world7Title: 'सातवा खण्ड: धनबाद कोयला खदान कर गहिर',
+      world7Desc: 'खदान कर ठेला गाड़ी, पटरी आ अंधरिया सुरंग।',
+      world8Title: 'आठवा खण्ड: दामोदर तूफानी शिखर',
+      world8Desc: 'बिजली, पानी आ तूफान कर संगम... अंतिम महा-युद्ध।',
+      lockedBadge: '🔒 बंद',
+      unlockedBadge: '⭐ तैयार',
+
+      // Character Viewer
+      charViewerTitle: 'साहसी कबीर — रूप-रंग अवलोकन',
+      outfitLabel: 'यात्री कर पोशाक:',
+      outfitClassic: 'पारंपरिक अन्वेषक (आसमानी आ केसरिया)',
+      outfitSohrai: 'सोहराय कलाकार (लाल माटी आ पियरका)',
+      outfitNight: 'रैन पहरुआ (गहरा नीला आ रुपहला)',
+      animLabel: 'चाल-ढाल देखा:',
+      animIdle: 'थिर मुद्रा (Idle)',
+      animWalk: 'डगर चाल (Walk)',
+      animRun: 'धड़कन दौड़ (Run)',
+      animJump: 'ऊँच उछाल (Jump)',
+      animVictory: 'जीत कर जयकारा (Victory)',
+
+      // Loading Screen
+      loadingLabel: 'इलाका कर रस्ता सब जुड़त हे...',
+      tipHeader: 'कबीर बाबू ले सलाह:',
+      tip1: 'हवा में रह के नीचा (S / ↓) दबाबा त तुरते नीचा उतरबा।',
+      tip2: 'झपट्टा (Shift / K) मारले कुछ पल ले अमर होइ जाबा आ दुश्मन साफ!',
+      tip3: 'पलाश कर फूल में कूदा—ऊ तोके ऊपर कर छाँह में फेंक देई!',
+      tip4: 'दीया जरल त राउर डेरा पक्का भेल!',
+
+      // Title Card
+      stageObjective: 'उद्देश्य: गूँज कर टुकड़ा बटोरा आ तोरण दुआर खोला।',
+
+      // Voice callouts
+      startVoice: 'जोहार! आगे बढ़ू रे भइया!',
+      checkpointVoice: 'दीया बरत हे! ठिकाना पक्का होल!',
+      victoryVoice: 'तोरण दुआर खुल गेलक! राउर विजय होल!',
+      shardVoice: 'इको शार्ड मिल गेलक!',
+
+      // Credits
+      creditsTitle: 'बनावेक वाला आ जोहार',
+      devLead: 'मुख्य वास्तुकार आ कोड: RAJRANJEET7680',
+      culturalConsultants: 'माटी कर बात: झारखंड लोकसंस्कृति आ पर्यावरण',
+      artArchitecture: 'नक्शा आ एनीमेशन: 2D बहुस्तरीय लंबन (Parallax)',
+      soundDesign: 'राग आ सुर: राग भूपाली वेब-ऑडियो सिंथेसाइज़र',
+      specialThanks: 'झारखंड कर पावन माटी, झरना आ वीर मन के समर्पित।',
+
+      // Dialogues
+      mentorName: 'गुरु कृपाल (सयान मार्गदर्शक)',
+      protagonistName: 'कबीर (साहसी यात्री)',
+
+      dialogueIntro: [
+        {
+          speaker: 'गुरु कृपाल',
+          role: 'mentor',
+          emotion: 'calm',
+          text: 'जोहार कबीर बाबू! अकास के देखा... गूँज कर दरार हमर सब इलाका के अलग-अलग कइर देलक हे।'
+        },
+        {
+          speaker: 'कबीर',
+          role: 'player',
+          emotion: 'determined',
+          text: 'हँ गुरुजी, हवा में कुछ अनहोनी बुझात हे। हमर साल कर बन आ जलप्रपात सब थम्हि गेल हे।'
+        },
+        {
+          speaker: 'गुरु कृपाल',
+          role: 'mentor',
+          emotion: 'warning',
+          text: 'तोके राँची कर लाल माटी में बिखरैल इको शार्ड (गूँज कर टुकड़ा) मन के बटोरेक होवी। ई मन में हमर पुरखा कर इयाद भरल हे।'
+        },
+        {
+          speaker: 'गुरु कृपाल',
+          role: 'mentor',
+          emotion: 'calm',
+          text: 'आगे जंगल कर कीड़ा आ जंगली सूअर घूमत हैं। फूर्ती से कूद के पार होवा। भगवान बिरसा कर आसीरबाद तोर साथे हे!'
+        }
+      ],
+
+      loreTabletTitle: 'पुरान सोहराय भित्तिचित्र',
+      loreTabletText: '“जब नेतरहाट कर पहिया से बसात बही आ हुंडरू कर पानी गरजी, तब झारखंड कर माटी एके होइ!” (+1000 गूँज अंक!)'
     }
   },
 
@@ -301,6 +469,13 @@ export const Localization = {
       return true;
     }
     return false;
+  },
+
+  cycleLanguage() {
+    const idx = this.availableLangs.indexOf(this.currentLang);
+    const nextIdx = (idx + 1) % this.availableLangs.length;
+    this.currentLang = this.availableLangs[nextIdx];
+    return this.currentLang;
   },
 
   get(key) {

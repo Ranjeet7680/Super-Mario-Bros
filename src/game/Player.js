@@ -107,7 +107,7 @@ export class Player {
     return true;
   }
 
-  update(input, platforms, dt, audio = null, camera = null, particles = null) {
+  update(input, platforms, dt, audio = null, camera = null, particles = null, windForce = 0) {
     if (this.hasWon) {
       this.vx = 0;
       this.vy = 0;
@@ -174,6 +174,10 @@ export class Player {
       const friction = this.isGrounded ? this.groundFriction : this.airFriction;
 
       if (moveInput !== 0) {
+        // Skid dust on sharp turnaround
+        if (this.isGrounded && Math.sign(moveInput) !== Math.sign(this.vx) && Math.abs(this.vx) > 110) {
+          if (particles) particles.spawnDust(this.x + this.width / 2, this.y + this.height);
+        }
         this.facing = moveInput;
         this.vx += moveInput * accel * dt;
         if (Math.abs(this.vx) > this.maxSpeed) {
@@ -186,6 +190,11 @@ export class Player {
         } else {
           this.vx = 0;
         }
+      }
+
+      // Wind force effect (e.g. Netarhat highland wind / Damodar tempest)
+      if (windForce) {
+        this.vx += windForce * (this.isGrounded ? 0.4 : 1.0) * dt;
       }
 
       // Jump Execution (Buffer + Coyote)

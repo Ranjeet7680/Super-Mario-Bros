@@ -1,0 +1,219 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E1118" />
+      <stop offset="100%" stop-color="#181B26" />
+    </linearGradient>
+
+    <linearGradient id="boxPres" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#311B92" />
+      <stop offset="100%" stop-color="#1A237E" />
+    </linearGradient>
+
+    <linearGradient id="boxGame" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00695C" />
+      <stop offset="100%" stop-color="#004D40" />
+    </linearGradient>
+
+    <linearGradient id="boxWorld" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#D84315" />
+      <stop offset="100%" stop-color="#BF360C" />
+    </linearGradient>
+
+    <linearGradient id="boxAudio" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C2185B" />
+      <stop offset="100%" stop-color="#880E4F" />
+    </linearGradient>
+
+    <linearGradient id="boxData" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F57F17" />
+      <stop offset="100%" stop-color="#E65100" />
+    </linearGradient>
+
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="620" rx="16" fill="url(#bgGrad)" stroke="#37474F" stroke-width="1.5" />
+
+  <!-- Diagram Title -->
+  <g text-anchor="middle">
+    <text x="550" y="44" font-family="-apple-system, sans-serif" font-size="22" font-weight="800" fill="#FFE082" letter-spacing="1.5">
+      SYSTEM ARCHITECTURE &amp; PIPELINE BLUEPRINT
+    </text>
+    <text x="550" y="70" font-family="-apple-system, sans-serif" font-size="13" font-weight="500" fill="#90A4AE">
+      Adheres to Section 3 &amp; 28 of the RRR / Jharkhand Quest Game Architecture Bible
+    </text>
+  </g>
+
+  <!-- Subsystem Pillars (5 Columns) -->
+  
+  <!-- 1. Presentation & UI Layer -->
+  <g transform="translate(40, 100)" filter="url(#softShadow)">
+    <rect width="190" height="470" rx="12" fill="url(#boxPres)" stroke="#7E57C2" stroke-width="2" />
+    <text x="95" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#EDE7F6">1. PRESENTATION</text>
+    <line x1="20" y1="52" x2="170" y2="52" stroke="#B39DDB" stroke-width="1.5" opacity="0.6" />
+    
+    <g transform="translate(16, 75)" font-family="sans-serif" font-size="12" fill="#D1C4E9">
+      <rect x="0" y="0" width="158" height="54" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="22" font-weight="700" fill="#FFF">HTML5 Viewport</text>
+      <text x="10" y="42" font-size="10.5">960x540 Logical Grid</text>
+
+      <rect x="0" y="68" width="158" height="54" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="90" font-weight="700" fill="#FFF">Minimal HUD</text>
+      <text x="10" y="110" font-size="10.5">Hearts, Shards, Timer</text>
+
+      <rect x="0" y="136" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="158" font-weight="700" fill="#FFF">Cinematic Dialogue</text>
+      <text x="10" y="176" font-size="10.5">Letterbox Bars &amp;</text>
+      <text x="10" y="192" font-size="10.5">Speaker Portraits</text>
+
+      <rect x="0" y="216" width="158" height="60" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="238" font-weight="700" fill="#FFF">Accessibility UI</text>
+      <text x="10" y="258" font-size="10.5">Contrast &amp; Shake Opts</text>
+
+      <rect x="0" y="290" width="158" height="60" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="312" font-weight="700" fill="#FFF">Touch Controls</text>
+      <text x="10" y="332" font-size="10.5">On-Screen D-Pad/Btns</text>
+    </g>
+  </g>
+
+  <!-- 2. Gameplay Engine -->
+  <g transform="translate(245, 100)" filter="url(#softShadow)">
+    <rect width="190" height="470" rx="12" fill="url(#boxGame)" stroke="#26A69A" stroke-width="2" />
+    <text x="95" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#E0F2F1">2. GAMEPLAY</text>
+    <line x1="20" y1="52" x2="170" y2="52" stroke="#80CBC4" stroke-width="1.5" opacity="0.6" />
+
+    <g transform="translate(16, 75)" font-family="sans-serif" font-size="12" fill="#B2DFDB">
+      <rect x="0" y="0" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="22" font-weight="700" fill="#FFF">Player Controller</text>
+      <text x="10" y="42" font-size="10.5">Ground/Air Accel</text>
+      <text x="10" y="56" font-size="10.5">Fast-Fall Mechanics</text>
+
+      <rect x="0" y="80" width="158" height="64" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="102" font-weight="700" fill="#FFF">Fairness Engine</text>
+      <text x="10" y="122" font-size="10.5">Coyote Time (120ms)</text>
+      <text x="10" y="136" font-size="10.5">Jump Buffer (120ms)</text>
+
+      <rect x="0" y="158" width="158" height="64" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="180" font-weight="700" fill="#FFF">Combat &amp; Dash</text>
+      <text x="10" y="200" font-size="10.5">Dash i-frames (180ms)</text>
+      <text x="10" y="214" font-size="10.5">Enemy Head Stomp</text>
+
+      <rect x="0" y="236" width="158" height="64" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="258" font-weight="700" fill="#FFF">Enemy AI Logic</text>
+      <text x="10" y="278" font-size="10.5">Patrol Beetles</text>
+      <text x="10" y="292" font-size="10.5">Charger Telegraph !</text>
+
+      <rect x="0" y="314" width="158" height="50" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="336" font-weight="700" fill="#FFF">Health / i-Frames</text>
+      <text x="10" y="352" font-size="10.5">3 Hearts System</text>
+    </g>
+  </g>
+
+  <!-- 3. World & Physics -->
+  <g transform="translate(450, 100)" filter="url(#softShadow)">
+    <rect width="190" height="470" rx="12" fill="url(#boxWorld)" stroke="#FF7043" stroke-width="2" />
+    <text x="95" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#FBE9E7">3. WORLD &amp; PHYSICS</text>
+    <line x1="20" y1="52" x2="170" y2="52" stroke="#FFAB91" stroke-width="1.5" opacity="0.6" />
+
+    <g transform="translate(16, 75)" font-family="sans-serif" font-size="12" fill="#FFCCBC">
+      <rect x="0" y="0" width="158" height="54" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="22" font-weight="700" fill="#FFF">AABB Collision</text>
+      <text x="10" y="42" font-size="10.5">Solid &amp; One-Way Ledges</text>
+
+      <rect x="0" y="68" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="90" font-weight="700" fill="#FFF">Camera System</text>
+      <text x="10" y="110" font-size="10.5">Predictive Look-Ahead</text>
+      <text x="10" y="126" font-size="10.5">Vertical Dead Zones</text>
+
+      <rect x="0" y="148" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="170" font-weight="700" fill="#FFF">Parallax Renderer</text>
+      <text x="10" y="190" font-size="10.5">4-Layer Scenic Depth</text>
+      <text x="10" y="206" font-size="10.5">Red Murram &amp; Sal Trees</text>
+
+      <rect x="0" y="228" width="158" height="60" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="250" font-weight="700" fill="#FFF">Entities System</text>
+      <text x="10" y="270" font-size="10.5">Shards, Lanterns, Torana</text>
+
+      <rect x="0" y="302" width="158" height="58" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="324" font-weight="700" fill="#FFF">Assist Platforms</text>
+      <text x="10" y="344" font-size="10.5">Dynamic Recovery</text>
+    </g>
+  </g>
+
+  <!-- 4. Audio Engine -->
+  <g transform="translate(655, 100)" filter="url(#softShadow)">
+    <rect width="190" height="470" rx="12" fill="url(#boxAudio)" stroke="#EC407A" stroke-width="2" />
+    <text x="95" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#FCE4EC">4. AUDIO ENGINE</text>
+    <line x1="20" y1="52" x2="170" y2="52" stroke="#F48FB1" stroke-width="1.5" opacity="0.6" />
+
+    <g transform="translate(16, 75)" font-family="sans-serif" font-size="12" fill="#F8BBD0">
+      <rect x="0" y="0" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="22" font-weight="700" fill="#FFF">WebAudio Synth</text>
+      <text x="10" y="42" font-size="10.5">Zero MP3 File Dep.</text>
+      <text x="10" y="56" font-size="10.5">Real-time Oscillators</text>
+
+      <rect x="0" y="80" width="158" height="74" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="102" font-weight="700" fill="#FFF">Indian Folk Stems</text>
+      <text x="10" y="122" font-size="10.5">Raag Bhupali Scale</text>
+      <text x="10" y="136" font-size="10.5">Flute Lead + Sitar</text>
+      <text x="10" y="150" font-size="10.5">Dholak / Bass Grooves</text>
+
+      <rect x="0" y="168" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="190" font-weight="700" fill="#FFF">SFX Synthesizers</text>
+      <text x="10" y="210" font-size="10.5">Crystal Shard Chimes</text>
+      <text x="10" y="224" font-size="10.5">Pitch-Glide Jumps</text>
+
+      <rect x="0" y="248" width="158" height="54" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="270" font-weight="700" fill="#FFF">Fanfare &amp; Jingle</text>
+      <text x="10" y="290" font-size="10.5">Checkpoint &amp; Victory</text>
+
+      <rect x="0" y="316" width="158" height="48" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="338" font-weight="700" fill="#FFF">Mix &amp; Gain Bus</text>
+      <text x="10" y="354" font-size="10.5">Independent Controls</text>
+    </g>
+  </g>
+
+  <!-- 5. Data & Localization -->
+  <g transform="translate(860, 100)" filter="url(#softShadow)">
+    <rect width="190" height="470" rx="12" fill="url(#boxData)" stroke="#FFA726" stroke-width="2" />
+    <text x="95" y="36" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="#FFF3E0">5. DATA &amp; LOCAL.</text>
+    <line x1="20" y1="52" x2="170" y2="52" stroke="#FFCC80" stroke-width="1.5" opacity="0.6" />
+
+    <g transform="translate(16, 75)" font-family="sans-serif" font-size="12" fill="#FFE0B2">
+      <rect x="0" y="0" width="158" height="64" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="22" font-weight="700" fill="#FFF">Data-Driven Levels</text>
+      <text x="10" y="42" font-size="10.5">Declarative Stages</text>
+      <text x="10" y="56" font-size="10.5">Entity Spawn JSON</text>
+
+      <rect x="0" y="78" width="158" height="74" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="100" font-weight="700" fill="#FFF">Bilingual Engine</text>
+      <text x="10" y="120" font-size="10.5">English Language</text>
+      <text x="10" y="134" font-size="10.5">Hindi (हिंदी) Support</text>
+      <text x="10" y="148" font-size="10.5">Nagpuri / Mundari Ready</text>
+
+      <rect x="0" y="166" width="158" height="66" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="188" font-weight="700" fill="#FFF">Save &amp; Checkpoint</text>
+      <text x="10" y="208" font-size="10.5">Lantern State Storage</text>
+      <text x="10" y="222" font-size="10.5">Stats &amp; High Scores</text>
+
+      <rect x="0" y="246" width="158" height="54" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="268" font-weight="700" fill="#FFF">Input Abstractor</text>
+      <text x="10" y="288" font-size="10.5">Key / Pad / Touch Map</text>
+
+      <rect x="0" y="314" width="158" height="50" rx="6" fill="rgba(0,0,0,0.3)" />
+      <text x="10" y="336" font-weight="700" fill="#FFF">Performance Opt</text>
+      <text x="10" y="352" font-size="10.5">60 FPS Fixed Delta</text>
+    </g>
+  </g>
+
+  <!-- Bottom Connecting Data Flow Bus -->
+  <path d="M 135 570 L 135 595 L 955 595 L 955 570" stroke="#00E5FF" stroke-width="2.5" fill="none" stroke-dasharray="8,6" opacity="0.75" />
+  <circle cx="550" cy="595" r="5" fill="#00E5FF" />
+  <text x="550" y="612" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="600" fill="#80D8FF">
+    DATA-DRIVEN EVENT &amp; STATE SYNCHRONIZATION PIPELINE
+  </text>
+</svg>

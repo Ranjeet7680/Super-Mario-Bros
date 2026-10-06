@@ -2,6 +2,12 @@
 
 Adhering to Section 6, 7-14, and 21 of the Game Architecture Bible.
 
+<div align="center">
+  <img src="../assets/diagram-world-map.svg" alt="The 8 Jharkhand Worlds Map" width="100%" />
+</div>
+
+<br/>
+
 ---
 
 ### World 1 — Ranchi Plateau Gateway

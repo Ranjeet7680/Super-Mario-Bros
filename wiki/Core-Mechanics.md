@@ -2,6 +2,12 @@
 
 Adhering to Section 4 of the Game Architecture Bible.
 
+<div align="center">
+  <img src="../assets/diagram-player-physics.svg" alt="Player Physics Envelope" width="100%" />
+</div>
+
+<br/>
+
 ---
 
 ## 🏃 1. Movement Physics

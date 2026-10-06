@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 560" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgMap" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#100C1A" />
+      <stop offset="100%" stop-color="#1A1024" />
+    </linearGradient>
+
+    <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FF9800" />
+      <stop offset="50%" stop-color="#00E5FF" />
+      <stop offset="100%" stop-color="#E040FB" />
+    </linearGradient>
+
+    <filter id="shadowBox" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="560" rx="16" fill="url(#bgMap)" stroke="#4A148C" stroke-width="1.5" />
+
+  <!-- Title Header -->
+  <g text-anchor="middle">
+    <text x="550" y="44" font-family="-apple-system, sans-serif" font-size="22" font-weight="900" fill="#FFD54F" letter-spacing="2">
+      THE 8 JHARKHAND REGIONAL WORLDS MAP
+    </text>
+    <text x="550" y="70" font-family="-apple-system, sans-serif" font-size="13" font-weight="500" fill="#B0BEC5">
+      The Journey Across Fictionalized Plateaus, Waterfalls, Forests, Sacred Cities &amp; Industry
+    </text>
+  </g>
+
+  <!-- Connecting Pathway S-Curve Line -->
+  <!-- Top Row (W1 -> W2 -> W3 -> W4) -->
+  <path d="M 160 180 L 390 180 L 630 180 L 870 180 C 990 180 990 380 870 380 L 630 380 L 390 380 L 160 380" 
+        stroke="url(#pathGrad)" stroke-width="4" stroke-dasharray="8,6" fill="none" opacity="0.75" />
+
+  <!-- WORLD NODES -->
+
+  <!-- World 1: Ranchi -->
+  <g transform="translate(60, 110)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#1E1308" stroke="#FF9800" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#E65100" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W1</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FFE082">Ranchi Plateau</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFB74D">Gateway (Current Demo)</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Red soil Murram trails</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Movement &amp; Jump basics</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Beetles &amp; Elder Guru</text>
+  </g>
+
+  <!-- World 2: Hundru -->
+  <g transform="translate(300, 110)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#051923" stroke="#00B0FF" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#0277BD" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W2</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#80D8FF">Hundru Falls Wilds</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#4FC3F7">Water Currents &amp; Spray</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Slippery moss platforms</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• River current acceleration</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Vertical waterfall climbing</text>
+  </g>
+
+  <!-- World 3: Netarhat -->
+  <g transform="translate(540, 110)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#240D15" stroke="#FF4081" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#C2185B" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W3</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FF80AB">Netarhat Sunset</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#F48FB1">Wind &amp; Cloud Lifts</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Highland gale currents</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Temporary cloud blocks</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Extended gliding jumps</text>
+  </g>
+
+  <!-- World 4: Betla -->
+  <g transform="translate(780, 110)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#0C1D0F" stroke="#00E676" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#2E7D32" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W4</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#B9F6CA">Betla Frontier</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#69F0AE">Canopy &amp; Hidden Paths</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Dense Sal tree branches</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Swinging forest vines</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Wildlife stealth encounters</text>
+  </g>
+
+  <!-- World 8: Damodar (Final) -->
+  <g transform="translate(60, 310)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#1C0626" stroke="#D500F9" stroke-width="2.5" />
+    <circle cx="28" cy="28" r="14" fill="#AA00FF" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W8</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#EA80FC">Damodar Storm</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#E040FB">Grand Finale Summit</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Wind + Water + Machines</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• 3-Phase Rift Guardian</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• All Echo Shards restored</text>
+  </g>
+
+  <!-- World 7: Dhanbad -->
+  <g transform="translate(300, 310)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#17130F" stroke="#FFD600" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#F57F17" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W7</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FFF59D">Dhanbad Mines</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFEE58">Mine Carts &amp; Switches</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• High-speed rail navigation</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Junction track switching</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Collapsing timber shafts</text>
+  </g>
+
+  <!-- World 6: Jamshedpur -->
+  <g transform="translate(540, 310)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#131B24" stroke="#00E5FF" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#00838F" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W6</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#84FFFF">Jamshedpur Steel</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#18FFFF">Industrial Machinery</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Reversible conveyors</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Heavy crane platforms</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Steam vent pressure gates</text>
+  </g>
+
+  <!-- World 5: Deoghar -->
+  <g transform="translate(780, 310)" filter="url(#shadowBox)">
+    <rect width="200" height="135" rx="10" fill="#201018" stroke="#FF5252" stroke-width="2" />
+    <circle cx="28" cy="28" r="14" fill="#C62828" />
+    <text x="28" y="33" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">W5</text>
+    <text x="52" y="32" font-family="sans-serif" font-size="13" font-weight="bold" fill="#FF8A80">Deoghar Heritage</text>
+    <text x="14" y="62" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FF5252">Rhythm &amp; Bell Timing</text>
+    <text x="14" y="82" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Temple rooftop traversal</text>
+    <text x="14" y="98" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Synchronized bell platforms</text>
+    <text x="14" y="114" font-family="sans-serif" font-size="10" fill="#CFD8DC">• Market courtyard puzzles</text>
+  </g>
+
+  <!-- Footer Tag -->
+  <g transform="translate(550, 520)" text-anchor="middle">
+    <rect x="-240" y="-18" width="480" height="26" rx="13" fill="#161224" stroke="#7E57C2" stroke-width="1.2" />
+    <text x="0" y="-1" font-family="sans-serif" font-size="11.5" font-weight="600" fill="#E1BEE7">
+      ✦ Act I: Discovery (W1-2)  •  Act II: Connection (W3-6)  •  Act III: Reckoning (W7-8) ✦
+    </text>
+  </g>
+</svg>

@@ -1,10 +1,17 @@
-# Super-Mario-Bros
-# RRR — REWIND. REIMAGINE. RECONNECT.
-### Super Mario Bros: Jharkhand Quest — Full Game Vertical Slice
+<div align="center">
+  <img src="assets/header-banner.svg" alt="Super Mario Bros. — Jharkhand Quest / RRR Banner" width="100%" />
+</div>
+
+<br/>
+
+<div align="center">
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Ranjeet7680/Super-Mario-Bros)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20HTML5%20Canvas-brightgreen.svg)](#)
+[![Languages](https://img.shields.io/badge/Languages-English%20%7C%20%E0%A4%B9%E0%A4%BF%E0%A4%82%E0%A4%A6%E0%A4%82%E0%A5%80-orange.svg)](#)
+
+</div>
 
 > **Team / Creator:** RAJRANJEET7680  
 > **Production Status:** Milestone 1 & 2 Playable Vertical Slice (World 1-1: Ranchi Plateau Gateway)  
@@ -19,11 +26,24 @@ This project implements the design specifications and production blueprints defi
 1. `Super_Mario_Bros_Jharkhand_Full_Game_Architecture.pdf` (Original platforming mechanics, level flow, and Jharkhand environmental themes).
 2. `RRR_Fully_Detailed_20000_Word_Game_Architecture.pdf` (Commercial original IP transition, *Rift of Echoes* narrative, Bollywood cinematic direction, bilingual localization, and layered acting).
 
+<br/>
+
+<div align="center">
+  <img src="assets/diagram-architecture.svg" alt="System Architecture Blueprint" width="100%" />
+</div>
+
 ---
 
 ## 🎮 Playable Vertical Slice Features
 
 ### 1. Player Movement Architecture (`src/game/Player.js` & `src/engine/Physics.js`)
+
+<div align="center">
+  <img src="assets/diagram-player-physics.svg" alt="Player Movement Physics & Jump Envelope" width="100%" />
+</div>
+
+<br/>
+
 - **Responsive Acceleration & Friction:** Separate ground and air controls with tactile stopping power.
 - **Variable-Height Jump:** Holding the jump key provides extended upward boost up to a strict cap.
 - **Fairness Enhancements:**
@@ -114,6 +134,12 @@ Simply open `index.html` in Chrome, Edge, Firefox, or Safari!
 ---
 
 ## 🗺️ Campaign Roadmap (The 8 Worlds)
+
+<div align="center">
+  <img src="assets/diagram-world-map.svg" alt="The 8 Jharkhand Regional Worlds Map" width="100%" />
+</div>
+
+<br/>
 
 ```mermaid
 flowchart TD

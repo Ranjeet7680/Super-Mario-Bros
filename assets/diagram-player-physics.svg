@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 580" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgPhysics" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F141C" />
+      <stop offset="100%" stop-color="#182230" />
+    </linearGradient>
+
+    <linearGradient id="jumpArcNormal" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#FF9800" />
+      <stop offset="100%" stop-color="#FFEB3B" />
+    </linearGradient>
+
+    <linearGradient id="jumpArcBoost" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#00E5FF" />
+      <stop offset="100%" stop-color="#76FF03" />
+    </linearGradient>
+
+    <filter id="glowPhysics" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="580" rx="16" fill="url(#bgPhysics)" stroke="#37474F" stroke-width="1.5" />
+
+  <!-- Title Header -->
+  <g text-anchor="middle">
+    <text x="550" y="42" font-family="-apple-system, sans-serif" font-size="22" font-weight="900" fill="#00E5FF" letter-spacing="2">
+      PLAYER MOVEMENT PHYSICS &amp; JUMP ENVELOPE
+    </text>
+    <text x="550" y="68" font-family="-apple-system, sans-serif" font-size="13" font-weight="500" fill="#90A4AE">
+      Responsive Platforming Mechanics &amp; Fairness Guarantees (Section 4 Architecture Bible)
+    </text>
+  </g>
+
+  <!-- Left Side: Main Jump Arc Physics Canvas -->
+  <g transform="translate(60, 110)">
+    <!-- Canvas Grid Area -->
+    <rect width="560" height="380" rx="12" fill="#0A0E14" stroke="#263238" stroke-width="2" />
+
+    <!-- Grid lines -->
+    <g stroke="#1E293B" stroke-width="1" stroke-dasharray="4,4">
+      <line x1="0" y1="70" x2="560" y2="70" />
+      <line x1="0" y1="140" x2="560" y2="140" />
+      <line x1="0" y1="210" x2="560" y2="210" />
+      <line x1="0" y1="280" x2="560" y2="280" />
+      <line x1="140" y1="0" x2="140" y2="380" />
+      <line x1="280" y1="0" x2="280" y2="380" />
+      <line x1="420" y1="0" x2="420" y2="380" />
+    </g>
+
+    <!-- Ground Platforms -->
+    <!-- Start Ledge -->
+    <rect x="0" y="320" width="130" height="60" fill="#4E342E" />
+    <rect x="0" y="320" width="130" height="8" fill="#4CAF50" />
+    <text x="65" y="355" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFF">Ledge A</text>
+
+    <!-- Destination Ledge -->
+    <rect x="420" y="320" width="140" height="60" fill="#4E342E" />
+    <rect x="420" y="320" width="140" height="8" fill="#4CAF50" />
+    <text x="490" y="355" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFF">Ledge B</text>
+
+    <!-- Path 1: Tap Jump (Low Apex: Vy = -380 px/s) -->
+    <path d="M 115 320 Q 240 180 350 320" fill="none" stroke="url(#jumpArcNormal)" stroke-width="3.5" stroke-dasharray="6,4" />
+    <circle cx="230" cy="215" r="5" fill="#FFEB3B" />
+    <text x="230" y="200" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FFEB3B">
+      Tap Jump Apex (-380 px/s)
+    </text>
+
+    <!-- Path 2: Full Held Jump (High Apex with 180ms boost: -280 px/s extra) -->
+    <path d="M 115 320 Q 260 40 450 320" fill="none" stroke="url(#jumpArcBoost)" stroke-width="4" filter="url(#glowPhysics)" />
+    <circle cx="280" cy="110" r="6" fill="#76FF03" />
+    <text x="280" y="94" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#76FF03">
+      Full Variable Jump Apex (180ms Hold Window)
+    </text>
+
+    <!-- Path 3: Fast-Fall Descent Plunge -->
+    <path d="M 330 150 Q 370 230 400 320" fill="none" stroke="#FF1744" stroke-width="3" stroke-dasharray="4,4" />
+    <text x="410" y="240" font-family="sans-serif" font-size="11" font-weight="bold" fill="#FF5252">
+      Fast-Fall (↓ key: 1900 px/s²)
+    </text>
+
+    <!-- Coyote Time Zone (Visualized off edge of Ledge A) -->
+    <rect x="130" y="320" width="45" height="18" fill="rgba(255, 152, 0, 0.3)" stroke="#FF9800" stroke-width="1.5" stroke-dasharray="3,3" />
+    <text x="152" y="310" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="bold" fill="#FFB74D">
+      Coyote Time
+    </text>
+    <text x="152" y="352" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#FFE082">
+      120ms Grace
+    </text>
+
+    <!-- Jump Buffer Zone (Visualized before landing on Ledge B) -->
+    <rect x="380" y="302" width="40" height="18" fill="rgba(0, 229, 255, 0.3)" stroke="#00E5FF" stroke-width="1.5" stroke-dasharray="3,3" />
+    <text x="400" y="292" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="bold" fill="#80D8FF">
+      Buffer Window
+    </text>
+    <text x="400" y="334" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#B3E5FC">
+      120ms Pre-Land
+    </text>
+  </g>
+
+  <!-- Right Side: Platforming Feature Panels -->
+  <g transform="translate(650, 110)">
+    <!-- Panel 1: Variable Jump & Hold -->
+    <g transform="translate(0, 0)">
+      <rect width="390" height="85" rx="8" fill="#121824" stroke="#00E5FF" stroke-width="1.5" />
+      <circle cx="28" cy="26" r="14" fill="#00838F" />
+      <text x="28" y="31" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">1</text>
+      <text x="52" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#80D8FF">Variable Height Jump System</text>
+      <text x="52" y="52" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Initial impulse: -380 px/s with launch squash (0.7x)</text>
+      <text x="52" y="68" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Continuous hold boost: -280 px/s for up to 180ms</text>
+    </g>
+
+    <!-- Panel 2: Coyote Time & Jump Buffering -->
+    <g transform="translate(0, 98)">
+      <rect width="390" height="85" rx="8" fill="#121824" stroke="#FF9800" stroke-width="1.5" />
+      <circle cx="28" cy="26" r="14" fill="#E65100" />
+      <text x="28" y="31" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">2</text>
+      <text x="52" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#FFB74D">Input Fairness Engine</text>
+      <text x="52" y="52" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Coyote Time: 120ms timer prevents accidental ledge falls</text>
+      <text x="52" y="68" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Jump Buffer: 120ms timer queues jump before touching ground</text>
+    </g>
+
+    <!-- Panel 3: Dash Burst & Invulnerability -->
+    <g transform="translate(0, 196)">
+      <rect width="390" height="85" rx="8" fill="#121824" stroke="#E040FB" stroke-width="1.5" />
+      <circle cx="28" cy="26" r="14" fill="#8E24AA" />
+      <text x="28" y="31" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">3</text>
+      <text x="52" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#EA80FC">Dash &amp; Combat Stomp</text>
+      <text x="52" y="52" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Dash Burst: 440 px/s forward with 180ms i-frames</text>
+      <text x="52" y="68" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Head Stomp: -340 px/s upward bounce + squash reaction</text>
+    </g>
+
+    <!-- Panel 4: Acceleration & Fast Fall -->
+    <g transform="translate(0, 294)">
+      <rect width="390" height="85" rx="8" fill="#121824" stroke="#76FF03" stroke-width="1.5" />
+      <circle cx="28" cy="26" r="14" fill="#33691E" />
+      <text x="28" y="31" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="bold" fill="#FFF">4</text>
+      <text x="52" y="30" font-family="sans-serif" font-size="14" font-weight="bold" fill="#B9F6CA">Acceleration &amp; Expressive Fall</text>
+      <text x="52" y="52" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Ground Accel: 1350 px/s²  |  Ground Friction: 1500 px/s²</text>
+      <text x="52" y="68" font-family="sans-serif" font-size="11" fill="#CFD8DC">• Fast-Fall: Increases gravity from 1100 to 1900 px/s²</text>
+    </g>
+  </g>
+
+  <!-- Bottom Legend -->
+  <g transform="translate(550, 532)" text-anchor="middle">
+    <text x="0" y="0" font-family="sans-serif" font-size="12" font-weight="600" fill="#90A4AE">
+      🎮 Designed for responsive feel on Keyboard, Gamepad (Xbox/PlayStation), and Touch Mobile Screens
+    </text>
+  </g>
+</svg>

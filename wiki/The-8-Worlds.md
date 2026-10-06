@@ -1,59 +1,59 @@
-# The 8 Jharkhand Worlds Guide
+# The 8 Jharkhand Regional Worlds
 
 Adhering to Section 6, 7-14, and 21 of the Game Architecture Bible.
 
 <div align="center">
-  <img src="../assets/diagram-world-map.svg" alt="The 8 Jharkhand Worlds Map" width="100%" />
+  <img src="https://raw.githubusercontent.com/Ranjeet7680/Super-Mario-Bros/main/assets/diagram-world-map.svg" alt="The 8 Jharkhand Regional Worlds Map" width="100%" />
 </div>
 
 <br/>
 
 ---
 
-### World 1 — Ranchi Plateau Gateway
-* **Visual Identity:** Plateau grasslands, red earth (Murram), Tagore Hill silhouette, Sal tree canopies, Sohrai tribal mural patterns.
-* **Core Vocabulary:** Basic jump timing, Patrol Beetles, Forest Chargers, Brass Checkpoint Lanterns.
-* **Climax:** Gateway Torana restoring the ancient pathway.
+### World 1: Ranchi Plateau Gateway
+* **Visual Atmosphere:** Red soil (Murram) trails, Tagore Hill / plateau silhouettes, Sal tree canopies, and Sohrai tribal mural patterns.
+* **Core Vocabulary:** Basic jump timing, Patrol Beetles, Forest Chargers, Brass Lantern Checkpoints.
+* **Stage Structure:** Safe opening $\rightarrow$ Teaching room $\rightarrow$ First test $\rightarrow$ Checkpoint $\rightarrow$ Secret canopy $\rightarrow$ Gateway Torana.
 
 ---
 
-### World 2 — Hundru Falls Wilds
-* **Visual Identity:** Vertical cliffs, spray mist, roaring water currents, mossy rocks.
-* **Core Vocabulary:** Water currents, falling logs, slippery surfaces, vertical rope lifts.
+### World 2: Hundru Falls Wilds
+* **Visual Atmosphere:** Towering cliff drops, cascading waterfall spray, mist particles, and wet river stones.
+* **Core Vocabulary:** River flow acceleration, moving log bridges, vertical rope elevators, falling debris.
 * **Climax:** Waterfall Guardian pattern encounter.
 
 ---
 
-### World 3 — Netarhat Sunset Hills
-* **Visual Identity:** Crimson evening horizon, red soil ridges, highland winds.
-* **Core Vocabulary:** Wind drift zones, floating cloud platforms, long gap traversals.
+### World 3: Netarhat Sunset Hills
+* **Visual Atmosphere:** Warm highland horizons, crimson evening skies, wind prayer flags, and panoramic viewpoints.
+* **Core Vocabulary:** Directional wind zones, floating cloud platforms, extended gliding jumps.
 
 ---
 
-### World 4 — Betla Forest Frontier
-* **Visual Identity:** Deep sal forests, ancient ruins, wildlife silhouettes.
-* **Core Vocabulary:** Canopy vine swinging, hollow tree traversal, hidden paths.
+### World 4: Betla Forest Frontier
+* **Visual Atmosphere:** Dense Sal forest, ancient stone ruins, fireflies, and wildlife silhouettes.
+* **Core Vocabulary:** Canopy traversal, swinging vines, hollow tree routes, patrol evasion.
 
 ---
 
-### World 5 — Deoghar Temple-City Adventure
-* **Visual Identity:** Heritage courtyards, stone stairs, rooftop vistas, oil lamps.
-* **Core Vocabulary:** Rhythm-based platforms, bell chime timing, public space puzzles.
+### World 5: Deoghar Temple-City Adventure
+* **Visual Atmosphere:** Heritage stone courtyards, public steps, carved archways, market lamps, and rooftops.
+* **Core Vocabulary:** Rhythm-based platforms, bell chime timing, public space environmental puzzles.
 
 ---
 
-### World 6 — Jamshedpur Industrial Run
-* **Visual Identity:** Steel mills, structural girders, cranes, rail corridors.
-* **Core Vocabulary:** Conveyor belts, moving cranes, magnetic switches, steam vents.
+### World 6: Jamshedpur Industrial Run
+* **Visual Atmosphere:** Steel structures, industrial pipe networks, overhead cranes, and rail sidings.
+* **Core Vocabulary:** Reversible conveyor belts, moving magnetic cranes, steam vent gates.
 
 ---
 
-### World 7 — Dhanbad Coal-Mine Depths
-* **Visual Identity:** Underground shafts, timber supports, mine cart rails.
-* **Core Vocabulary:** Mine cart driving, track switches, collapsing routes.
+### World 7: Dhanbad Coal-Mine Depths
+* **Visual Atmosphere:** Underground mine tunnels, timber shaft supports, iron cart rails, and mine lamps.
+* **Core Vocabulary:** High-speed mine carts, rail lane switches, collapsing route hazards.
 
 ---
 
-### World 8 — Damodar Storm Summit
-* **Visual Identity:** Tempest sky, river valley dams, storm ruin summits.
-* **Core Vocabulary:** Wind + water + machinery combined system mastery.
+### World 8: Damodar Storm Summit
+* **Visual Atmosphere:** Grand river valley dams, storm clouds, tempest wind, and lightning flashes.
+* **Core Vocabulary:** Multi-system synthesis (wind + water + industrial machinery) and 3-phase final Rift Guardian encounter.

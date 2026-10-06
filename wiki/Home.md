@@ -1,22 +1,37 @@
-# Super Mario Bros. — Jharkhand Quest / RRR: Wiki
+# Super Mario Bros. — Jharkhand Quest
+## RRR: Rewind • Reimagine • Reconnect
 
-Welcome to the official architecture wiki for **Super Mario Bros. — Jharkhand Quest** (Original IP: **RRR — Rewind. Reimagine. Reconnect.**).
+<div align="center">
+  <img src="https://raw.githubusercontent.com/Ranjeet7680/Super-Mario-Bros/main/assets/header-banner.svg" alt="Header Banner" width="100%" />
+</div>
+
+<br/>
+
+Welcome to the **Official Architecture & Game Design Wiki** for **Super Mario Bros. — Jharkhand Quest** (Original IP: **RRR — Rewind. Reimagine. Reconnect.**).
+
+> **Developer & Team:** RAJRANJEET7680  
+> **Source Repository:** [github.com/Ranjeet7680/Super-Mario-Bros](https://github.com/Ranjeet7680/Super-Mario-Bros)  
+> **Current Milestone:** Playable Vertical Slice (World 1-1: Ranchi Plateau Gateway)
 
 ---
 
-## 📚 Wiki Contents
+## 📖 Wiki Navigation
 
-1. [Core Mechanics](Core-Mechanics.md) — Physics, coyote time, jump buffering, fast fall, variable jump, and dash attacks.
-2. [The 8 Jharkhand Worlds](The-8-Worlds.md) — Environmental architecture, mechanics, and level progression across Ranchi, Hundru, Netarhat, Betla, Deoghar, Jamshedpur, Dhanbad, and Damodar.
-3. [Cinematic & Audio Architecture](Cinematic-and-Audio-Architecture.md) — Bollywood-style cinematic direction, letterbox framing, and procedural Raag Bhupali WebAudio soundscapes.
-4. [Localization System](Localization-System.md) — Multi-language framework supporting English, Hindi, and regional languages (Nagpuri, Mundari, Santali).
+* 🏃 **[[Core-Mechanics]]** — Physics tuning, variable jump heights, coyote time, jump buffering, fast fall, and dash combat.
+* 🗺️ **[[The-8-Worlds]]** — Visual identity, gameplay systems, and stage flow across all 8 Jharkhand-inspired regions.
+* 📐 **[[System-Architecture]]** — 5-pillar technical structure (Presentation, Gameplay, World, WebAudio Synth, and Localization).
+* 🎬 **[[Cinematic-and-Audio-Architecture]]** — Bollywood-style cinematic direction, dialogue state machines, and real-time procedural WebAudio Raag Bhupali synthesizers.
+* 🇮🇳 **[[Localization-System]]** — Seamless bilingual English/Hindi engine designed for regional language packs (Nagpuri, Mundari, Santali).
 
 ---
 
-## 🎯 Executive Vision
+## 🎯 Executive Product Vision
 
-The game transforms real Jharkhand geography—red earth plateaus, cascading waterfalls, dense sal forests, industrial steel cities, and coal mines—into readable 2D platforming systems.
+The game transforms real Jharkhand geography—red earth plateaus, cascading waterfalls, dense sal forests, industrial corridors, and underground mining landscapes—into expressive 2D platforming systems.
 
-* **Developer:** RAJRANJEET7680
-* **Platform:** Web / HTML5 / Desktop / Mobile
-* **Live Deployment:** Compatible with Vercel & GitHub Pages
+### Core Design Pillars
+
+1. **Readability First:** Interactive surfaces have distinct silhouettes, predictable collisions, and unmistakable telegraphs.
+2. **Cultural Authenticity:** Contextual Indian world-building inspired by regional ecology, architecture, Sohrai tribal art, and music.
+3. **Mechanical Originality:** Setting-specific gameplay including water flow, monsoon traction, high-altitude wind currents, and mine-cart switches.
+4. **Accessible Iteration:** Integrated options for high contrast, customizable audio, and assist mode recovery platforms.

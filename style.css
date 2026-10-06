@@ -62,7 +62,8 @@ body {
 
 /* 1. Boot / Logo Screen */
 #bootScreen {
-  background: radial-gradient(circle at center, #1e1329 0%, #0a0910 100%);
+  background: linear-gradient(rgba(10, 9, 16, 0.7), rgba(10, 9, 16, 0.85)), url('assets/boot_bg.jpg') no-repeat center center;
+  background-size: cover;
   z-index: 100;
 }
 
@@ -71,6 +72,13 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 14px;
+  background: rgba(14, 10, 20, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 36px 48px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
 }
 
 .logo-line {
@@ -167,7 +175,8 @@ body {
 
 /* 2. Main Lobby Screen */
 #lobbyScreen {
-  background: linear-gradient(180deg, #1A132B 0%, #29121E 50%, #150A0F 100%);
+  background: linear-gradient(rgba(18, 12, 24, 0.45), rgba(12, 8, 16, 0.75)), url('assets/lobby_bg.jpg') no-repeat center center;
+  background-size: cover;
   padding: 24px 36px;
   justify-content: space-between;
   z-index: 30;
@@ -178,6 +187,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: rgba(14, 10, 20, 0.65);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 8px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 179, 0, 0.25);
 }
 
 .lobby-brand {
@@ -214,6 +229,13 @@ body {
   align-items: center;
   gap: 16px;
   text-align: center;
+  background: rgba(18, 12, 24, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 30px 44px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 179, 0, 0.35);
+  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.85);
 }
 
 .lobby-chapter-tag {
@@ -292,7 +314,8 @@ body {
 
 /* 3. Loading Screen */
 #loadingScreen {
-  background: radial-gradient(circle at center, #1b172b 0%, #0d0a14 100%);
+  background: linear-gradient(rgba(12, 10, 18, 0.45), rgba(10, 8, 16, 0.8)), url('assets/loading_bg.jpg') no-repeat center center;
+  background-size: cover;
   z-index: 50;
 }
 
@@ -302,8 +325,15 @@ body {
   align-items: center;
   gap: 14px;
   width: 90%;
-  max-width: 480px;
+  max-width: 520px;
   text-align: center;
+  background: rgba(16, 12, 24, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 32px 38px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  box-shadow: 0 14px 45px rgba(0, 0, 0, 0.9);
 }
 
 .loading-shard-icon {

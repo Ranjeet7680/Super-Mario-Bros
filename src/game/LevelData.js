@@ -130,8 +130,9 @@ export const Level_2_1 = {
 
     // Section 3: The Great Cascade Lift (1140 - 1650)
     { x: 1140, y: 470, width: 180, height: 130, surfaceType: 'stone' },
-    { x: 1360, y: 380, width: 120, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 90, moveSpeed: 2.2, axis: 'y' },
-    { x: 1520, y: 320, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 80, moveSpeed: 1.8, axis: 'x' },
+    { x: 1360, y: 400, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 60, moveSpeed: 2.0, axis: 'y' },
+    { x: 1530, y: 340, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 70, moveSpeed: 1.8, axis: 'x' },
+    { x: 1220, y: 515, width: 440, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 4: Mid-Falls Shrine Checkpoint (1680 - 1980)
     { x: 1680, y: 450, width: 300, height: 150, surfaceType: 'stone' },

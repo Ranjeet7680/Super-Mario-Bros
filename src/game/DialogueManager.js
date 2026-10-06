@@ -20,6 +20,17 @@ export class DialogueManager {
     this.typeSpeed = 0.025; // seconds per char
     this.currentEntry = null;
     this.onCompleteCallback = null;
+
+    // Global click / keyboard advance to prevent any dialogue freeze
+    window.addEventListener('click', () => {
+      if (this.isActive) this.next();
+    });
+    window.addEventListener('keydown', (e) => {
+      if (this.isActive && ['Space', 'Enter', 'Escape', 'KeyE', 'KeyF'].includes(e.code)) {
+        e.preventDefault();
+        this.next();
+      }
+    });
   }
 
   setTextSpeed(mode) {
@@ -29,6 +40,12 @@ export class DialogueManager {
   }
 
   startDialogue(entries, onComplete = null) {
+    if (!Array.isArray(entries) || entries.length === 0) {
+      if (onComplete) onComplete();
+      this.close();
+      return;
+    }
+
     this.dialogueQueue = entries;
     this.currentIndex = 0;
     this.onCompleteCallback = onComplete;
@@ -230,7 +247,8 @@ export class DialogueManager {
   }
 
   drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ');
+    if (!text) return;
+    const words = String(text).split(' ');
     let line = '';
     let currY = y;
 

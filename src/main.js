@@ -79,6 +79,7 @@ class GameApp {
     this.bannerTimer = 0;
     this.hasTalkedToElder = false;
     this.selectedOutfit = 'classic';
+    this.isRespawning = false;
 
     // Character Showcase preview player
     this.previewPlayer = new Player(80, 160);
@@ -122,6 +123,7 @@ class GameApp {
     this.player.resetToCheckpoint(this.level.playerSpawn.x, this.level.playerSpawn.y);
     this.player.outfit = this.selectedOutfit;
     this.hasTalkedToElder = false;
+    this.isRespawning = false;
 
     // Reset platform base coordinates
     for (const p of this.level.platforms) {
@@ -603,22 +605,25 @@ class GameApp {
 
   handleDialogue() {
     if (this.dialogue.isActive) {
-      if (this.input.actions.jumpDown || this.input.actions.interactDown) {
+      if (this.input.actions.jumpDown || this.input.actions.interactDown || this.input.actions.pauseDown) {
         this.dialogue.next();
       }
       return;
     }
 
+    if (!this.npcElder) return;
     const elderDist = Math.abs(this.player.x - this.npcElder.x);
     if (elderDist < 75 && this.input.actions.interactDown) {
       const script = Localization.get('dialogueIntro');
-      this.dialogue.startDialogue(script, () => {
-        if (!this.hasTalkedToElder) {
-          this.hasTalkedToElder = true;
-          this.score += 250;
-          this.particles.spawnTextPopup(this.npcElder.x + 15, this.npcElder.y - 20, '+250 Knowledge');
-        }
-      });
+      if (Array.isArray(script) && script.length > 0) {
+        this.dialogue.startDialogue(script, () => {
+          if (!this.hasTalkedToElder) {
+            this.hasTalkedToElder = true;
+            this.score += 250;
+            this.particles.spawnTextPopup(this.npcElder.x + 15, this.npcElder.y - 20, '+250 Knowledge');
+          }
+        });
+      }
     }
   }
 
@@ -766,20 +771,24 @@ class GameApp {
       setTimeout(() => this.hudHearts.classList.remove('flash-damage'), 400);
     }
 
-    // Bottom pit check
-    if (this.player.y > this.level.height + 60) {
+    // Bottom pit rescue
+    if (this.player.y > this.level.height + 40 && !this.isRespawning) {
+      this.isRespawning = true;
       this.player.takeDamage(1, this.audio, this.camera);
       this.input.vibrate(400, 0.9, 1.0);
-      if (!this.player.isDead) {
-        this.player.resetToCheckpoint(this.activeCheckpoint.x, this.activeCheckpoint.y);
-      }
-    }
-
-    // Death & Respawn
-    if (this.player.isDead) {
       setTimeout(() => {
         this.player.resetToCheckpoint(this.activeCheckpoint.x, this.activeCheckpoint.y);
-      }, 700);
+        this.isRespawning = false;
+      }, 350);
+    }
+
+    // Death & Respawn from damage
+    if (this.player.isDead && !this.isRespawning) {
+      this.isRespawning = true;
+      setTimeout(() => {
+        this.player.resetToCheckpoint(this.activeCheckpoint.x, this.activeCheckpoint.y);
+        this.isRespawning = false;
+      }, 650);
     }
 
     // Camera follow
@@ -910,7 +919,7 @@ class GameApp {
     // Realistic Sal & Palas trees anchored into platform soil
     this.renderer.drawWorldTrees(this.ctx, this.level.platforms, camX, camY, this.level.theme);
 
-    this.renderer.drawPlatforms(this.ctx, this.level.platforms, camX, camY, this.assistMode);
+    this.renderer.drawPlatforms(this.ctx, this.level.platforms, camX, camY, this.assistMode, this.level.theme);
 
     // 3. Goal Gateway Arch
     this.goalGateway.draw(this.ctx);

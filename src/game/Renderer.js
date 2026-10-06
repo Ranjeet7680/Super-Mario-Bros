@@ -35,14 +35,16 @@ export class ParticleSystem {
 
   initAmbient() {
     this.ambientParticles = [];
-    for (let i = 0; i < 45; i++) {
+    for (let i = 0; i < 60; i++) {
       this.ambientParticles.push({
         x: Math.random() * 960,
         y: Math.random() * 540,
         vx: (Math.random() - 0.5) * 20,
         vy: 10 + Math.random() * 30,
-        size: 1.5 + Math.random() * 2.5,
-        type: 'dust'
+        size: 1.5 + Math.random() * 3,
+        phase: Math.random() * Math.PI * 2,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 3
       });
     }
   }
@@ -71,33 +73,47 @@ export class ParticleSystem {
 
     // Ambient weather particles based on theme
     for (const ap of this.ambientParticles) {
+      ap.rot += (ap.rotSpeed || 1) * dt;
+
       if (theme === 'hundru') {
-        // Falling water spray & rising mist
-        ap.x += (Math.random() - 0.5) * 15 * dt;
-        ap.y += (60 + Math.random() * 80) * dt;
-      } else if (theme === 'netarhat') {
-        // High mountain winds blowing left-to-right
-        ap.x += (120 + Math.random() * 100) * dt;
-        ap.y += Math.sin(ap.x * 0.02) * 15 * dt;
+        // Cascading mist droplets with buoyant swirling updrafts
+        ap.x += (Math.sin(ap.y * 0.03 + ap.phase) * 28 + 12) * dt;
+        ap.y += (35 + Math.random() * 40) * dt;
       } else if (theme === 'damodar') {
-        // Heavy rain streaks
-        ap.x += 80 * dt;
-        ap.y += 360 * dt;
+        // Torrential tempest rain streaks rushing downward
+        ap.x += 160 * dt;
+        ap.y += 480 * dt;
+      } else if (theme === 'netarhat') {
+        // High mountain winds blowing golden autumn leaves & pine needles
+        ap.x += (170 + Math.random() * 110) * dt;
+        ap.y += (Math.sin(ap.x * 0.02 + ap.phase) * 24 + 18) * dt;
+      } else if (theme === 'betla') {
+        // Undulating forest fireflies & glowing spores
+        ap.x += Math.sin(ap.y * 0.02 + ap.phase) * 22 * dt;
+        ap.y += Math.cos(ap.x * 0.02 + ap.phase) * 16 * dt - 8 * dt;
       } else if (theme === 'jamshedpur') {
-        // Rising embers & sparks
-        ap.x += (Math.random() - 0.5) * 25 * dt;
-        ap.y -= (40 + Math.random() * 40) * dt;
+        // Rising forge embers & sparks
+        ap.x += (Math.sin(ap.y * 0.04) * 22 + (Math.random() - 0.5) * 35) * dt;
+        ap.y -= (65 + Math.random() * 55) * dt;
+      } else if (theme === 'dhanbad') {
+        // Subterranean mine dust and lantern glimmer motes
+        ap.x += (Math.random() - 0.5) * 16 * dt;
+        ap.y += (14 + Math.random() * 20) * dt;
+      } else if (theme === 'deoghar') {
+        // Sacred fluttering marigold petals drifting gently
+        ap.x += (Math.sin(ap.y * 0.025 + ap.phase) * 32 + 10) * dt;
+        ap.y += (35 + Math.random() * 25) * dt;
       } else {
-        // Gentle plateau breeze
-        ap.x += (15 + Math.random() * 15) * dt;
-        ap.y += (Math.random() - 0.5) * 10 * dt;
+        // Ranchi plateau dawn breeze with dancing Sal pollen
+        ap.x += (28 + Math.random() * 22) * dt;
+        ap.y += (Math.sin(ap.x * 0.015) * 12 + 6) * dt;
       }
 
       // Wrap around bounds
-      if (ap.x > 960 + 20) ap.x = -20;
-      if (ap.x < -20) ap.x = 960 + 20;
-      if (ap.y > 540 + 20) ap.y = -20;
-      if (ap.y < -20) ap.y = 540 + 20;
+      if (ap.x > 960 + 30) ap.x = -30;
+      if (ap.x < -30) ap.x = 960 + 30;
+      if (ap.y > 540 + 30) ap.y = -30;
+      if (ap.y < -30) ap.y = 540 + 30;
     }
   }
 
@@ -184,43 +200,111 @@ export class ParticleSystem {
   drawAmbientWeather(ctx, theme = 'ranchi') {
     ctx.save();
     if (theme === 'damodar') {
-      // Torrential rain streaks
-      ctx.strokeStyle = 'rgba(179, 229, 252, 0.45)';
-      ctx.lineWidth = 1.5;
+      // Torrential storm rain streaks with angled impact
+      ctx.strokeStyle = 'rgba(187, 222, 251, 0.65)';
+      ctx.lineWidth = 1.6;
       for (const ap of this.ambientParticles) {
         ctx.beginPath();
         ctx.moveTo(ap.x, ap.y);
-        ctx.lineTo(ap.x - 6, ap.y - 18);
+        ctx.lineTo(ap.x - 7, ap.y - 20);
         ctx.stroke();
+
+        // Tiny water splash ripple at low heights
+        if (ap.y > 500) {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+          ctx.beginPath();
+          ctx.ellipse(ap.x, ap.y, 4, 1.5, 0, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = 'rgba(187, 222, 251, 0.65)';
+        }
       }
     } else if (theme === 'hundru') {
-      // Water mist globules
-      ctx.fillStyle = 'rgba(224, 247, 250, 0.4)';
+      // Shimmering waterfall mist droplets with soft iridescent halos
       for (const ap of this.ambientParticles) {
+        const radGrad = ctx.createRadialGradient(ap.x, ap.y, 0, ap.x, ap.y, ap.size * 2.2);
+        radGrad.addColorStop(0, 'rgba(255, 255, 255, 0.85)');
+        radGrad.addColorStop(0.45, 'rgba(178, 235, 242, 0.55)');
+        radGrad.addColorStop(1, 'rgba(128, 222, 234, 0)');
+        ctx.fillStyle = radGrad;
         ctx.beginPath();
-        ctx.arc(ap.x, ap.y, ap.size * 1.5, 0, Math.PI * 2);
+        ctx.arc(ap.x, ap.y, ap.size * 2.2, 0, Math.PI * 2);
         ctx.fill();
       }
     } else if (theme === 'netarhat') {
-      // Flying golden highland leaf / wind streaks
-      ctx.fillStyle = 'rgba(255, 224, 130, 0.55)';
+      // Flying golden highland leaves & pine needle wisps
       for (const ap of this.ambientParticles) {
+        ctx.save();
+        ctx.translate(ap.x, ap.y);
+        ctx.rotate(ap.rot || 0);
+        ctx.fillStyle = 'rgba(255, 213, 79, 0.75)';
         ctx.beginPath();
-        ctx.ellipse(ap.x, ap.y, ap.size * 2, ap.size, Math.PI / 4, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, ap.size * 2.5, ap.size * 1.1, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(230, 81, 0, 0.5)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(-ap.size * 2, 0);
+        ctx.lineTo(ap.size * 2, 0);
+        ctx.stroke();
+        ctx.restore();
+      }
+    } else if (theme === 'betla') {
+      // Luminescent emerald forest fireflies & glowing spores
+      for (const ap of this.ambientParticles) {
+        const pulse = 0.5 + Math.sin((ap.phase || 0) + ap.y * 0.05) * 0.5;
+        const radGrad = ctx.createRadialGradient(ap.x, ap.y, 0, ap.x, ap.y, ap.size * 2.5);
+        radGrad.addColorStop(0, `rgba(255, 245, 157, ${0.9 * pulse})`);
+        radGrad.addColorStop(0.5, `rgba(165, 214, 167, ${0.6 * pulse})`);
+        radGrad.addColorStop(1, 'rgba(76, 175, 80, 0)');
+        ctx.fillStyle = radGrad;
+        ctx.beginPath();
+        ctx.arc(ap.x, ap.y, ap.size * 2.5, 0, Math.PI * 2);
         ctx.fill();
       }
     } else if (theme === 'jamshedpur') {
-      // Hot embers / sparks
-      ctx.fillStyle = 'rgba(255, 112, 67, 0.65)';
+      // Glowing furnace sparks & hot rising embers
       for (const ap of this.ambientParticles) {
+        ctx.fillStyle = 'rgba(255, 110, 64, 0.85)';
         ctx.beginPath();
-        ctx.arc(ap.x, ap.y, ap.size, 0, Math.PI * 2);
+        ctx.arc(ap.x, ap.y, ap.size * 1.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255, 215, 64, 0.95)';
+        ctx.beginPath();
+        ctx.arc(ap.x, ap.y, ap.size * 0.6, 0, Math.PI * 2);
         ctx.fill();
       }
-    } else {
-      // Gentle plateau dust
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    } else if (theme === 'dhanbad') {
+      // Subterranean coal dust specks & warm lantern glimmer
       for (const ap of this.ambientParticles) {
+        if (ap.size > 3.0) {
+          ctx.fillStyle = 'rgba(255, 183, 77, 0.65)';
+        } else {
+          ctx.fillStyle = 'rgba(66, 66, 66, 0.45)';
+        }
+        ctx.beginPath();
+        ctx.arc(ap.x, ap.y, ap.size * 0.9, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (theme === 'deoghar') {
+      // Sacred marigold petals tumbling gently
+      for (const ap of this.ambientParticles) {
+        ctx.save();
+        ctx.translate(ap.x, ap.y);
+        ctx.rotate(ap.rot || 0);
+        ctx.fillStyle = 'rgba(255, 152, 0, 0.8)';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, ap.size * 1.8, ap.size * 1.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255, 235, 59, 0.8)';
+        ctx.beginPath();
+        ctx.arc(0, 0, ap.size * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    } else {
+      // Ranchi sunlit plateau dawn pollen & golden dust
+      for (const ap of this.ambientParticles) {
+        ctx.fillStyle = 'rgba(255, 248, 225, 0.45)';
         ctx.beginPath();
         ctx.arc(ap.x, ap.y, ap.size, 0, Math.PI * 2);
         ctx.fill();
@@ -263,40 +347,43 @@ export class WorldRenderer {
     // 1. SKY GRADIENT ACCORDING TO BIOME THEME
     const skyGrad = ctx.createLinearGradient(0, 0, 0, this.height);
     if (theme === 'hundru') {
-      // Azure mist & waterfall chasm
-      skyGrad.addColorStop(0, '#006064');
-      skyGrad.addColorStop(0.5, '#0097A7');
-      skyGrad.addColorStop(1.0, '#80DEEA');
+      // Azure mist & mountain chasm
+      skyGrad.addColorStop(0, '#004D40');
+      skyGrad.addColorStop(0.35, '#00838F');
+      skyGrad.addColorStop(0.7, '#00ACC1');
+      skyGrad.addColorStop(1.0, '#B2EBF2');
     } else if (theme === 'netarhat') {
-      // Queen of Chotanagpur Crimson Twilight Sunset
-      skyGrad.addColorStop(0, '#311B92');
+      // Queen of Chotanagpur Crimson & Violet Sunset
+      skyGrad.addColorStop(0, '#280659');
       skyGrad.addColorStop(0.35, '#880E4F');
       skyGrad.addColorStop(0.7, '#E65100');
-      skyGrad.addColorStop(1.0, '#FFD54F');
+      skyGrad.addColorStop(1.0, '#FFE082');
     } else if (theme === 'betla') {
-      // Deep emerald jungle canopy
+      // Deep emerald jungle canopy dawn
       skyGrad.addColorStop(0, '#1B5E20');
       skyGrad.addColorStop(0.5, '#2E7D32');
-      skyGrad.addColorStop(1.0, '#A5D6A7');
+      skyGrad.addColorStop(1.0, '#C8E6C9');
     } else if (theme === 'deoghar') {
-      // Sacred golden ochre sunrise
-      skyGrad.addColorStop(0, '#4A148C');
-      skyGrad.addColorStop(0.45, '#F57C00');
+      // Sacred Baidyanath ochre sunrise
+      skyGrad.addColorStop(0, '#3E2723');
+      skyGrad.addColorStop(0.4, '#D84315');
+      skyGrad.addColorStop(0.8, '#FFB300');
       skyGrad.addColorStop(1.0, '#FFF9C4');
     } else if (theme === 'jamshedpur') {
       // Industrial amber/bronze forge horizon
-      skyGrad.addColorStop(0, '#263238');
+      skyGrad.addColorStop(0, '#212121');
       skyGrad.addColorStop(0.5, '#BF360C');
-      skyGrad.addColorStop(1.0, '#FFB74D');
+      skyGrad.addColorStop(0.85, '#FF8A65');
+      skyGrad.addColorStop(1.0, '#FFE0B2');
     } else if (theme === 'dhanbad') {
-      // Subterranean coal shaft cavern
-      skyGrad.addColorStop(0, '#101010');
-      skyGrad.addColorStop(0.55, '#212121');
+      // Subterranean coal shaft cavern vault
+      skyGrad.addColorStop(0, '#0A0A0A');
+      skyGrad.addColorStop(0.55, '#1E1E1E');
       skyGrad.addColorStop(1.0, '#3E2723');
     } else if (theme === 'damodar') {
       // Storm tempest with lightning
-      const bgTop = this.isLightning ? '#ECEFF1' : '#1A237E';
-      const bgBot = this.isLightning ? '#CFD8DC' : '#263238';
+      const bgTop = this.isLightning ? '#ECEFF1' : '#0D1B2A';
+      const bgBot = this.isLightning ? '#CFD8DC' : '#1B263B';
       skyGrad.addColorStop(0, bgTop);
       skyGrad.addColorStop(1.0, bgBot);
     } else {
@@ -310,10 +397,74 @@ export class WorldRenderer {
     ctx.fillStyle = skyGrad;
     ctx.fillRect(0, 0, this.width, this.height);
 
-    // 2. DRIFTING CLOUDS / MIST (Parallax 0.05)
-    ctx.fillStyle = theme === 'damodar' ? 'rgba(55, 71, 79, 0.6)' : 'rgba(255, 255, 255, 0.4)';
+    // 2. CELESTIAL ELEMENTS & LIGHTNING
+    if (theme === 'netarhat') {
+      // Sinking setting sun disc behind Queen of Chotanagpur plateau
+      const sunX = this.width * 0.65 - camX * 0.03;
+      const sunY = 220;
+      const sunGrad = ctx.createRadialGradient(sunX, sunY, 15, sunX, sunY, 120);
+      sunGrad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+      sunGrad.addColorStop(0.3, 'rgba(255, 213, 79, 0.85)');
+      sunGrad.addColorStop(0.65, 'rgba(255, 112, 67, 0.45)');
+      sunGrad.addColorStop(1.0, 'rgba(244, 67, 54, 0)');
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 120, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Atmospheric golden god-rays
+      ctx.fillStyle = 'rgba(255, 235, 59, 0.08)';
+      for (let r = -3; r <= 3; r++) {
+        ctx.beginPath();
+        ctx.moveTo(sunX, sunY);
+        ctx.lineTo(sunX + r * 140 - 70, 0);
+        ctx.lineTo(sunX + r * 140 + 70, 0);
+        ctx.closePath();
+        ctx.fill();
+      }
+    } else if (theme === 'deoghar') {
+      // Sacred dawn sun aureole
+      const sunX = this.width * 0.35 - camX * 0.03;
+      const sunY = 170;
+      const sunGrad = ctx.createRadialGradient(sunX, sunY, 10, sunX, sunY, 90);
+      sunGrad.addColorStop(0, 'rgba(255, 255, 224, 0.95)');
+      sunGrad.addColorStop(0.4, 'rgba(255, 183, 77, 0.6)');
+      sunGrad.addColorStop(1.0, 'rgba(255, 152, 0, 0)');
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(sunX, sunY, 90, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (theme === 'damodar' && this.isLightning) {
+      // Forked lightning strike across the storm sky
+      ctx.save();
+      ctx.strokeStyle = '#FFFFFF';
+      ctx.shadowColor = '#80D8FF';
+      ctx.shadowBlur = 18;
+      ctx.lineWidth = 3.2;
+      ctx.beginPath();
+      const lx = ((camX * 0.15 + 460) % (this.width - 100)) + 50;
+      ctx.moveTo(lx, 0);
+      ctx.lineTo(lx - 22, 65);
+      ctx.lineTo(lx + 15, 120);
+      ctx.lineTo(lx - 28, 195);
+      ctx.lineTo(lx - 6, 255);
+      ctx.lineTo(lx - 38, 320);
+      ctx.stroke();
+
+      // Secondary lightning branch
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(lx + 15, 120);
+      ctx.lineTo(lx + 42, 175);
+      ctx.lineTo(lx + 28, 225);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 3. DRIFTING CLOUDS & MIST (Parallax 0.05)
+    ctx.fillStyle = theme === 'damodar' ? 'rgba(38, 50, 56, 0.65)' : (theme === 'dhanbad' ? 'rgba(20, 20, 20, 0.5)' : 'rgba(255, 255, 255, 0.38)');
     for (let i = 0; i < 8; i++) {
-      const cx = ((i * 320 + this.cloudOffset * 0.8 - camX * 0.05) % (this.width + 300)) - 150;
+      const cx = ((i * 320 + this.cloudOffset * 0.8 - camX * 0.05) % (this.width + 320)) - 160;
       const cy = 40 + (i % 3) * 35;
       ctx.beginPath();
       ctx.arc(cx, cy, 38, 0, Math.PI * 2);
@@ -322,77 +473,129 @@ export class WorldRenderer {
       ctx.fill();
     }
 
-    // 3. DISTANT MOUNTAIN SILHOUETTE (Parallax 0.15)
-    ctx.fillStyle = theme === 'hundru' ? '#004D40' : (theme === 'netarhat' ? '#4A148C' : '#5E35B1');
+    // 4. DISTANT MOUNTAIN SILHOUETTE (Parallax 0.15)
+    ctx.fillStyle = theme === 'hundru' ? '#00362F' : (theme === 'netarhat' ? '#4A148C' : (theme === 'betla' ? '#1B4D24' : (theme === 'deoghar' ? '#4E342E' : '#3949AB')));
     ctx.beginPath();
     ctx.moveTo(0, this.height);
-    for (let x = 0; x <= this.width + 100; x += 120) {
+    for (let x = 0; x <= this.width + 120; x += 100) {
       const worldX = x + camX * 0.15;
-      const ridgeY = this.height - 230 + Math.sin(worldX * 0.003) * 60 + Math.cos(worldX * 0.007) * 30;
+      const ridgeY = this.height - 240 + Math.sin(worldX * 0.0035) * 65 + Math.cos(worldX * 0.008) * 32;
       ctx.lineTo(x, ridgeY);
     }
     ctx.lineTo(this.width, this.height);
     ctx.closePath();
     ctx.fill();
 
-    // 4. CASCADING WATERFALL IN HUNDRU FALLS (Natural Gorge & Billowing Mist)
+    // 5. CASCADING WATERFALL IN HUNDRU FALLS (Natural Gorge, Multi-Tier Cataract, & Mist Rainbow)
     if (theme === 'hundru') {
       for (let i = 0; i < 3; i++) {
-        const fallX = ((i * 440 + 120 - camX * 0.22) % (this.width + 300)) - 80;
-        const fallWidth = 44 + (i % 2) * 16;
-        
-        // Dark rocky canyon fissure behind water
-        ctx.fillStyle = '#00332C';
+        const fallOriginWorldX = i * 460 + 140;
+        const fallX = ((fallOriginWorldX - camX * 0.22) % (this.width + 360)) - 100;
+        const fallWidth = 56 + (i % 2) * 18;
+        const originY = 110 + (i % 2) * 30; // Mountain gorge origin
+
+        // (a) Rugged Basalt Canyon Cliffs flanking both sides of the cataract
+        ctx.fillStyle = '#061D18';
         ctx.beginPath();
-        ctx.moveTo(fallX - 8, 90);
-        ctx.lineTo(fallX + fallWidth + 8, 90);
+        ctx.moveTo(fallX - 32, originY - 15);
+        ctx.lineTo(fallX + fallWidth + 32, originY - 15);
+        ctx.lineTo(fallX + fallWidth + 45, this.height);
+        ctx.lineTo(fallX - 45, this.height);
+        ctx.closePath();
+        ctx.fill();
+
+        // Stepped basalt rock ledges
+        ctx.fillStyle = '#0F2C24';
+        ctx.fillRect(fallX - 28, 220, 36, 14);
+        ctx.fillRect(fallX + fallWidth - 8, 235, 38, 14);
+        ctx.fillRect(fallX - 20, 370, 32, 14);
+        ctx.fillRect(fallX + fallWidth - 12, 385, 36, 14);
+
+        // (b) Multi-tier Falling Cataract Torrent Gradient
+        const fallGrad = ctx.createLinearGradient(fallX, originY, fallX + fallWidth, originY);
+        fallGrad.addColorStop(0, 'rgba(128, 222, 234, 0.6)');
+        fallGrad.addColorStop(0.25, 'rgba(255, 255, 255, 0.95)');
+        fallGrad.addColorStop(0.5, 'rgba(224, 247, 250, 0.92)');
+        fallGrad.addColorStop(0.75, 'rgba(178, 235, 242, 0.90)');
+        fallGrad.addColorStop(1, 'rgba(128, 222, 234, 0.6)');
+        ctx.fillStyle = fallGrad;
+
+        // Cataract body
+        ctx.beginPath();
+        ctx.moveTo(fallX + 6, originY);
+        ctx.lineTo(fallX + fallWidth - 6, originY);
         ctx.lineTo(fallX + fallWidth + 12, this.height);
         ctx.lineTo(fallX - 12, this.height);
         ctx.closePath();
         ctx.fill();
 
-        // Multi-stop falling water torrent gradient
-        const fallGrad = ctx.createLinearGradient(fallX, 90, fallX + fallWidth, 90);
-        fallGrad.addColorStop(0, 'rgba(128, 222, 234, 0.45)');
-        fallGrad.addColorStop(0.3, 'rgba(255, 255, 255, 0.85)');
-        fallGrad.addColorStop(0.7, 'rgba(224, 247, 250, 0.80)');
-        fallGrad.addColorStop(1, 'rgba(128, 222, 234, 0.45)');
-        ctx.fillStyle = fallGrad;
-        ctx.fillRect(fallX, 90, fallWidth, this.height - 90);
-
-        // Animated vertical flowing water streaks
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
-        ctx.lineWidth = 2;
-        const flowY = (this.time * 260) % 36;
+        // (c) Animated Vertical Flowing Whitewater Ribs & Rapids
+        ctx.strokeStyle = '#FFFFFF';
+        ctx.lineWidth = 2.2;
+        const flowY = (this.time * 280) % 40;
         ctx.beginPath();
-        for (let sy = 90 + flowY; sy < this.height - 40; sy += 36) {
-          ctx.moveTo(fallX + 8, sy);
-          ctx.lineTo(fallX + 8, sy + 18);
-          ctx.moveTo(fallX + fallWidth * 0.5, sy + 10);
-          ctx.lineTo(fallX + fallWidth * 0.5, sy + 28);
-          ctx.moveTo(fallX + fallWidth - 10, sy + 4);
-          ctx.lineTo(fallX + fallWidth - 10, sy + 22);
+        for (let sy = originY + flowY; sy < this.height - 30; sy += 40) {
+          ctx.moveTo(fallX + 10, sy);
+          ctx.lineTo(fallX + 10, sy + 22);
+          ctx.moveTo(fallX + fallWidth * 0.35, sy + 12);
+          ctx.lineTo(fallX + fallWidth * 0.35, sy + 32);
+          ctx.moveTo(fallX + fallWidth * 0.65, sy + 6);
+          ctx.lineTo(fallX + fallWidth * 0.65, sy + 28);
+          ctx.moveTo(fallX + fallWidth - 12, sy + 16);
+          ctx.lineTo(fallX + fallWidth - 12, sy + 36);
         }
         ctx.stroke();
 
-        // Billowing foaming water spray & mist clouds at cascade base
-        const mistPulse = Math.sin(this.time * 6 + i * 2) * 6;
-        ctx.fillStyle = 'rgba(224, 247, 250, 0.55)';
+        // (d) Mid-tier Rock Shelf Splash Zones
+        const splashMid = Math.sin(this.time * 8 + i) * 4;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
         ctx.beginPath();
-        ctx.arc(fallX + fallWidth * 0.5, this.height - 60 + mistPulse, 38, 0, Math.PI * 2);
-        ctx.arc(fallX + 6, this.height - 45 - mistPulse, 28, 0, Math.PI * 2);
-        ctx.arc(fallX + fallWidth - 6, this.height - 50 + mistPulse * 0.5, 32, 0, Math.PI * 2);
+        ctx.arc(fallX + 12, 228 + splashMid, 14, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth - 12, 242 - splashMid, 16, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+        // (e) Billowing Foaming Mist Clouds at Plunge Pool Base
+        const mistPulse = Math.sin(this.time * 5 + i * 2.2) * 8;
+        ctx.fillStyle = 'rgba(224, 247, 250, 0.6)';
         ctx.beginPath();
-        ctx.arc(fallX + fallWidth * 0.5, this.height - 40, 24, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth * 0.5, this.height - 75 + mistPulse, 48, 0, Math.PI * 2);
+        ctx.arc(fallX + 4, this.height - 55 - mistPulse, 36, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth - 2, this.height - 60 + mistPulse * 0.6, 40, 0, Math.PI * 2);
         ctx.fill();
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+        ctx.beginPath();
+        ctx.arc(fallX + fallWidth * 0.5, this.height - 45, 32, 0, Math.PI * 2);
+        ctx.arc(fallX + 16, this.height - 35, 24, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth - 16, this.height - 38, 26, 0, Math.PI * 2);
+        ctx.fill();
+
+        // (f) Shimmering 7-Color Prismatic Mist Rainbow Arc across the Gorge
+        const rbCenter = fallX + fallWidth * 0.5;
+        const rbY = this.height - 180;
+        const rainbowColors = [
+          'rgba(244, 67, 54, 0.24)',   // Red
+          'rgba(255, 152, 0, 0.22)',  // Orange
+          'rgba(255, 235, 59, 0.24)',  // Yellow
+          'rgba(76, 175, 80, 0.22)',   // Green
+          'rgba(0, 188, 212, 0.22)',   // Cyan
+          'rgba(33, 150, 243, 0.20)',  // Blue
+          'rgba(156, 39, 176, 0.18)'   // Violet
+        ];
+        ctx.save();
+        ctx.lineWidth = 5.5;
+        rainbowColors.forEach((color, cIdx) => {
+          ctx.strokeStyle = color;
+          ctx.beginPath();
+          ctx.arc(rbCenter + 30, rbY + 50, 105 + cIdx * 4.8, Math.PI * 1.08, Math.PI * 1.88);
+          ctx.stroke();
+        });
+        ctx.restore();
       }
     }
 
-    // 5. MIDGROUND FOOTHILLS & SAL FORESTS (Parallax 0.35)
-    ctx.fillStyle = theme === 'betla' ? '#1B5E20' : (theme === 'jamshedpur' ? '#37474F' : '#311B92');
+    // 6. MIDGROUND FOOTHILLS & BIOME LANDMARKS (Parallax 0.35)
+    ctx.fillStyle = theme === 'betla' ? '#14461B' : (theme === 'jamshedpur' ? '#37474F' : (theme === 'deoghar' ? '#5D4037' : (theme === 'dhanbad' ? '#1B1B1B' : '#2A1845')));
     ctx.beginPath();
     ctx.moveTo(0, this.height);
     for (let x = 0; x <= this.width + 80; x += 60) {
@@ -404,16 +607,79 @@ export class WorldRenderer {
     ctx.closePath();
     ctx.fill();
 
-    // 6. MIDGROUND VEGETATION / SILHOUETTES
+    // 7. ARCHITECTURAL & INDUSTRIAL BIOME LANDMARKS
     if (theme === 'jamshedpur') {
+      // Industrial skyline: Blast furnaces & chimneys
       ctx.fillStyle = '#212121';
       for (let i = 0; i < 18; i++) {
-        const treeWorldX = i * 220;
-        const screenX = treeWorldX - camX * 0.45;
+        const furnaceWorldX = i * 220;
+        const screenX = furnaceWorldX - camX * 0.45;
         if (screenX > -60 && screenX < this.width + 60) {
-          // Industrial chimneys & blast towers
-          ctx.fillRect(screenX + 14, this.height - 200, 14, 110);
-          ctx.fillRect(screenX + 8, this.height - 210, 26, 12);
+          ctx.fillRect(screenX + 14, this.height - 210, 16, 120);
+          ctx.fillRect(screenX + 8, this.height - 222, 28, 14);
+
+          // Molten furnace glow at stack vents
+          ctx.fillStyle = 'rgba(255, 110, 64, 0.85)';
+          ctx.fillRect(screenX + 16, this.height - 226, 12, 6);
+          ctx.fillStyle = '#212121';
+        }
+      }
+    } else if (theme === 'deoghar') {
+      // Baidyanath Temple Shikharas (Spire Silhouettes)
+      ctx.fillStyle = '#3E2723';
+      for (let i = 0; i < 12; i++) {
+        const shrineWorldX = i * 310 + 90;
+        const screenX = shrineWorldX - camX * 0.42;
+        if (screenX > -80 && screenX < this.width + 80) {
+          const sY = this.height - 165;
+          // Main Shikhara cone
+          ctx.beginPath();
+          ctx.moveTo(screenX, sY);
+          ctx.lineTo(screenX + 18, sY - 65);
+          ctx.lineTo(screenX + 36, sY);
+          ctx.closePath();
+          ctx.fill();
+
+          // Golden Kalash pinnacle finial
+          ctx.fillStyle = '#FFD54F';
+          ctx.beginPath();
+          ctx.arc(screenX + 18, sY - 70, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#3E2723';
+        }
+      }
+    } else if (theme === 'betla') {
+      // Ancient stone watchtowers of Palamu Fort
+      ctx.fillStyle = '#1B3B22';
+      for (let i = 0; i < 10; i++) {
+        const fortWorldX = i * 380 + 120;
+        const screenX = fortWorldX - camX * 0.42;
+        if (screenX > -90 && screenX < this.width + 90) {
+          const fY = this.height - 170;
+          ctx.fillRect(screenX, fY - 55, 42, 65);
+          // Crenellations
+          ctx.fillRect(screenX - 4, fY - 65, 14, 12);
+          ctx.fillRect(screenX + 16, fY - 65, 14, 12);
+          ctx.fillRect(screenX + 34, fY - 65, 14, 12);
+        }
+      }
+    } else if (theme === 'dhanbad') {
+      // Cavern rock vaults & wooden mine headframes
+      ctx.fillStyle = '#141414';
+      for (let i = 0; i < 12; i++) {
+        const frameWorldX = i * 330 + 60;
+        const screenX = frameWorldX - camX * 0.42;
+        if (screenX > -80 && screenX < this.width + 80) {
+          const mY = this.height - 165;
+          ctx.fillRect(screenX + 6, mY - 60, 6, 65);
+          ctx.fillRect(screenX + 28, mY - 60, 6, 65);
+          ctx.fillRect(screenX, mY - 64, 40, 8);
+          // Pithead wheel
+          ctx.strokeStyle = '#757575';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(screenX + 20, mY - 72, 10, 0, Math.PI * 2);
+          ctx.stroke();
         }
       }
     } else {
@@ -695,7 +961,7 @@ export class WorldRenderer {
     ctx.restore();
   }
 
-  drawPlatforms(ctx, platforms, camX, camY, assistMode) {
+  drawPlatforms(ctx, platforms, camX, camY, assistMode, theme = 'ranchi') {
     ctx.save();
 
     for (const p of platforms) {
@@ -717,15 +983,15 @@ export class WorldRenderer {
       if (drawX + p.width < camX - 80 || drawX > camX + this.width + 80) continue;
 
       if (p.surfaceType === 'water') {
-        // ANIMATED RUSHING RIVER STREAM PLATFORM (River stone base + crystal rapids)
-        // 1. Riverbed granite foundation
-        ctx.fillStyle = '#37474F';
+        // ANIMATED RUSHING RIVER RAPIDS PLATFORM
+        // 1. Wet Riverbed Granite Foundation
+        ctx.fillStyle = '#212D32';
         ctx.fillRect(drawX, drawY + 14, p.width, p.height - 14);
-        ctx.fillStyle = '#263238';
+        ctx.fillStyle = '#182125';
         ctx.fillRect(drawX, drawY + p.height - 8, p.width, 8);
 
         // Stone bank cracks
-        ctx.strokeStyle = '#1E272C';
+        ctx.strokeStyle = '#10171A';
         ctx.lineWidth = 1.5;
         for (let bx = drawX + 20; bx < drawX + p.width - 10; bx += 35) {
           ctx.beginPath();
@@ -734,33 +1000,44 @@ export class WorldRenderer {
           ctx.stroke();
         }
 
-        // 2. Crystal rushing water channel
+        // 2. Crystal Rushing Rapids Water Channel
+        const isHundru = (theme === 'hundru');
         const waterGrad = ctx.createLinearGradient(drawX, drawY, drawX, drawY + 18);
-        waterGrad.addColorStop(0, '#E1F5FE');
-        waterGrad.addColorStop(0.3, '#29B6F6');
-        waterGrad.addColorStop(1, '#0277BD');
+        if (isHundru) {
+          waterGrad.addColorStop(0, '#E0F7FA');
+          waterGrad.addColorStop(0.35, '#00E5FF');
+          waterGrad.addColorStop(1.0, '#006064');
+        } else if (theme === 'damodar') {
+          waterGrad.addColorStop(0, '#E3F2FD');
+          waterGrad.addColorStop(0.35, '#2196F3');
+          waterGrad.addColorStop(1.0, '#0D47A1');
+        } else {
+          waterGrad.addColorStop(0, '#E1F5FE');
+          waterGrad.addColorStop(0.35, '#29B6F6');
+          waterGrad.addColorStop(1.0, '#0277BD');
+        }
         ctx.fillStyle = waterGrad;
         ctx.fillRect(drawX, drawY, p.width, 18);
 
-        // 3. Animated flow wave chevrons & foam ripples
+        // 3. Directional Flow Wave Chevrons & Rapids
         const speedDir = (p.currentSpeed && p.currentSpeed < 0) ? -1 : 1;
         const waveShift = ((this.waterFlowOffset * speedDir) % 36);
         ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 2.2;
         ctx.beginPath();
         for (let wx = drawX + waveShift - 36; wx < drawX + p.width + 20; wx += 28) {
           if (wx >= drawX + 4 && wx <= drawX + p.width - 14) {
             ctx.moveTo(wx, drawY + 2);
-            ctx.lineTo(wx + 7 * speedDir, drawY + 7);
-            ctx.lineTo(wx + 14 * speedDir, drawY + 2);
+            ctx.lineTo(wx + 8 * speedDir, drawY + 7);
+            ctx.lineTo(wx + 16 * speedDir, drawY + 2);
           }
         }
         ctx.stroke();
 
-        // 4. White water foam bubbles along river crest
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-        for (let fx = drawX + 6; fx < drawX + p.width - 6; fx += 18) {
-          const bBob = Math.sin(this.time * 8 + fx * 0.1) * 2;
+        // 4. Whitewater Foam Bubbles & Spray along Crest
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        for (let fx = drawX + 6; fx < drawX + p.width - 6; fx += 16) {
+          const bBob = Math.sin(this.time * 8 + fx * 0.12) * 2.2;
           ctx.beginPath();
           ctx.arc(fx, drawY + 4 + bBob, 2.5, 0, Math.PI * 2);
           ctx.fill();
@@ -768,14 +1045,14 @@ export class WorldRenderer {
 
       } else if (p.surfaceType === 'conveyor') {
         // ANIMATED INDUSTRIAL CONVEYOR BELT (Jamshedpur Steel / Dhanbad Mines)
-        ctx.fillStyle = '#424242';
+        ctx.fillStyle = '#37474F';
         ctx.fillRect(drawX, drawY, p.width, p.height);
 
-        // Conveyor belt track top
+        // Conveyor belt rubber track top
         ctx.fillStyle = '#212121';
         ctx.fillRect(drawX, drawY, p.width, 8);
 
-        // Animated direction chevrons
+        // Moving directional chevrons
         const cDir = (p.currentSpeed && p.currentSpeed < 0) ? -1 : 1;
         const cShift = ((this.time * 80 * cDir) % 24);
         ctx.strokeStyle = '#FFD54F';
@@ -791,40 +1068,163 @@ export class WorldRenderer {
         ctx.stroke();
 
         // Conveyor rollers
-        ctx.fillStyle = '#757575';
-        for (let rx = drawX + 10; rx < drawX + p.width - 10; rx += 28) {
+        ctx.fillStyle = '#78909C';
+        for (let rx = drawX + 12; rx < drawX + p.width - 10; rx += 28) {
           ctx.beginPath();
           ctx.arc(rx, drawY + 16, 5, 0, Math.PI * 2);
           ctx.fill();
         }
 
       } else if (p.surfaceType === 'stone') {
-        // RANCHI / PARASNATH / DEOGHAR GRANITE ROCK
-        ctx.fillStyle = p.isAssist ? '#FFB300' : '#546E7A';
-        ctx.fillRect(drawX, drawY, p.width, p.height);
+        // BIOME-SPECIFIC STONE GEOLOGY
+        if (p.isAssist) {
+          ctx.fillStyle = '#FFB300';
+          ctx.fillRect(drawX, drawY, p.width, p.height);
+          ctx.fillStyle = '#FFE082';
+          ctx.fillRect(drawX, drawY, p.width, 6);
+        } else if (theme === 'hundru') {
+          // Wet Riverbed Basalt Rock with Emerald Moss Fringe
+          ctx.fillStyle = '#1C2833';
+          ctx.fillRect(drawX, drawY, p.width, p.height);
 
-        ctx.fillStyle = '#78909C';
-        ctx.fillRect(drawX, drawY, p.width, 6);
+          // Top wet stone cap
+          ctx.fillStyle = '#2E4053';
+          ctx.fillRect(drawX, drawY, p.width, 8);
 
-        // Stone masonry cracks & Sohrai motifs
-        ctx.strokeStyle = '#37474F';
-        ctx.lineWidth = 1.5;
-        for (let sx = drawX + 25; sx < drawX + p.width; sx += 40) {
+          // Glistening moisture sheen line
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
-          ctx.moveTo(sx, drawY + 6);
-          ctx.lineTo(sx, drawY + p.height);
+          ctx.moveTo(drawX + 8, drawY + 2);
+          ctx.lineTo(drawX + p.width - 8, drawY + 2);
           ctx.stroke();
+
+          // Riverbed emerald moss tufts clinging to stone corners
+          ctx.fillStyle = '#2E7D32';
+          for (let mx = drawX + 2; mx < drawX + p.width - 4; mx += 14) {
+            ctx.beginPath();
+            ctx.arc(mx + 4, drawY + 2, 4.5, 0, Math.PI);
+            ctx.fill();
+          }
+          ctx.fillStyle = '#43A047';
+          for (let mx = drawX + 4; mx < drawX + p.width - 6; mx += 28) {
+            ctx.beginPath();
+            ctx.arc(mx + 3, drawY + 1, 2.5, 0, Math.PI);
+            ctx.fill();
+          }
+
+          // Basalt fissures
+          ctx.strokeStyle = '#0E171E';
+          ctx.lineWidth = 1.5;
+          for (let sx = drawX + 22; sx < drawX + p.width; sx += 36) {
+            ctx.beginPath();
+            ctx.moveTo(sx, drawY + 8);
+            ctx.lineTo(sx - 3, drawY + p.height);
+            ctx.stroke();
+          }
+
+        } else if (theme === 'deoghar') {
+          // Sacred Temple Sandstone Flagstones with Terracotta Frieze
+          ctx.fillStyle = '#6D4C41';
+          ctx.fillRect(drawX, drawY, p.width, p.height);
+
+          // Carved sandstone top
+          ctx.fillStyle = '#D7CCC8';
+          ctx.fillRect(drawX, drawY, p.width, 9);
+
+          // Terracotta decorative trim
+          ctx.fillStyle = '#BF360C';
+          ctx.fillRect(drawX, drawY + 9, p.width, 4);
+
+          // Sacred geometric masonry lines
+          ctx.strokeStyle = '#4E342E';
+          ctx.lineWidth = 1.5;
+          for (let sx = drawX + 26; sx < drawX + p.width; sx += 38) {
+            ctx.beginPath();
+            ctx.moveTo(sx, drawY + 9);
+            ctx.lineTo(sx, drawY + p.height);
+            ctx.stroke();
+          }
+
+        } else if (theme === 'jamshedpur') {
+          // Industrial Heavy Steel Plating with Caution Hazard Stripes
+          ctx.fillStyle = '#263238';
+          ctx.fillRect(drawX, drawY, p.width, p.height);
+
+          ctx.fillStyle = '#455A64';
+          ctx.fillRect(drawX, drawY, p.width, 10);
+
+          // Hazard diagonal yellow/black warning stripes
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(drawX, drawY, p.width, 6);
+          ctx.clip();
+          for (let hx = drawX - 10; hx < drawX + p.width + 10; hx += 16) {
+            ctx.fillStyle = '#FFD54F';
+            ctx.beginPath();
+            ctx.moveTo(hx, drawY + 6);
+            ctx.lineTo(hx + 8, drawY);
+            ctx.lineTo(hx + 14, drawY);
+            ctx.lineTo(hx + 6, drawY + 6);
+            ctx.closePath();
+            ctx.fill();
+          }
+          ctx.restore();
+
+          // Steel rivets
+          ctx.fillStyle = '#90A4AE';
+          for (let rx = drawX + 8; rx < drawX + p.width; rx += 24) {
+            ctx.beginPath();
+            ctx.arc(rx, drawY + 16, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+        } else if (theme === 'dhanbad') {
+          // Anthracite Coal Seam Strata with Glistening Mineral Facets
+          ctx.fillStyle = '#141414';
+          ctx.fillRect(drawX, drawY, p.width, p.height);
+
+          ctx.fillStyle = '#262626';
+          ctx.fillRect(drawX, drawY, p.width, 8);
+
+          // Mineral crystal flecks
+          ctx.fillStyle = '#78909C';
+          for (let cx = drawX + 10; cx < drawX + p.width - 8; cx += 22) {
+            ctx.fillRect(cx, drawY + 3, 3, 2);
+          }
+
+          // Timber mine support props
+          ctx.fillStyle = '#3E2723';
+          ctx.fillRect(drawX + 8, drawY + 8, 8, p.height - 8);
+          ctx.fillRect(drawX + p.width - 16, drawY + 8, 8, p.height - 8);
+
+        } else {
+          // Weathered Chotanagpur Granite with Tribal Motifs
+          ctx.fillStyle = '#455A64';
+          ctx.fillRect(drawX, drawY, p.width, p.height);
+
+          ctx.fillStyle = '#78909C';
+          ctx.fillRect(drawX, drawY, p.width, 6);
+
+          ctx.strokeStyle = '#263238';
+          ctx.lineWidth = 1.5;
+          for (let sx = drawX + 25; sx < drawX + p.width; sx += 40) {
+            ctx.beginPath();
+            ctx.moveTo(sx, drawY + 6);
+            ctx.lineTo(sx, drawY + p.height);
+            ctx.stroke();
+          }
         }
 
       } else if (p.surfaceType === 'wood') {
-        // SAL TIMBER PLANK RUNWAY
-        ctx.fillStyle = '#6D4C41';
+        // AUTHENTIC SAL TIMBER PLANK RUNWAY (Shorea robusta)
+        ctx.fillStyle = '#5D4037';
         ctx.fillRect(drawX, drawY, p.width, p.height);
 
         ctx.fillStyle = '#8D6E63';
-        ctx.fillRect(drawX, drawY, p.width, 4);
+        ctx.fillRect(drawX, drawY, p.width, 5);
 
-        // Timber gaps
+        // Plank separation gaps
         ctx.strokeStyle = '#3E2723';
         ctx.lineWidth = 2;
         for (let px = drawX + 18; px < drawX + p.width; px += 24) {
@@ -832,20 +1232,30 @@ export class WorldRenderer {
           ctx.moveTo(px, drawY);
           ctx.lineTo(px, drawY + p.height);
           ctx.stroke();
+
+          // Iron bolt head
+          ctx.fillStyle = '#212121';
+          ctx.beginPath();
+          ctx.arc(px - 6, drawY + 3, 1.8, 0, Math.PI * 2);
+          ctx.fill();
         }
 
       } else {
-        // DEFAULT RED SOIL (MURRAM OF JHARKHAND)
+        // DEFAULT RED SOIL (MURRAM OF JHARKHAND — LAL MITTI)
         ctx.fillStyle = p.isAssist ? '#FFB300' : '#8D4024';
         ctx.fillRect(drawX, drawY, p.width, p.height);
 
-        // Grass top
-        ctx.fillStyle = '#4CAF50';
-        ctx.fillRect(drawX, drawY, p.width, 10);
+        // Subsoil dark base layer
+        ctx.fillStyle = '#5D2716';
+        ctx.fillRect(drawX, drawY + p.height - 10, p.width, 10);
 
-        // Grass blades
+        // Plateau green grass cap
+        ctx.fillStyle = '#4CAF50';
+        ctx.fillRect(drawX, drawY, p.width, 9);
+
+        // Organic grass blades
         ctx.fillStyle = '#388E3C';
-        for (let bx = drawX; bx < drawX + p.width - 6; bx += 10) {
+        for (let bx = drawX; bx < drawX + p.width - 6; bx += 8) {
           ctx.beginPath();
           ctx.moveTo(bx, drawY);
           ctx.lineTo(bx + 3, drawY - 5);
@@ -853,14 +1263,14 @@ export class WorldRenderer {
           ctx.fill();
         }
 
-        // Sohrai tribal white decorative line accents
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+        // Traditional Sohrai tribal white geometric chalk line motifs
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.42)';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        for (let sx = drawX + 10; sx < drawX + p.width - 20; sx += 30) {
+        for (let sx = drawX + 10; sx < drawX + p.width - 20; sx += 32) {
           ctx.moveTo(sx, drawY + 22);
-          ctx.lineTo(sx + 15, drawY + 36);
-          ctx.lineTo(sx + 30, drawY + 22);
+          ctx.lineTo(sx + 16, drawY + 36);
+          ctx.lineTo(sx + 32, drawY + 22);
         }
         ctx.stroke();
       }

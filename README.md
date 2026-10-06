@@ -1,9 +1,15 @@
+# Super-Mario-Bros
 # RRR — REWIND. REIMAGINE. RECONNECT.
-## Super Mario Bros: Jharkhand Quest — Full Vertical Slice
+### Super Mario Bros: Jharkhand Quest — Full Game Vertical Slice
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Ranjeet7680/Super-Mario-Bros)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/Platform-Web%20%7C%20HTML5%20Canvas-brightgreen.svg)](#)
 
 > **Team / Creator:** RAJRANJEET7680  
 > **Production Status:** Milestone 1 & 2 Playable Vertical Slice (World 1-1: Ranchi Plateau Gateway)  
-> **Technology Stack:** Zero-dependency modern ES6+ HTML5 Canvas, Web Audio API, Modular Physics Engine
+> **Architecture Docs:** `Super_Mario_Bros_Jharkhand_Full_Game_Architecture.pdf` & `RRR_Fully_Detailed_20000_Word_Game_Architecture.pdf`  
+> **Wiki Documentation:** Check the [`/wiki`](wiki/Home.md) folder for full game architecture guides.
 
 ---
 

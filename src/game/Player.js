@@ -67,6 +67,11 @@ export class Player {
     this.scaleY = 1.0;
     this.animTime = 0;
     this.scarfWave = 0;
+    this.idleActTimer = 0;
+    this.idleActState = 'normal'; // 'normal', 'lookAround', 'stretch'
+
+    // Outfit Customization (from Character Architecture)
+    this.outfit = 'classic'; // 'classic', 'sohrai', 'night'
 
     // Surface info
     this.currentSurface = 'ground';
@@ -255,10 +260,28 @@ export class Player {
     const w = this.width;
     const h = this.height;
 
+    // Palette per outfit
+    let tunicColor = '#00838F';
+    let pantsColor = '#33691E';
+    let scarfColor = '#E65100';
+    let trimColor = '#FFD54F';
+
+    if (this.outfit === 'sohrai') {
+      tunicColor = '#B71C1C';
+      pantsColor = '#F57F17';
+      scarfColor = '#FFD54F';
+      trimColor = '#FFFFFF';
+    } else if (this.outfit === 'night') {
+      tunicColor = '#1A237E';
+      pantsColor = '#263238';
+      scarfColor = '#00E5FF';
+      trimColor = '#80D8FF';
+    }
+
     // --- Dynamic Character Rendering (Kabir: Indian Adventurer) ---
-    // Scarf (Orange/Saffron Silk waving in wind)
+    // Scarf (Silk waving in wind)
     const scarfOffset = Math.sin(this.scarfWave) * 6;
-    ctx.fillStyle = '#E65100'; // Vibrant saffron
+    ctx.fillStyle = scarfColor;
     ctx.beginPath();
     ctx.moveTo(-w * 0.2, -h * 0.72);
     ctx.quadraticCurveTo(-w * 0.7, -h * 0.65 + scarfOffset, -w * 0.95, -h * 0.5 + scarfOffset);
@@ -273,8 +296,8 @@ export class Player {
     ctx.fillStyle = '#D7CCC8';
     ctx.fillRect(-w * 0.42, -h * 0.52, w * 0.28, 3); // buckle
 
-    // Legs / Trousers (Olive expedition pants)
-    ctx.fillStyle = '#33691E';
+    // Legs / Trousers
+    ctx.fillStyle = pantsColor;
     let legOffset = 0;
     if (this.state === 'walk' || this.state === 'run') {
       legOffset = Math.sin(this.animTime * (this.state === 'run' ? 18 : 12)) * 6;
@@ -289,12 +312,12 @@ export class Player {
     ctx.fillRect(-w * 0.35, -h * 0.08, w * 0.32, h * 0.08);
     ctx.fillRect(w * 0.02, -h * 0.08, w * 0.32, h * 0.08);
 
-    // Torso / Vest (Teal blue traveler tunic with embroidered pattern)
-    ctx.fillStyle = '#00838F';
+    // Torso / Vest (Traveler tunic)
+    ctx.fillStyle = tunicColor;
     ctx.fillRect(-w * 0.35, -h * 0.72, w * 0.7, h * 0.38);
 
     // Nehru collar / chest detail
-    ctx.fillStyle = '#FFD54F'; // Gold trim
+    ctx.fillStyle = trimColor;
     ctx.fillRect(-w * 0.05, -h * 0.72, w * 0.1, h * 0.35);
 
     // Head / Face
@@ -317,16 +340,19 @@ export class Player {
     ctx.fillRect(-9, -h * 0.94, 18, 5);
 
     // Saffron headband
-    ctx.fillStyle = '#FF6F00';
+    ctx.fillStyle = scarfColor;
     ctx.fillRect(-9, -h * 0.89, 18, 3);
 
     // Arms
-    ctx.fillStyle = '#00838F';
+    ctx.fillStyle = tunicColor;
     let armSwing = 0;
     if (this.state === 'walk' || this.state === 'run') {
       armSwing = Math.cos(this.animTime * 14) * 8;
+    } else if (this.state === 'victory') {
+      // Raised arms in celebration
+      armSwing = -14;
     }
-    ctx.fillRect(-w * 0.15 + armSwing * 0.3, -h * 0.68, 6, 14);
+    ctx.fillRect(-w * 0.15 + armSwing * 0.3, -h * 0.68 + (this.state === 'victory' ? -8 : 0), 6, 14);
 
     ctx.restore();
   }

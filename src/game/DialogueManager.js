@@ -21,11 +21,18 @@ export class DialogueManager {
     this.onCompleteCallback = null;
   }
 
+  setTextSpeed(mode) {
+    if (mode === 'instant') this.typeSpeed = 0;
+    else if (mode === 'fast') this.typeSpeed = 0.012;
+    else this.typeSpeed = 0.025;
+  }
+
   startDialogue(entries, onComplete = null) {
     this.dialogueQueue = entries;
     this.currentIndex = 0;
     this.onCompleteCallback = onComplete;
     this.isActive = true;
+    if (this.audio) this.audio.setMusicDucking(true);
     this.showEntry(0);
   }
 
@@ -41,6 +48,11 @@ export class DialogueManager {
     this.displayedText = '';
     this.charIndex = 0;
     this.typeTimer = 0;
+
+    if (this.typeSpeed === 0) {
+      this.displayedText = this.targetText;
+      this.charIndex = this.targetText.length;
+    }
   }
 
   next() {
@@ -60,6 +72,7 @@ export class DialogueManager {
   close() {
     this.isActive = false;
     this.currentEntry = null;
+    if (this.audio) this.audio.setMusicDucking(false);
     if (this.onCompleteCallback) {
       this.onCompleteCallback();
       this.onCompleteCallback = null;

@@ -249,6 +249,87 @@ export class AudioManager {
     osc.stop(now + 0.05);
   }
 
+  playBtnClick() {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(520, now);
+    osc.frequency.exponentialRampToValueAtTime(260, now + 0.08);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.08);
+  }
+
+  playLogoSting() {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    // 1. Low environmental rumble
+    const rumble = this.ctx.createOscillator();
+    const rGain = this.ctx.createGain();
+    rumble.type = 'sine';
+    rumble.frequency.setValueAtTime(60, now);
+    rumble.frequency.linearRampToValueAtTime(40, now + 1.2);
+    rGain.gain.setValueAtTime(0.4, now);
+    rGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    rumble.connect(rGain);
+    rGain.connect(this.sfxGain);
+    rumble.start(now);
+    rumble.stop(now + 1.2);
+
+    // 2. Rising tonal element
+    const tone = this.ctx.createOscillator();
+    const tGain = this.ctx.createGain();
+    tone.type = 'triangle';
+    tone.frequency.setValueAtTime(140, now + 0.4);
+    tone.frequency.exponentialRampToValueAtTime(523.25, now + 1.4);
+    tGain.gain.setValueAtTime(0.25, now + 0.4);
+    tGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+    tone.connect(tGain);
+    tGain.connect(this.sfxGain);
+    tone.start(now + 0.4);
+    tone.stop(now + 1.8);
+
+    // 3. Short percussion accent
+    const perc = this.ctx.createOscillator();
+    const pGain = this.ctx.createGain();
+    perc.type = 'sine';
+    perc.frequency.setValueAtTime(180, now + 1.4);
+    perc.frequency.exponentialRampToValueAtTime(50, now + 1.7);
+    pGain.gain.setValueAtTime(0.35, now + 1.4);
+    pGain.gain.exponentialRampToValueAtTime(0.001, now + 1.7);
+    perc.connect(pGain);
+    pGain.connect(this.sfxGain);
+    perc.start(now + 1.4);
+    perc.stop(now + 1.7);
+  }
+
+  playTitleCardWhoosh() {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(180, now);
+    osc.frequency.exponentialRampToValueAtTime(440, now + 0.3);
+    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc.connect(gain);
+    gain.connect(this.sfxGain);
+    osc.start(now);
+    osc.stop(now + 0.35);
+  }
+
+  setMusicDucking(duck) {
+    if (!this.initialized || !this.musicGain || !this.ctx) return;
+    const target = duck ? 0.12 : 0.35;
+    this.musicGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.1);
+  }
+
   // --- Background Indian Folk Melodic Groove ---
   startBGM() {
     if (this.musicPlaying) return;

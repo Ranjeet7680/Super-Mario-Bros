@@ -8,8 +8,93 @@
 </head>
 <body>
   <div id="game-wrapper">
-    <!-- Top HUD Overlay -->
-    <header id="hud">
+
+    <!-- 1. BOOT / LOGO SCREEN (Section 03 of Architecture Bible) -->
+    <div id="bootScreen" class="screen-overlay">
+      <div class="logo-anim-container">
+        <div class="logo-line"></div>
+        <div class="logo-letters">
+          <span class="letter-r" id="letR1">R</span>
+          <span class="letter-r" id="letR2">R</span>
+          <span class="letter-r" id="letR3">R</span>
+        </div>
+        <div class="logo-subtitles">
+          <span class="pulse-tag" id="tagRewind">REWIND</span>
+          <span class="pulse-tag" id="tagReimagine">REIMAGINE</span>
+          <span class="pulse-tag" id="tagReconnect">RECONNECT</span>
+        </div>
+        <div class="logo-jharkhand-title">JHARKHAND QUEST</div>
+        <div class="logo-brand-author">A Game Experience by RAJRANJEET7680</div>
+        <button id="skipBootBtn" class="skip-btn">[Click or Space to Skip]</button>
+      </div>
+    </div>
+
+    <!-- 2. MAIN LOBBY SCREEN (Section 06 of Architecture Bible) -->
+    <div id="lobbyScreen" class="screen-overlay hidden">
+      <!-- Lobby Header -->
+      <div class="lobby-topbar">
+        <div class="lobby-brand">
+          <span class="brand-badge">RRR</span>
+          <span class="brand-title" data-i18n="gameTitle">RRR — JHARKHAND QUEST</span>
+        </div>
+        <div class="lobby-controls">
+          <button id="lobbyLangToggle" class="hud-btn">🇮🇳 हिंदी</button>
+          <button id="lobbySoundToggle" class="hud-btn">🔊</button>
+        </div>
+      </div>
+
+      <!-- Lobby Centerpiece / Overlook -->
+      <div class="lobby-center">
+        <div class="lobby-chapter-tag" data-i18n="lobbySubtitle">Chapter I: The Rift of Echoes Awakens</div>
+        <h1 class="lobby-heading" data-i18n="lobbyTitle">RANCHI BASE CAMP</h1>
+        
+        <!-- Primary Action Button (Dominant gold pulse) -->
+        <button id="lobbyPlayBtn" class="lobby-primary-btn" data-i18n="playBtn">▶ PLAY GAME</button>
+
+        <!-- Secondary Navigation Menu -->
+        <div class="lobby-menu-bar">
+          <button id="btnOpenWorldMap" class="lobby-sub-btn" data-i18n="levelSelectBtn">🗺️ Level Select</button>
+          <button id="btnOpenCharacter" class="lobby-sub-btn" data-i18n="characterBtn">👤 Character Viewer</button>
+          <button id="btnOpenSettings" class="lobby-sub-btn" data-i18n="settings">⚙️ Settings</button>
+          <button id="btnOpenCredits" class="lobby-sub-btn" data-i18n="creditsBtn">📜 Credits</button>
+        </div>
+      </div>
+
+      <!-- Lobby Footer Hint -->
+      <div class="lobby-footer">
+        <span>Use Mouse, Keyboard [Enter / Space / WASD], or Gamepad to Navigate</span>
+      </div>
+    </div>
+
+    <!-- 3. LOADING SCREEN (Section 04 & 34 of Architecture Bible) -->
+    <div id="loadingScreen" class="screen-overlay hidden">
+      <div class="loading-card">
+        <div class="loading-shard-icon">💎</div>
+        <h2 id="loadingRegionTitle">World 1-1: Ranchi Plateau Gateway</h2>
+        <div class="loading-bar-track">
+          <div id="loadingBarFill" class="loading-bar-fill"></div>
+        </div>
+        <div id="loadingStatusText" class="loading-status" data-i18n="loadingLabel">Restoring Regional Pathways...</div>
+        
+        <div class="loading-tip-box">
+          <strong data-i18n="tipHeader">Gameplay Guide:</strong>
+          <p id="loadingTipText" class="loading-tip-text">Press Down (S / ↓) while airborne to perform a fast-fall descent.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. LEVEL TITLE CARD (Section 09 & 35 of Architecture Bible) -->
+    <div id="titleCardOverlay" class="screen-overlay hidden pointer-events-none">
+      <div class="title-card-box">
+        <div class="title-card-icon">🏛️</div>
+        <h2 id="tcTitle">विश्व १-१: राँची पठार प्रवेशद्वार</h2>
+        <h3 id="tcSubtitle">World 1-1: Ranchi Plateau Gateway</h3>
+        <p id="tcObjective" data-i18n="stageObjective">Objective: Collect the Echo Shards and unlock the Gateway Torana.</p>
+      </div>
+    </div>
+
+    <!-- 5. TOP GAMEPLAY HUD -->
+    <header id="hud" class="hidden">
       <div class="hud-left">
         <span id="hudWorld" class="hud-tag">World 1-1: Ranchi Plateau</span>
         <span id="hudHearts" class="hud-hearts">❤️❤️❤️</span>
@@ -34,11 +119,11 @@
     </main>
 
     <!-- Bottom Controls Hint Bar -->
-    <footer id="controls-hint">
+    <footer id="controls-hint" class="hidden">
       <span data-i18n="controlsHint">[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk</span>
     </footer>
 
-    <!-- Mobile Virtual Touch Controls (Visible on touch devices) -->
+    <!-- Mobile Virtual Touch Controls -->
     <div id="touch-controls">
       <div class="touch-dpad">
         <button id="btnTouchLeft" class="touch-btn">◀</button>
@@ -52,14 +137,148 @@
       </div>
     </div>
 
-    <!-- Pause & Accessibility Settings Modal -->
+    <!-- 6. WORLD MAP / LEVEL SELECT MODAL (Section 08 of Architecture Bible) -->
+    <div id="worldMapModal" class="modal-backdrop hidden">
+      <div class="modal-card map-card">
+        <div class="modal-header">
+          <h2 data-i18n="worldSelectTitle">The 8 Jharkhand Regions</h2>
+          <button id="closeMapBtn" class="close-x-btn">✕</button>
+        </div>
+
+        <div class="world-grid">
+          <!-- World 1 (Unlocked) -->
+          <div class="world-node active" id="nodeWorld1">
+            <div class="node-header">
+              <span class="node-num">01</span>
+              <span class="badge-status unlocked" data-i18n="unlockedBadge">⭐ Ready</span>
+            </div>
+            <h3 data-i18n="world1Title">World 1: Ranchi Plateau</h3>
+            <p data-i18n="world1Desc">Red-soil trails, teaching jumps, and the first Echo Shards.</p>
+            <button class="node-play-btn" id="btnLaunchWorld1">START REGION</button>
+          </div>
+
+          <!-- World 2 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">02</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world2Title">World 2: Hundru Falls</h3>
+            <p data-i18n="world2Desc">Towering waterfall cliffs, mist, and rushing water currents.</p>
+          </div>
+
+          <!-- World 3 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">03</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world3Title">World 3: Netarhat Hills</h3>
+            <p data-i18n="world3Desc">Highland winds, twilight vistas, and floating cloud bridges.</p>
+          </div>
+
+          <!-- World 4 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">04</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world4Title">World 4: Betla Forest</h3>
+            <p data-i18n="world4Desc">Dense canopy routes, hanging vines, and hidden wildlife.</p>
+          </div>
+
+          <!-- World 5 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">05</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world5Title">World 5: Deoghar Heritage</h3>
+            <p data-i18n="world5Desc">Sacred courtyards, rhythm platforms, and bell chime puzzles.</p>
+          </div>
+
+          <!-- World 6 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">06</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world6Title">World 6: Jamshedpur Steel</h3>
+            <p data-i18n="world6Desc">Steel mills, reversible conveyors, and overhead crane lifts.</p>
+          </div>
+
+          <!-- World 7 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">07</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world7Title">World 7: Dhanbad Mines</h3>
+            <p data-i18n="world7Desc">Underground rail carts, track switches, and timber collapses.</p>
+          </div>
+
+          <!-- World 8 -->
+          <div class="world-node locked">
+            <div class="node-header">
+              <span class="node-num">08</span>
+              <span class="badge-status locked" data-i18n="lockedBadge">🔒 Locked</span>
+            </div>
+            <h3 data-i18n="world8Title">World 8: Damodar Storm</h3>
+            <p data-i18n="world8Desc">The tempest climax combining all learned environmental systems.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. CHARACTER VIEWER MODAL (Section 07 of Architecture Bible) -->
+    <div id="characterModal" class="modal-backdrop hidden">
+      <div class="modal-card char-card">
+        <div class="modal-header">
+          <h2 data-i18n="charViewerTitle">Adventurer Kabir — Character Showcase</h2>
+          <button id="closeCharBtn" class="close-x-btn">✕</button>
+        </div>
+
+        <div class="char-showcase-layout">
+          <!-- Canvas preview of Kabir -->
+          <div class="char-canvas-box">
+            <canvas id="charPreviewCanvas" width="220" height="260"></canvas>
+          </div>
+
+          <!-- Customization Controls -->
+          <div class="char-controls-panel">
+            <div class="char-section">
+              <h4 data-i18n="outfitLabel">Traveler Outfit:</h4>
+              <div class="outfit-buttons">
+                <button class="outfit-btn active" data-outfit="classic" data-i18n="outfitClassic">Classic Explorer</button>
+                <button class="outfit-btn" data-outfit="sohrai" data-i18n="outfitSohrai">Sohrai Artist</button>
+                <button class="outfit-btn" data-outfit="night" data-i18n="outfitNight">Night Scout</button>
+              </div>
+            </div>
+
+            <div class="char-section">
+              <h4 data-i18n="animLabel">Action Preview:</h4>
+              <div class="anim-preview-buttons">
+                <button class="anim-btn active" data-anim="idle" data-i18n="animIdle">Idle</button>
+                <button class="anim-btn" data-anim="walk" data-i18n="animWalk">Walk</button>
+                <button class="anim-btn" data-anim="run" data-i18n="animRun">Sprint</button>
+                <button class="anim-btn" data-anim="jump" data-i18n="animJump">Jump</button>
+                <button class="anim-btn" data-anim="victory" data-i18n="animVictory">Victory</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. SETTINGS & ACCESSIBILITY MODAL (Section 23 of Architecture Bible) -->
     <div id="pauseModal" class="modal-backdrop hidden">
       <div class="modal-card">
-        <h2 data-i18n="pause">PAUSED</h2>
+        <div class="modal-header">
+          <h2 data-i18n="accessibility">Settings & Accessibility</h2>
+          <button id="closeSettingsBtn" class="close-x-btn">✕</button>
+        </div>
         
         <div class="settings-group">
-          <h3 data-i18n="accessibility">Accessibility & Settings</h3>
-          
           <label class="setting-item">
             <span data-i18n="screenShake">Screen Shake</span>
             <input type="checkbox" id="shakeToggle" checked>
@@ -79,6 +298,24 @@
             <span data-i18n="soundVolume">Audio Volume</span>
             <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7">
           </label>
+
+          <label class="setting-item">
+            <span data-i18n="graphicsPreset">Graphics Quality</span>
+            <select id="graphicsSelect" class="settings-select">
+              <option value="high" data-i18n="presetHigh">High (Cinematic)</option>
+              <option value="med" data-i18n="presetMed">Medium</option>
+              <option value="low" data-i18n="presetLow">Low</option>
+            </select>
+          </label>
+
+          <label class="setting-item">
+            <span data-i18n="textSpeed">Text Speed</span>
+            <select id="textSpeedSelect" class="settings-select">
+              <option value="normal" data-i18n="speedNormal">Normal</option>
+              <option value="fast" data-i18n="speedFast">Fast</option>
+              <option value="instant" data-i18n="speedInstant">Instant</option>
+            </select>
+          </label>
         </div>
 
         <div class="controls-guide">
@@ -86,20 +323,38 @@
           <ul>
             <li><strong>Run:</strong> A / D or Left / Right Arrows (or Left Stick)</li>
             <li><strong>Variable Jump:</strong> W or Space (or Gamepad A)</li>
-            <li><strong>Dash / Stomp Attack:</strong> Shift or K or X (or Gamepad X / RB)</li>
+            <li><strong>Dash / Stomp:</strong> Shift or K or X (or Gamepad X / RB)</li>
             <li><strong>Fast Fall:</strong> S or Down Arrow</li>
-            <li><strong>Talk / Interact:</strong> E or F (or Gamepad Y)</li>
+            <li><strong>Talk:</strong> E or F (or Gamepad Y)</li>
           </ul>
         </div>
 
         <div class="modal-actions">
           <button id="resumeBtn" class="primary-btn" data-i18n="resume">Resume</button>
           <button id="restartBtn" class="secondary-btn" data-i18n="restart">Restart Level</button>
+          <button id="pauseLobbyBtn" class="secondary-btn" data-i18n="returnToLobby">Return to Camp</button>
         </div>
       </div>
     </div>
 
-    <!-- Victory / Gateway Cleared Modal -->
+    <!-- 9. CREDITS MODAL (Section 39 of Architecture Bible) -->
+    <div id="creditsModal" class="modal-backdrop hidden">
+      <div class="modal-card credits-card">
+        <div class="modal-header">
+          <h2 data-i18n="creditsTitle">PRODUCTION CREDITS</h2>
+          <button id="closeCreditsBtn" class="close-x-btn">✕</button>
+        </div>
+        <div class="credits-body">
+          <div class="credit-row" data-i18n="devLead">Lead Architecture & Development: RAJRANJEET7680</div>
+          <div class="credit-row" data-i18n="culturalConsultants">Cultural Worldbuilding: Jharkhand Folklore & Regional Ecology</div>
+          <div class="credit-row" data-i18n="artArchitecture">Visual & Animation Blueprint: 2D Multi-layer Parallax & Pixel Canvas</div>
+          <div class="credit-row" data-i18n="soundDesign">Audio Architecture: Procedural Raag Bhupali WebAudio Synthesizer</div>
+          <div class="credit-note" data-i18n="specialThanks">Inspired by the vibrant heritage, waterfalls, and resilient spirit of Jharkhand.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. VICTORY / RESULTS MODAL (Section 21 & 22 of Architecture Bible) -->
     <div id="victoryModal" class="modal-backdrop hidden">
       <div class="modal-card victory-card">
         <div class="victory-header">
@@ -129,9 +384,11 @@
 
         <div class="modal-actions">
           <button id="playAgainBtn" class="primary-btn" data-i18n="playAgain">Play Again</button>
+          <button id="victoryLobbyBtn" class="secondary-btn" data-i18n="returnToLobby">Return to Camp</button>
         </div>
       </div>
     </div>
+
   </div>
 
   <script type="module" src="src/main.js"></script>

@@ -1,6 +1,9 @@
 /**
- * RRR — Jharkhand Quest: Main Game Coordinator
- * Integrates Player, Physics, Camera, Audio, Enemies, Entities, Dialogue, and HUD.
+ * RRR — Jharkhand Quest: Complete Production Game Coordinator
+ * Implements Full Player Journey:
+ * Boot/Logo -> Main Lobby -> Level Select / Character Showcase / Settings / Credits ->
+ * Loading Screen -> Gameplay with Title Card -> Boss/Goal -> Victory Results & Return to Camp.
+ * Adheres to RRR Complete Architecture 20,000 FINAL Blueprint.
  * Authors: RAJRANJEET7680
  */
 
@@ -32,7 +35,10 @@ class GameApp {
     this.renderer = new WorldRenderer(this.width, this.height);
     this.particles = new ParticleSystem();
 
-    // Game State
+    // App State: 'boot' | 'lobby' | 'loading' | 'gameplay'
+    this.appState = 'boot';
+
+    // Game Level State
     this.level = Level_1_1;
     this.player = new Player(this.level.playerSpawn.x, this.level.playerSpawn.y);
     this.activeCheckpoint = { x: this.level.playerSpawn.x, y: this.level.playerSpawn.y };
@@ -59,20 +65,28 @@ class GameApp {
     this.bannerMessage = '';
     this.bannerTimer = 0;
     this.hasTalkedToElder = false;
+    this.selectedOutfit = 'classic';
+
+    // Character Showcase preview player
+    this.previewPlayer = new Player(80, 160);
+    this.previewCanvas = document.getElementById('charPreviewCanvas');
+    this.previewCtx = this.previewCanvas.getContext('2d');
+    this.previewAnimState = 'idle';
 
     // Timing
     this.lastTime = performance.now();
+    this.bootTimer = 0;
 
     this.initLevel();
     this.initUI();
     this.initTouchControls();
+    this.initBootSequence();
 
-    // Start loop
+    // Start Main Loop
     requestAnimationFrame((t) => this.loop(t));
   }
 
   initLevel() {
-    // Entities instantiation from data
     this.shards = this.level.shards.map(s => new EchoShard(s.x, s.y, s.id, s.isRare));
     this.totalShards = this.shards.length;
 
@@ -87,87 +101,183 @@ class GameApp {
     this.goalGateway = new GoalGateway(this.level.goalGateway.x, this.level.goalGateway.y);
 
     this.player.resetToCheckpoint(this.level.playerSpawn.x, this.level.playerSpawn.y);
+    this.player.outfit = this.selectedOutfit;
+  }
+
+  initBootSequence() {
+    const bootScreen = document.getElementById('bootScreen');
+    const skipBtn = document.getElementById('skipBootBtn');
+
+    const goToLobby = () => {
+      if (this.appState !== 'boot') return;
+      this.appState = 'lobby';
+      bootScreen.classList.add('hidden');
+      document.getElementById('lobbyScreen').classList.remove('hidden');
+      this.audio.resumeContext();
+      this.audio.startBGM();
+    };
+
+    skipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goToLobby();
+    });
+
+    bootScreen.addEventListener('click', () => {
+      this.audio.resumeContext();
+      this.audio.playLogoSting();
+      setTimeout(goToLobby, 800);
+    }, { once: true });
+
+    // Auto-advance after 3.6s
+    setTimeout(() => {
+      if (this.appState === 'boot') goToLobby();
+    }, 3600);
   }
 
   initUI() {
+    // HUD Elements
+    this.hudEl = document.getElementById('hud');
     this.hudWorld = document.getElementById('hudWorld');
     this.hudShards = document.getElementById('hudShards');
     this.hudHearts = document.getElementById('hudHearts');
     this.hudTime = document.getElementById('hudTime');
     this.hudScore = document.getElementById('hudScore');
+    this.controlsHint = document.getElementById('controls-hint');
 
-    this.langBtn = document.getElementById('langToggle');
-    this.soundBtn = document.getElementById('soundToggle');
-    this.pauseBtn = document.getElementById('pauseBtn');
+    // Lobby Buttons
+    document.getElementById('lobbyPlayBtn').addEventListener('click', () => {
+      this.audio.playBtnClick();
+      this.startLevelTransition();
+    });
 
-    this.pauseModal = document.getElementById('pauseModal');
-    this.resumeBtn = document.getElementById('resumeBtn');
-    this.restartBtn = document.getElementById('restartBtn');
-    this.shakeToggle = document.getElementById('shakeToggle');
-    this.contrastToggle = document.getElementById('contrastToggle');
-    this.assistToggle = document.getElementById('assistToggle');
-    this.volumeSlider = document.getElementById('volumeSlider');
+    document.getElementById('btnOpenWorldMap').addEventListener('click', () => {
+      this.audio.playBtnClick();
+      document.getElementById('worldMapModal').classList.remove('hidden');
+    });
 
-    this.victoryModal = document.getElementById('victoryModal');
-    this.playAgainBtn = document.getElementById('playAgainBtn');
+    document.getElementById('btnOpenCharacter').addEventListener('click', () => {
+      this.audio.playBtnClick();
+      document.getElementById('characterModal').classList.remove('hidden');
+    });
 
-    // Language Toggle Listener
-    this.langBtn.addEventListener('click', () => {
+    document.getElementById('btnOpenSettings').addEventListener('click', () => {
+      this.audio.playBtnClick();
+      document.getElementById('pauseModal').classList.remove('hidden');
+    });
+
+    document.getElementById('btnOpenCredits').addEventListener('click', () => {
+      this.audio.playBtnClick();
+      document.getElementById('creditsModal').classList.remove('hidden');
+    });
+
+    // Close Modal Buttons
+    document.getElementById('closeMapBtn').addEventListener('click', () => {
+      document.getElementById('worldMapModal').classList.add('hidden');
+    });
+    document.getElementById('closeCharBtn').addEventListener('click', () => {
+      document.getElementById('characterModal').classList.add('hidden');
+    });
+    document.getElementById('closeSettingsBtn').addEventListener('click', () => {
+      document.getElementById('pauseModal').classList.add('hidden');
+    });
+    document.getElementById('closeCreditsBtn').addEventListener('click', () => {
+      document.getElementById('creditsModal').classList.add('hidden');
+    });
+
+    // Level Select Action
+    document.getElementById('btnLaunchWorld1').addEventListener('click', () => {
+      document.getElementById('worldMapModal').classList.add('hidden');
+      this.startLevelTransition();
+    });
+
+    // Character Viewer Outfits & Animations
+    document.querySelectorAll('.outfit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.outfit-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.selectedOutfit = e.target.getAttribute('data-outfit');
+        this.player.outfit = this.selectedOutfit;
+        this.previewPlayer.outfit = this.selectedOutfit;
+        this.audio.playBtnClick();
+      });
+    });
+
+    document.querySelectorAll('.anim-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.anim-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        this.previewAnimState = e.target.getAttribute('data-anim');
+        this.audio.playBtnClick();
+      });
+    });
+
+    // Language Toggles (Both in Lobby & in Gameplay HUD)
+    const toggleLang = () => {
       const nextLang = Localization.currentLang === 'en' ? 'hi' : 'en';
       Localization.setLanguage(nextLang);
       this.updateLocalizationUI();
-    });
+      this.audio.playBtnClick();
+    };
+    document.getElementById('langToggle').addEventListener('click', toggleLang);
+    document.getElementById('lobbyLangToggle').addEventListener('click', toggleLang);
 
-    // Sound Toggle Listener
-    this.soundBtn.addEventListener('click', () => {
+    // Sound Toggles
+    const toggleSound = () => {
       this.audio.resumeContext();
       this.audio.startBGM();
       const muted = this.audio.toggleMute();
-      this.soundBtn.textContent = muted ? '🔇' : '🔊';
-    });
+      document.getElementById('soundToggle').textContent = muted ? '🔇' : '🔊';
+      document.getElementById('lobbySoundToggle').textContent = muted ? '🔇' : '🔊';
+    };
+    document.getElementById('soundToggle').addEventListener('click', toggleSound);
+    document.getElementById('lobbySoundToggle').addEventListener('click', toggleSound);
 
-    // Pause Listeners
-    this.pauseBtn.addEventListener('click', () => this.togglePause());
-    this.resumeBtn.addEventListener('click', () => this.togglePause(false));
-    this.restartBtn.addEventListener('click', () => {
+    // Pause & Settings Listeners
+    document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
+    document.getElementById('resumeBtn').addEventListener('click', () => this.togglePause(false));
+    document.getElementById('restartBtn').addEventListener('click', () => {
       this.togglePause(false);
       this.restartGame();
     });
 
-    // Settings Listeners
-    this.shakeToggle.addEventListener('change', (e) => {
+    // Return to Camp / Lobby
+    const returnToCamp = () => {
+      this.togglePause(false);
+      document.getElementById('victoryModal').classList.add('hidden');
+      this.hudEl.classList.add('hidden');
+      this.controlsHint.classList.add('hidden');
+      document.getElementById('lobbyScreen').classList.remove('hidden');
+      this.appState = 'lobby';
+    };
+    document.getElementById('pauseLobbyBtn').addEventListener('click', returnToCamp);
+    document.getElementById('victoryLobbyBtn').addEventListener('click', returnToCamp);
+
+    document.getElementById('shakeToggle').addEventListener('change', (e) => {
       this.camera.shakeEnabled = e.target.checked;
     });
 
-    this.contrastToggle.addEventListener('change', (e) => {
+    document.getElementById('contrastToggle').addEventListener('change', (e) => {
       this.highContrast = e.target.checked;
       this.canvas.classList.toggle('high-contrast', this.highContrast);
     });
 
-    this.assistToggle.addEventListener('change', (e) => {
+    document.getElementById('assistToggle').addEventListener('change', (e) => {
       this.assistMode = e.target.checked;
       this.showBanner(this.assistMode ? 'Assist Mode Enabled' : 'Assist Mode Disabled');
     });
 
-    this.volumeSlider.addEventListener('input', (e) => {
+    document.getElementById('volumeSlider').addEventListener('input', (e) => {
       this.audio.setVolume(parseFloat(e.target.value));
     });
 
-    this.playAgainBtn.addEventListener('click', () => {
-      this.victoryModal.classList.add('hidden');
-      this.restartGame();
+    document.getElementById('textSpeedSelect').addEventListener('change', (e) => {
+      this.dialogue.setTextSpeed(e.target.value);
     });
 
-    // User first interaction starts Audio context & BGM
-    window.addEventListener('keydown', () => {
-      this.audio.resumeContext();
-      this.audio.startBGM();
-    }, { once: true });
-
-    window.addEventListener('click', () => {
-      this.audio.resumeContext();
-      this.audio.startBGM();
-    }, { once: true });
+    document.getElementById('playAgainBtn').addEventListener('click', () => {
+      document.getElementById('victoryModal').classList.add('hidden');
+      this.restartGame();
+    });
 
     this.updateLocalizationUI();
   }
@@ -201,8 +311,64 @@ class GameApp {
       const key = el.getAttribute('data-i18n');
       el.textContent = Localization.get(key);
     });
+
+    const isEn = Localization.currentLang === 'en';
+    document.getElementById('langToggle').textContent = isEn ? '🇮🇳 हिंदी' : '🇬🇧 EN';
+    document.getElementById('lobbyLangToggle').textContent = isEn ? '🇮🇳 हिंदी' : '🇬🇧 EN';
     this.hudWorld.textContent = Localization.get('worldTitle');
-    this.langBtn.textContent = Localization.currentLang === 'en' ? '🇮🇳 हिंदी' : '🇬🇧 EN';
+  }
+
+  startLevelTransition() {
+    // 1. Hide Lobby
+    document.getElementById('lobbyScreen').classList.add('hidden');
+
+    // 2. Show Loading Screen
+    const loadingScreen = document.getElementById('loadingScreen');
+    const loadingBar = document.getElementById('loadingBarFill');
+    const tipText = document.getElementById('loadingTipText');
+
+    const tips = [
+      Localization.get('tip1'),
+      Localization.get('tip2'),
+      Localization.get('tip3'),
+      Localization.get('tip4')
+    ];
+    tipText.textContent = tips[Math.floor(Math.random() * tips.length)];
+
+    loadingScreen.classList.remove('hidden');
+    loadingBar.style.width = '0%';
+
+    let progress = 0;
+    const loadInterval = setInterval(() => {
+      progress += 20;
+      loadingBar.style.width = `${progress}%`;
+
+      if (progress >= 100) {
+        clearInterval(loadInterval);
+        setTimeout(() => {
+          loadingScreen.classList.add('hidden');
+          this.beginGameplay();
+        }, 300);
+      }
+    }, 180);
+  }
+
+  beginGameplay() {
+    this.appState = 'gameplay';
+    this.restartGame();
+
+    // Show HUD & hint
+    this.hudEl.classList.remove('hidden');
+    this.controlsHint.classList.remove('hidden');
+
+    // Cinematic Title Card Whoosh
+    const tc = document.getElementById('titleCardOverlay');
+    tc.classList.remove('hidden');
+    this.audio.playTitleCardWhoosh();
+
+    setTimeout(() => {
+      tc.classList.add('hidden');
+    }, 2400);
   }
 
   showBanner(msg, duration = 2.2) {
@@ -211,8 +377,9 @@ class GameApp {
   }
 
   togglePause(forcedState = null) {
+    if (this.appState !== 'gameplay') return;
     this.isPaused = (forcedState !== null) ? forcedState : !this.isPaused;
-    this.pauseModal.classList.toggle('hidden', !this.isPaused);
+    document.getElementById('pauseModal').classList.toggle('hidden', !this.isPaused);
   }
 
   restartGame() {
@@ -232,7 +399,6 @@ class GameApp {
       return;
     }
 
-    // Check interaction with Elder NPC
     const elderDist = Math.abs(this.player.x - this.npcElder.x);
     if (elderDist < 75 && this.input.actions.interactDown) {
       const script = Localization.get('dialogueIntro');
@@ -247,22 +413,59 @@ class GameApp {
   }
 
   loop(timestamp) {
-    const dt = Math.min((timestamp - this.lastTime) / 1000, 0.05); // Clamp dt to prevent tunneling
+    const dt = Math.min((timestamp - this.lastTime) / 1000, 0.05);
     this.lastTime = timestamp;
 
     this.input.update();
 
-    if (this.input.actions.pauseDown) {
-      this.togglePause();
+    if (this.appState === 'gameplay') {
+      if (this.input.actions.pauseDown) {
+        this.togglePause();
+      }
+
+      if (!this.isPaused) {
+        this.update(dt);
+      }
+      this.render();
+    } else if (this.appState === 'lobby') {
+      this.renderLobbyBackground(dt);
     }
 
-    if (!this.isPaused) {
-      this.update(dt);
+    // Always update Character Showcase preview if modal is open
+    if (!document.getElementById('characterModal').classList.contains('hidden')) {
+      this.updateCharacterPreview(dt);
     }
-
-    this.render();
 
     requestAnimationFrame((t) => this.loop(t));
+  }
+
+  renderLobbyBackground(dt) {
+    // Parallax scenic background behind lobby menu
+    this.renderer.update(dt);
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.renderer.drawParallaxBackground(this.ctx, 200, 0);
+
+    // Draw bonfire / camp ledge
+    this.ctx.fillStyle = '#4E342E';
+    this.ctx.fillRect(0, 480, this.width, 60);
+    this.ctx.fillStyle = '#4CAF50';
+    this.ctx.fillRect(0, 480, this.width, 10);
+  }
+
+  updateCharacterPreview(dt) {
+    this.previewCtx.clearRect(0, 0, 220, 260);
+
+    this.previewPlayer.state = this.previewAnimState;
+    this.previewPlayer.animTime += dt;
+    this.previewPlayer.scarfWave += dt * 8;
+
+    this.previewCtx.save();
+    this.previewCtx.translate(110, 200);
+    this.previewCtx.scale(1.8, 1.8); // 1.8x showcase zoom
+    this.previewPlayer.x = -14;
+    this.previewPlayer.y = -46;
+    this.previewPlayer.draw(this.previewCtx);
+    this.previewCtx.restore();
   }
 
   update(dt) {
@@ -270,19 +473,20 @@ class GameApp {
 
     if (this.dialogue.isActive) {
       this.dialogue.update(dt);
-      return; // Freeze world physics during cinematic dialogue
+      return;
     }
 
     this.gameTime += dt;
     this.renderer.update(dt);
     this.particles.update(dt);
 
-    // Banner message decay
     if (this.bannerTimer > 0) {
       this.bannerTimer -= dt;
     }
 
-    // Update Player
+    const prevHealth = this.player.health;
+
+    // Player Update
     this.player.update(
       this.input,
       this.level.platforms,
@@ -291,6 +495,12 @@ class GameApp {
       this.camera,
       this.particles
     );
+
+    // Damage heart flash
+    if (this.player.health < prevHealth) {
+      this.hudHearts.classList.add('flash-damage');
+      setTimeout(() => this.hudHearts.classList.remove('flash-damage'), 400);
+    }
 
     // Bottom pit check
     if (this.player.y > this.level.height + 60) {
@@ -307,18 +517,22 @@ class GameApp {
       }, 700);
     }
 
-    // Update Camera
+    // Camera follow
     this.camera.update(this.player, dt);
 
-    // Update Collectibles
+    // Update Shards
     for (const shard of this.shards) {
       shard.update(dt, this.player, this.audio, this.particles, (s) => {
         this.shardsCollected++;
         this.score += s.isRare ? 500 : 100;
+
+        // Scale pulse animation on shard count
+        this.hudShards.classList.add('pulse-shard');
+        setTimeout(() => this.hudShards.classList.remove('pulse-shard'), 200);
       });
     }
 
-    // Update Checkpoints
+    // Checkpoints
     for (const cp of this.checkpoints) {
       cp.update(dt, this.player, this.audio, this.particles, () => {
         this.activeCheckpoint = { x: cp.x, y: cp.y - 20 };
@@ -326,31 +540,24 @@ class GameApp {
       });
     }
 
-    // Update Spring Flowers
-    for (const sp of this.springs) {
-      sp.update(dt, this.player, this.audio, this.particles);
-    }
+    // Springs
+    for (const sp of this.springs) sp.update(dt, this.player, this.audio, this.particles);
 
-    // Update Enemies
-    for (const beetle of this.beetles) {
-      beetle.update(dt, this.player, this.audio, this.particles);
-    }
+    // Enemies
+    for (const beetle of this.beetles) beetle.update(dt, this.player, this.audio, this.particles);
+    for (const charger of this.chargers) charger.update(dt, this.player, this.audio, this.particles, this.camera);
 
-    for (const charger of this.chargers) {
-      charger.update(dt, this.player, this.audio, this.particles, this.camera);
-    }
-
-    // Update NPC Elder
+    // NPC Elder
     this.npcElder.update(dt);
 
-    // Update Lore Tablet
+    // Lore Tablet
     this.loreTablet.update(this.player, () => {
       this.score += 1000;
       this.showBanner(Localization.get('secretFound'), 3.0);
       this.particles.spawnTextPopup(this.loreTablet.x + 20, this.loreTablet.y - 20, '+1000 Secret!', '#FFEA00');
     });
 
-    // Update Goal Gateway
+    // Goal Gateway
     this.goalGateway.update(dt, this.player, this.audio, () => {
       this.player.hasWon = true;
       this.showVictoryScreen();
@@ -373,7 +580,7 @@ class GameApp {
       }
       document.getElementById('resRank').textContent = rank;
 
-      this.victoryModal.classList.remove('hidden');
+      document.getElementById('victoryModal').classList.remove('hidden');
     }, 600);
   }
 
@@ -382,7 +589,6 @@ class GameApp {
     this.hudTime.textContent = `⏱️ ${this.gameTime.toFixed(0)}s`;
     this.hudScore.textContent = `⭐ ${this.score}`;
 
-    // Hearts display
     let hearts = '';
     for (let i = 0; i < this.player.maxHealth; i++) {
       hearts += (i < this.player.health) ? '❤️' : '🖤';

@@ -17,6 +17,7 @@ import { Level_1_1 } from './game/LevelData.js';
 import { Localization } from './game/Localization.js';
 import { DialogueManager } from './game/DialogueManager.js';
 import { WorldRenderer, ParticleSystem } from './game/Renderer.js';
+import { VoiceEngine } from './engine/Voice.js';
 
 class GameApp {
   constructor() {
@@ -30,8 +31,9 @@ class GameApp {
     // Subsystems
     this.input = new Input();
     this.audio = new AudioManager();
+    this.voice = new VoiceEngine(this.audio);
     this.camera = new Camera(this.width, this.height);
-    this.dialogue = new DialogueManager(this.audio);
+    this.dialogue = new DialogueManager(this.audio, this.voice);
     this.renderer = new WorldRenderer(this.width, this.height);
     this.particles = new ParticleSystem();
 
@@ -232,6 +234,43 @@ class GameApp {
     document.getElementById('soundToggle').addEventListener('click', toggleSound);
     document.getElementById('lobbySoundToggle').addEventListener('click', toggleSound);
 
+    // Fullscreen Toggles
+    const toggleFullscreen = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.warn("Fullscreen request error:", err);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+      this.audio.playBtnClick();
+    };
+    document.getElementById('fullscreenBtn')?.addEventListener('click', toggleFullscreen);
+    document.getElementById('lobbyFullscreenBtn')?.addEventListener('click', toggleFullscreen);
+    document.getElementById('modalFullscreenBtn')?.addEventListener('click', toggleFullscreen);
+
+    // Voice Acting Toggles
+    const toggleVoice = () => {
+      const isEnabled = this.voice.toggleVoice();
+      const label = isEnabled ? Localization.get('voiceOn') : Localization.get('voiceOff');
+      const icon = isEnabled ? '🗣️' : '🔇';
+      document.getElementById('voiceToggle').textContent = icon;
+      document.getElementById('lobbyVoiceToggle').textContent = label;
+      document.getElementById('voiceActingToggle').checked = isEnabled;
+      this.audio.playBtnClick();
+    };
+    document.getElementById('voiceToggle')?.addEventListener('click', toggleVoice);
+    document.getElementById('lobbyVoiceToggle')?.addEventListener('click', toggleVoice);
+    document.getElementById('voiceActingToggle')?.addEventListener('change', (e) => {
+      this.voice.enabled = e.target.checked;
+      if (!this.voice.enabled) this.voice.stop();
+      const label = this.voice.enabled ? Localization.get('voiceOn') : Localization.get('voiceOff');
+      document.getElementById('voiceToggle').textContent = this.voice.enabled ? '🗣️' : '🔇';
+      document.getElementById('lobbyVoiceToggle').textContent = label;
+    });
+
     // Pause & Settings Listeners
     document.getElementById('pauseBtn').addEventListener('click', () => this.togglePause());
     document.getElementById('resumeBtn').addEventListener('click', () => this.togglePause(false));
@@ -279,6 +318,18 @@ class GameApp {
       this.restartGame();
     });
 
+    // Universal audio & speech synthesis unlock on first gesture
+    const unlockAudioAndSpeech = () => {
+      this.audio.resumeContext();
+      this.audio.startBGM();
+      if (this.voice && this.voice.synth) {
+        if (this.voice.synth.paused) this.voice.synth.resume();
+      }
+    };
+    window.addEventListener('click', unlockAudioAndSpeech, { passive: true });
+    window.addEventListener('keydown', unlockAudioAndSpeech, { passive: true });
+    window.addEventListener('touchstart', unlockAudioAndSpeech, { passive: true });
+
     this.updateLocalizationUI();
   }
 
@@ -316,6 +367,10 @@ class GameApp {
     document.getElementById('langToggle').textContent = isEn ? '🇮🇳 हिंदी' : '🇬🇧 EN';
     document.getElementById('lobbyLangToggle').textContent = isEn ? '🇮🇳 हिंदी' : '🇬🇧 EN';
     this.hudWorld.textContent = Localization.get('worldTitle');
+
+    const isVoice = this.voice ? this.voice.enabled : true;
+    const lobbyVoice = document.getElementById('lobbyVoiceToggle');
+    if (lobbyVoice) lobbyVoice.textContent = isVoice ? Localization.get('voiceOn') : Localization.get('voiceOff');
   }
 
   startLevelTransition() {

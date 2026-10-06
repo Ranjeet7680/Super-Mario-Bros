@@ -7,8 +7,9 @@
 import { Localization } from './Localization.js';
 
 export class DialogueManager {
-  constructor(audio) {
+  constructor(audio, voiceEngine = null) {
     this.audio = audio;
+    this.voice = voiceEngine;
     this.isActive = false;
     this.dialogueQueue = [];
     this.currentIndex = 0;
@@ -49,6 +50,11 @@ export class DialogueManager {
     this.charIndex = 0;
     this.typeTimer = 0;
 
+    // Spoken voice synthesis with character persona
+    if (this.voice) {
+      this.voice.speak(this.currentEntry.text, this.currentEntry.role || this.currentEntry.speaker, Localization.currentLang);
+    }
+
     if (this.typeSpeed === 0) {
       this.displayedText = this.targetText;
       this.charIndex = this.targetText.length;
@@ -57,6 +63,10 @@ export class DialogueManager {
 
   next() {
     if (!this.isActive) return;
+
+    if (this.voice) {
+      this.voice.stop();
+    }
 
     // If currently typing, jump to full text
     if (this.charIndex < this.targetText.length) {
@@ -72,6 +82,9 @@ export class DialogueManager {
   close() {
     this.isActive = false;
     this.currentEntry = null;
+    if (this.voice) {
+      this.voice.stop();
+    }
     if (this.audio) this.audio.setMusicDucking(false);
     if (this.onCompleteCallback) {
       this.onCompleteCallback();

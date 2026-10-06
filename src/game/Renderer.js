@@ -364,25 +364,293 @@ export class WorldRenderer {
     ctx.fill();
 
     // 6. MIDGROUND VEGETATION / SILHOUETTES
-    ctx.fillStyle = theme === 'betla' ? '#004D40' : (theme === 'jamshedpur' ? '#212121' : '#2E7D32');
-    for (let i = 0; i < 18; i++) {
-      const treeWorldX = i * 220;
-      const screenX = treeWorldX - camX * 0.45;
-      if (screenX > -60 && screenX < this.width + 60) {
-        if (theme === 'jamshedpur') {
+    if (theme === 'jamshedpur') {
+      ctx.fillStyle = '#212121';
+      for (let i = 0; i < 18; i++) {
+        const treeWorldX = i * 220;
+        const screenX = treeWorldX - camX * 0.45;
+        if (screenX > -60 && screenX < this.width + 60) {
           // Industrial chimneys & blast towers
           ctx.fillRect(screenX + 14, this.height - 200, 14, 110);
           ctx.fillRect(screenX + 8, this.height - 210, 26, 12);
-        } else {
-          // Sal / Mahua trees
-          ctx.fillRect(screenX + 16, this.height - 180, 8, 90);
+        }
+      }
+    } else {
+      // Authentic Jharkhand Midground Trees (Sal, Palas, Mahua, Pine)
+      for (let i = 0; i < 22; i++) {
+        const treeWorldX = i * 190;
+        const screenX = treeWorldX - camX * 0.40;
+        if (screenX > -100 && screenX < this.width + 100) {
+          const treeTypes = (theme === 'netarhat') ? ['pine', 'sal', 'pine'] : ['sal', 'palas', 'sal', 'mahua'];
+          const tType = treeTypes[i % treeTypes.length];
+          const tHeight = 150 + ((i * 37) % 55); // Height 150 - 205
+          const tWidth = tHeight * 0.65;
+          const tGroundY = this.height - 110 + Math.sin(treeWorldX * 0.005) * 15;
+          const sway = Math.sin(this.time * 2.2 + i * 1.3) * (theme === 'netarhat' || theme === 'damodar' ? 8 : 4.5);
+          this.drawDetailedTree(ctx, screenX + 25, tGroundY, tHeight, tWidth, tType, sway, false);
+        }
+      }
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Procedural Authentic Tree Renderer
+   * Renders realistic Sal (Shorea robusta), Palas (Butea monosperma), Mahua, or Highland Pine trees.
+   * Features: Tapered hardwood trunk, bark fissures, root flare, branching forks,
+   * layered multi-lobed organic foliage with shadow/highlight depth, Palas blossoms, and wind sway.
+   */
+  drawDetailedTree(ctx, rootX, rootY, height = 180, width = 120, type = 'sal', sway = 0, isSilhouetted = false) {
+    ctx.save();
+
+    const trunkWidth = Math.max(11, height * 0.075);
+    const crownY = rootY - height;
+    const trunkTopY = rootY - height * 0.62;
+
+    // 1. Root flare & ground shadow
+    if (!isSilhouetted) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.beginPath();
+      ctx.ellipse(rootX, rootY, trunkWidth * 1.8, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 2. Tapered Trunk Path
+    ctx.beginPath();
+    ctx.moveTo(rootX - trunkWidth * 1.3, rootY);
+    ctx.quadraticCurveTo(rootX - trunkWidth * 0.6, rootY - height * 0.15, rootX - trunkWidth * 0.42, trunkTopY);
+    ctx.lineTo(rootX + trunkWidth * 0.42, trunkTopY);
+    ctx.quadraticCurveTo(rootX + trunkWidth * 0.6, rootY - height * 0.15, rootX + trunkWidth * 1.3, rootY);
+    ctx.closePath();
+
+    if (isSilhouetted) {
+      ctx.fillStyle = '#16331C';
+      ctx.fill();
+    } else {
+      // Wood gradient: deep shadow to sunlit warm timber bark
+      const trunkGrad = ctx.createLinearGradient(rootX - trunkWidth, rootY, rootX + trunkWidth, rootY);
+      trunkGrad.addColorStop(0, '#261811');
+      trunkGrad.addColorStop(0.35, '#3E2723');
+      trunkGrad.addColorStop(0.75, '#5D4037');
+      trunkGrad.addColorStop(1, '#6D4C41');
+      ctx.fillStyle = trunkGrad;
+      ctx.fill();
+
+      // Vertical bark fissure lines
+      ctx.strokeStyle = '#24160F';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(rootX - trunkWidth * 0.15, rootY - 4);
+      ctx.lineTo(rootX - trunkWidth * 0.1, trunkTopY + 12);
+      ctx.moveTo(rootX + trunkWidth * 0.2, rootY - 8);
+      ctx.lineTo(rootX + trunkWidth * 0.15, trunkTopY + 22);
+      ctx.stroke();
+
+      // Bark highlight rim
+      ctx.strokeStyle = 'rgba(141, 110, 99, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(rootX + trunkWidth * 0.35, rootY - 5);
+      ctx.lineTo(rootX + trunkWidth * 0.3, trunkTopY + 10);
+      ctx.stroke();
+    }
+
+    // 3. Branch Forks
+    const branchColor = isSilhouetted ? '#16331C' : '#3E2723';
+    ctx.strokeStyle = branchColor;
+    ctx.lineCap = 'round';
+
+    // Left primary bough
+    const leftBranchTipX = rootX - width * 0.32 + sway * 0.6;
+    const leftBranchTipY = rootY - height * 0.52;
+    ctx.lineWidth = trunkWidth * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(rootX - trunkWidth * 0.3, rootY - height * 0.36);
+    ctx.quadraticCurveTo(rootX - width * 0.16, rootY - height * 0.43, leftBranchTipX, leftBranchTipY);
+    ctx.stroke();
+
+    // Right primary bough
+    const rightBranchTipX = rootX + width * 0.35 + sway * 0.7;
+    const rightBranchTipY = rootY - height * 0.55;
+    ctx.lineWidth = trunkWidth * 0.4;
+    ctx.beginPath();
+    ctx.moveTo(rootX + trunkWidth * 0.3, rootY - height * 0.42);
+    ctx.quadraticCurveTo(rootX + width * 0.18, rootY - height * 0.48, rightBranchTipX, rightBranchTipY);
+    ctx.stroke();
+
+    // Center upper crown bough
+    ctx.lineWidth = trunkWidth * 0.35;
+    ctx.beginPath();
+    ctx.moveTo(rootX, trunkTopY);
+    ctx.quadraticCurveTo(rootX + sway * 0.4, rootY - height * 0.72, rootX + sway * 0.8, crownY + height * 0.16);
+    ctx.stroke();
+
+    // 4. Layered Multi-Lobe Foliage Canopy
+    if (type === 'pine') {
+      // Coniferous Pine Needle Tiers (Netarhat / Highland Ridge)
+      const tiers = 4;
+      const tierHeight = (height * 0.65) / tiers;
+      for (let t = 0; t < tiers; t++) {
+        const ty = crownY + t * tierHeight + 12;
+        const tw = (width * 0.38) + t * (width * 0.18);
+        const tSway = sway * (1.0 - t * 0.2);
+
+        ctx.fillStyle = isSilhouetted ? '#0D2B14' : (t === 0 ? '#2E7D32' : (t === 1 ? '#1B5E20' : '#14461B'));
+        ctx.beginPath();
+        ctx.moveTo(rootX + tSway, ty - tierHeight * 0.6);
+        ctx.lineTo(rootX + tw + tSway, ty + tierHeight * 0.6);
+        ctx.lineTo(rootX - tw + tSway, ty + tierHeight * 0.6);
+        ctx.closePath();
+        ctx.fill();
+
+        if (!isSilhouetted) {
+          ctx.strokeStyle = '#66BB6A';
+          ctx.lineWidth = 1.5;
           ctx.beginPath();
-          ctx.arc(screenX + 20, this.height - 210, 32, 0, Math.PI * 2);
+          ctx.moveTo(rootX + tSway, ty - tierHeight * 0.6);
+          ctx.lineTo(rootX + tw * 0.75 + tSway, ty + tierHeight * 0.35);
+          ctx.stroke();
+        }
+      }
+    } else {
+      // Broadleaf Organic Multi-Lobe Canopy (Sal, Palas, Mahua)
+      const clusters = [
+        // Bottom shadow lobes
+        { rx: -0.32, ry: -0.50, rad: width * 0.25, shade: 'shadow' },
+        { rx: 0.34, ry: -0.52, rad: width * 0.25, shade: 'shadow' },
+        { rx: 0.0, ry: -0.56, rad: width * 0.29, shade: 'shadow' },
+
+        // Mid-canopy main body
+        { rx: -0.26, ry: -0.66, rad: width * 0.29, shade: 'mid' },
+        { rx: 0.25, ry: -0.68, rad: width * 0.29, shade: 'mid' },
+        { rx: -0.04, ry: -0.72, rad: width * 0.33, shade: 'mid' },
+
+        // Upper canopy & sunlit crown
+        { rx: -0.15, ry: -0.83, rad: width * 0.27, shade: 'light' },
+        { rx: 0.15, ry: -0.84, rad: width * 0.26, shade: 'light' },
+        { rx: 0.02, ry: -0.93, rad: width * 0.23, shade: 'top' }
+      ];
+
+      let cShadow = '#0D3813';
+      let cMid = '#1B5E20';
+      let cLight = '#2E7D32';
+      let cTop = '#43A047';
+      let cRim = '#81C784';
+
+      if (type === 'mahua') {
+        cShadow = '#1B3811';
+        cMid = '#33691E';
+        cLight = '#558B2F';
+        cTop = '#7CB342';
+        cRim = '#AED581';
+      }
+
+      for (const cl of clusters) {
+        const lobeSway = sway * (cl.ry * -1);
+        const cx = rootX + cl.rx * width + lobeSway;
+        const cy = rootY + cl.ry * height;
+        const rad = cl.rad;
+
+        let col = cMid;
+        if (cl.shade === 'shadow') col = cShadow;
+        else if (cl.shade === 'light') col = cLight;
+        else if (cl.shade === 'top') col = cTop;
+
+        ctx.fillStyle = isSilhouetted ? '#0E2E16' : col;
+
+        // Main circular lobe
+        ctx.beginPath();
+        ctx.arc(cx, cy, rad, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Scalloped outer puffy leaf clusters for realistic organic silhouette
+        if (!isSilhouetted) {
+          ctx.fillStyle = (cl.shade === 'top' || cl.shade === 'light') ? cTop : cMid;
+          for (let a = 0; a < Math.PI * 2; a += Math.PI / 3) {
+            const px = cx + Math.cos(a) * rad * 0.82;
+            const py = cy + Math.sin(a) * rad * 0.82;
+            ctx.beginPath();
+            ctx.arc(px, py, rad * 0.36, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          // Top sunlit leaf highlight rim
+          if (cl.shade === 'top' || cl.shade === 'light') {
+            ctx.fillStyle = cRim;
+            ctx.beginPath();
+            ctx.arc(cx, cy - rad * 0.35, rad * 0.48, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      // Palas "Flame of the Forest" Flowering Blossoms
+      if (type === 'palas' && !isSilhouetted) {
+        const blossomPoints = [
+          { bx: -0.30, by: -0.50 },
+          { bx: 0.28, by: -0.54 },
+          { bx: -0.20, by: -0.70 },
+          { bx: 0.18, by: -0.74 },
+          { bx: -0.07, by: -0.86 },
+          { bx: 0.10, by: -0.90 }
+        ];
+
+        for (const bp of blossomPoints) {
+          const bSway = sway * (bp.by * -1);
+          const bx = rootX + bp.bx * width + bSway;
+          const by = rootY + bp.by * height;
+
+          // Fiery crimson/orange flower petals
+          ctx.fillStyle = '#FF3D00';
+          ctx.beginPath();
+          ctx.arc(bx, by, 7, 0, Math.PI * 2);
+          ctx.arc(bx + 4, by - 3, 6, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#FF9100';
+          ctx.beginPath();
+          ctx.arc(bx + 2, by - 2, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#FFEA00';
+          ctx.beginPath();
+          ctx.arc(bx + 1, by - 2, 2, 0, Math.PI * 2);
           ctx.fill();
         }
       }
     }
 
+    ctx.restore();
+  }
+
+  /**
+   * Draws scenic background trees anchored directly to ground platforms
+   */
+  drawWorldTrees(ctx, platforms, camX, camY, theme = 'ranchi') {
+    if (theme === 'jamshedpur' || theme === 'dhanbad') return; // Industrial/subterranean biomes
+
+    ctx.save();
+    for (let i = 0; i < platforms.length; i++) {
+      const p = platforms[i];
+      if (p.isAssist || p.moving || p.surfaceType === 'water' || p.surfaceType === 'conveyor') continue;
+      if (p.width < 180) continue;
+
+      // Deterministic tree placement on this platform
+      const treeWorldX = p.x + Math.floor(p.width * 0.42);
+      const treeGroundY = p.y;
+
+      // Cull against camera bounds
+      if (treeWorldX < camX - 140 || treeWorldX > camX + this.width + 140) continue;
+
+      const treeTypes = (theme === 'netarhat') ? ['pine', 'sal'] : ['sal', 'palas', 'mahua'];
+      const tType = treeTypes[i % treeTypes.length];
+      const tHeight = 170 + ((i * 41) % 45); // Height 170 - 215px
+      const tWidth = tHeight * 0.65;
+      const sway = Math.sin(this.time * 2.0 + treeWorldX * 0.008) * (theme === 'netarhat' || theme === 'damodar' ? 9 : 5);
+
+      this.drawDetailedTree(ctx, treeWorldX, treeGroundY, tHeight, tWidth, tType, sway, false);
+    }
     ctx.restore();
   }
 

@@ -778,6 +778,9 @@ class GameApp {
     this.ctx.save();
     this.ctx.translate(-camX, -camY);
 
+    // Realistic Sal & Palas trees anchored into platform soil
+    this.renderer.drawWorldTrees(this.ctx, this.level.platforms, camX, camY, this.level.theme);
+
     this.renderer.drawPlatforms(this.ctx, this.level.platforms, camX, camY, this.assistMode);
 
     // 3. Goal Gateway Arch

@@ -15,7 +15,7 @@ import { Physics } from './engine/Physics.js';
 import { Player } from './game/Player.js';
 import { PatrolBeetle, ForestCharger } from './game/Enemies.js';
 import { EchoShard, CheckpointLantern, SpringFlower, NpcElder, LoreTablet, GoalGateway, TempleShrine } from './game/Entities.js';
-import { LevelRegistry } from './game/LevelData.js';
+import { LevelRegistry } from './game/LevelData.js?v=1.0.2';
 import { Localization } from './game/Localization.js';
 import { DialogueManager } from './game/DialogueManager.js';
 import { StoryManager } from './game/StoryManager.js';
@@ -92,6 +92,10 @@ class GameApp {
     this.lastTime = performance.now();
     this.bootTimer = 0;
 
+    // Global references for fail-safe interactions
+    window.__gameInstance = this;
+    window.__gameApp = this;
+
     this.initLevel();
     this.initUI();
     this.initTouchControls();
@@ -143,31 +147,64 @@ class GameApp {
     const goToLobby = () => {
       if (this.appState !== 'boot') return;
       this.appState = 'lobby';
-      bootScreen.classList.add('hidden');
-      document.getElementById('lobbyScreen').classList.remove('hidden');
-      this.audio.resumeContext();
-      this.audio.startBGM();
+      if (bootScreen) bootScreen.classList.add('hidden');
+      const lobby = document.getElementById('lobbyScreen');
+      if (lobby) lobby.classList.remove('hidden');
+      try {
+        this.audio.resumeContext();
+        this.audio.startBGM();
+      } catch (err) {
+        console.warn('Audio resume error during boot transition:', err);
+      }
     };
 
-    skipBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      goToLobby();
-    });
+    this.skipBoot = goToLobby;
+    window.skipBoot = goToLobby;
 
-    bootScreen.addEventListener('click', () => {
-      this.audio.resumeContext();
-      this.audio.playLogoSting();
-      setTimeout(goToLobby, 800);
-    }, { once: true });
+    const handleSkip = (e) => {
+      if (e) e.stopPropagation();
+      goToLobby();
+    };
+
+    if (skipBtn) {
+      skipBtn.addEventListener('click', handleSkip);
+      skipBtn.addEventListener('pointerdown', handleSkip);
+      skipBtn.addEventListener('touchstart', handleSkip, { passive: true });
+    }
+
+    if (bootScreen) {
+      let stingPlayed = false;
+      const advanceBoot = () => {
+        if (this.appState !== 'boot') return;
+        try {
+          this.audio.resumeContext();
+          if (!stingPlayed) {
+            stingPlayed = true;
+            this.audio.playLogoSting();
+          }
+        } catch (err) {
+          console.warn('Boot sting error:', err);
+        }
+        setTimeout(goToLobby, 350);
+      };
+
+      bootScreen.addEventListener('click', advanceBoot);
+      bootScreen.addEventListener('pointerdown', advanceBoot);
+      bootScreen.addEventListener('touchstart', advanceBoot, { passive: true });
+    }
 
     window.addEventListener('keydown', (e) => {
-      if (this.appState === 'boot' && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ')) {
+      if (this.appState === 'boot' && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ' || e.key === 'Enter')) {
         e.preventDefault();
-        this.audio.resumeContext();
-        this.audio.playLogoSting();
-        setTimeout(goToLobby, 400);
+        try {
+          this.audio.resumeContext();
+          this.audio.playLogoSting();
+        } catch (err) {
+          console.warn('Boot key audio error:', err);
+        }
+        setTimeout(goToLobby, 250);
       }
-    }, { once: true });
+    });
 
     // Auto-advance after 3.8s
     setTimeout(() => {
@@ -1209,6 +1246,18 @@ class GameApp {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  new GameApp();
-});
+function launchGame() {
+  if (!window.__gameInstance) {
+    try {
+      window.__gameInstance = new GameApp();
+    } catch (err) {
+      console.error('Fatal error initializing GameApp:', err);
+    }
+  }
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', launchGame);
+} else {
+  launchGame();
+}

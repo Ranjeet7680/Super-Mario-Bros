@@ -537,9 +537,51 @@
         </div>
       </div>
     </div>
-
   </div>
 
-  <script type="module" src="src/main.js"></script>
+  <script>
+    // Fail-safe boot dismissal: ensure boot screen is never frozen under any circumstance
+    (function() {
+      function dismissBoot() {
+        if (typeof window.skipBoot === 'function') {
+          window.skipBoot();
+          return;
+        }
+        var boot = document.getElementById('bootScreen');
+        var lobby = document.getElementById('lobbyScreen');
+        if (boot && !boot.classList.contains('hidden')) {
+          boot.classList.add('hidden');
+          if (lobby) lobby.classList.remove('hidden');
+        }
+      }
+
+      var skipBtn = document.getElementById('skipBootBtn');
+      if (skipBtn) {
+        skipBtn.addEventListener('click', dismissBoot);
+        skipBtn.addEventListener('pointerdown', dismissBoot);
+        skipBtn.addEventListener('touchstart', dismissBoot, { passive: true });
+      }
+
+      var bootScreen = document.getElementById('bootScreen');
+      if (bootScreen) {
+        bootScreen.addEventListener('click', dismissBoot);
+        bootScreen.addEventListener('pointerdown', dismissBoot);
+        bootScreen.addEventListener('touchstart', dismissBoot, { passive: true });
+      }
+
+      window.addEventListener('keydown', function(e) {
+        if (e.code === 'Space' || e.code === 'Enter' || e.key === ' ' || e.key === 'Enter') {
+          var boot = document.getElementById('bootScreen');
+          if (boot && !boot.classList.contains('hidden')) {
+            dismissBoot();
+          }
+        }
+      });
+
+      // Auto fallback advance after 4s
+      setTimeout(dismissBoot, 4000);
+    })();
+  </script>
+  <script type="module" src="src/main.js?v=1.0.2"></script>
 </body>
 </html>

@@ -33,6 +33,19 @@
     <div id="storyScreen" class="screen-overlay hidden">
       <div class="story-letterbox-top"></div>
       <div class="story-container">
+        <!-- Story Chapter Navigation Bar / Theater Selector -->
+        <div class="story-chapter-bar" id="storyChapterBar">
+          <button class="ch-tab" data-ch="all">▶ All Saga</button>
+          <button class="ch-tab active" data-ch="1">Ch 1</button>
+          <button class="ch-tab" data-ch="2">Ch 2</button>
+          <button class="ch-tab" data-ch="3">Ch 3</button>
+          <button class="ch-tab" data-ch="4">Ch 4</button>
+          <button class="ch-tab" data-ch="5">Ch 5</button>
+          <button class="ch-tab" data-ch="6">Ch 6</button>
+          <button class="ch-tab" data-ch="7">Ch 7</button>
+          <button class="ch-tab" data-ch="8">Ch 8</button>
+          <button class="ch-tab" data-ch="9">🌟 Finale</button>
+        </div>
         <div class="story-slide-badge" id="storySceneTag">ACT I: THE SACRED HOMELAND</div>
         <div class="story-visual-canvas-box">
           <canvas id="storyCanvas" width="800" height="340"></canvas>
@@ -450,6 +463,53 @@
           <button id="nextLevelBtn" class="primary-btn pulse-glow" data-i18n="nextLevelBtn">Next Level ▶</button>
           <button id="playAgainBtn" class="secondary-btn" data-i18n="playAgain">Play Again</button>
           <button id="victoryLobbyBtn" class="secondary-btn" data-i18n="returnToLobby">Return to Camp</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. GRAND TRIUMPH / ALL CHAPTERS COMPLETE MODAL -->
+    <div id="grandTriumphModal" class="modal-backdrop hidden">
+      <div class="modal-card grand-triumph-card">
+        <div class="triumph-header">
+          <div class="triumph-crest">🏛️✨</div>
+          <h2 data-i18n="grandTriumphTitle">JHARKHAND UNIFIED — ALL 8 REGIONS RESTORED!</h2>
+          <p data-i18n="grandTriumphSubtitle" class="sub-text">The Rift of Echoes is Sealed • Complete All Chapters Story Conquered</p>
+        </div>
+
+        <div class="triumph-toranas-grid" id="triumphToranasGrid">
+          <div class="triumph-torana-pill"><span>🏛️</span>W1: Ranchi</div>
+          <div class="triumph-torana-pill"><span>🌊</span>W2: Hundru</div>
+          <div class="triumph-torana-pill"><span>🌄</span>W3: Netarhat</div>
+          <div class="triumph-torana-pill"><span>🐅</span>W4: Betla</div>
+          <div class="triumph-torana-pill"><span>🔔</span>W5: Deoghar</div>
+          <div class="triumph-torana-pill"><span>⚙️</span>W6: Jamshedpur</div>
+          <div class="triumph-torana-pill"><span>⛏️</span>W7: Dhanbad</div>
+          <div class="triumph-torana-pill"><span>⚡</span>W8: Damodar</div>
+        </div>
+
+        <div class="results-stats">
+          <div class="stat-row">
+            <span>Campaign Progression:</span>
+            <strong style="color: #FFD54F;">All 8 Torana Gateways Reconnected</strong>
+          </div>
+          <div class="stat-row">
+            <span data-i18n="statsShards">Echo Shards:</span>
+            <strong id="triumphTotalShards">104 / 104</strong>
+          </div>
+          <div class="stat-row">
+            <span data-i18n="score">Total Score:</span>
+            <strong id="triumphTotalScore">35,400</strong>
+          </div>
+          <div class="stat-row rank-row">
+            <span data-i18n="statsRank">Hero Title:</span>
+            <strong class="rank-badge" style="color: #FFD54F;">🌟 Guardian of Jharkhand & Chota Nagpur</strong>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="triumphReplayStoryBtn" class="primary-btn pulse-glow" data-i18n="replayAllStory">🎬 Replay Full Saga (Ch 1–9)</button>
+          <button id="triumphWorldMapBtn" class="secondary-btn" data-i18n="viewWorldMap">🗺️ World Map</button>
+          <button id="triumphLobbyBtn" class="secondary-btn" data-i18n="returnToLobby">Return to Camp</button>
         </div>
       </div>
     </div>

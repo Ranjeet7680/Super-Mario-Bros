@@ -100,7 +100,7 @@ export class Physics {
         }
       } else {
         // Solid block collision
-        if (entity.vy > 0) {
+        if (entity.vy >= 0) {
           entity.y = plat.y - entity.height;
           entity.vy = 0;
           entity.isGrounded = true;
@@ -119,6 +119,20 @@ export class Physics {
           entity.vy = 0;
         }
         box.y = entity.y;
+      }
+    }
+
+    // Secondary horizontal resolution: prevent moving platforms or water currents from pushing entity inside solid walls
+    box = { x: entity.x, y: entity.y, width: entity.width, height: entity.height };
+    for (const plat of platforms) {
+      if (plat.oneWay) continue;
+      if (this.checkAABB(box, plat)) {
+        if (entity.x + entity.width / 2 < plat.x + plat.width / 2) {
+          entity.x = plat.x - entity.width;
+        } else {
+          entity.x = plat.x + plat.width;
+        }
+        box.x = entity.x;
       }
     }
   }

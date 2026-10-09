@@ -20,6 +20,7 @@ export class DialogueManager {
     this.typeSpeed = 0.025; // seconds per char
     this.currentEntry = null;
     this.onCompleteCallback = null;
+    this.lastAdvanceTime = 0;
 
     // Global click / keyboard advance to prevent any dialogue freeze
     window.addEventListener('click', () => {
@@ -80,6 +81,10 @@ export class DialogueManager {
 
   next() {
     if (!this.isActive) return;
+
+    const now = performance.now();
+    if (now - this.lastAdvanceTime < 180) return;
+    this.lastAdvanceTime = now;
 
     if (this.voice) {
       this.voice.stop();

@@ -177,17 +177,16 @@ class GameApp {
     // Lobby Buttons
     document.getElementById('lobbyPlayBtn').addEventListener('click', () => {
       this.audio.playBtnClick();
-      if (!localStorage.getItem('rrr_intro_seen')) {
-        localStorage.setItem('rrr_intro_seen', 'true');
-        this.story.startStory();
-      } else {
-        this.startLevelTransition(this.currentLevelIndex);
-      }
+      const targetLevel = this.currentLevelIndex || 0;
+      const targetChapter = targetLevel + 1;
+      this.story.startChapterStory(targetChapter, () => {
+        this.startLevelTransition(targetLevel);
+      });
     });
 
     document.getElementById('btnOpenStory')?.addEventListener('click', () => {
       this.audio.playBtnClick();
-      this.story.startStory();
+      this.story.openStoryTheater(1);
     });
 
     document.getElementById('btnOpenWorldMap').addEventListener('click', () => {
@@ -225,12 +224,15 @@ class GameApp {
       document.getElementById('creditsModal').classList.add('hidden');
     });
 
-    // World Map Level Selection Launchers
+    // World Map Level Selection Launchers (Story -> Level)
     document.querySelectorAll('.node-play-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const targetWorldIndex = parseInt(e.target.getAttribute('data-world-index') || '0', 10);
         document.getElementById('worldMapModal').classList.add('hidden');
-        this.startLevelTransition(targetWorldIndex);
+        const targetChapter = targetWorldIndex + 1;
+        this.story.startChapterStory(targetChapter, () => {
+          this.startLevelTransition(targetWorldIndex);
+        });
       });
     });
 
@@ -362,11 +364,44 @@ class GameApp {
       this.restartGame();
     });
 
-    // NEXT LEVEL Progression Action Button
+    // NEXT LEVEL Progression Action Button (Story -> Level -> Story -> Level loop)
     document.getElementById('nextLevelBtn').addEventListener('click', () => {
       document.getElementById('victoryModal').classList.add('hidden');
-      const nextIndex = (this.currentLevelIndex + 1) % this.levels.length;
-      this.startLevelTransition(nextIndex);
+      if (this.currentLevelIndex >= this.levels.length - 1) {
+        // Conquered Level 8 (Damodar Summit): Trigger Chapter 9 Grand Finale Story!
+        this.story.startChapterStory(9, () => {
+          this.showGrandTriumphScreen();
+        });
+      } else {
+        // Trigger Chapter (N + 2) Story, then enter Level (N + 1)
+        const nextIndex = this.currentLevelIndex + 1;
+        const nextChapter = nextIndex + 1;
+        this.story.startChapterStory(nextChapter, () => {
+          this.startLevelTransition(nextIndex);
+        });
+      }
+    });
+
+    // Grand Triumph Reconnection Modal Action Buttons
+    document.getElementById('triumphReplayStoryBtn')?.addEventListener('click', () => {
+      document.getElementById('grandTriumphModal').classList.add('hidden');
+      this.audio.playBtnClick();
+      this.story.startChapterStory(1, () => {
+        this.showGrandTriumphScreen();
+      }, true); // Saga mode (Chapters 1 to 9)
+    });
+
+    document.getElementById('triumphWorldMapBtn')?.addEventListener('click', () => {
+      document.getElementById('grandTriumphModal').classList.add('hidden');
+      this.audio.playBtnClick();
+      this.updateWorldMapUI();
+      document.getElementById('worldMapModal').classList.remove('hidden');
+    });
+
+    document.getElementById('triumphLobbyBtn')?.addEventListener('click', () => {
+      document.getElementById('grandTriumphModal').classList.add('hidden');
+      this.audio.playBtnClick();
+      returnToCamp();
     });
 
     // Universal audio & speech synthesis unlock on first gesture
@@ -826,7 +861,7 @@ class GameApp {
     for (const sp of this.springs) sp.update(dt, this.player, this.audio, this.particles);
 
     // Enemies
-    for (const beetle of this.beetles) beetle.update(dt, this.player, this.audio, this.particles);
+    for (const beetle of this.beetles) beetle.update(dt, this.player, this.audio, this.particles, this.camera);
     for (const charger of this.chargers) charger.update(dt, this.player, this.audio, this.particles, this.camera);
 
     // NPC Elder
@@ -878,16 +913,39 @@ class GameApp {
       }
       document.getElementById('resRank').textContent = rank;
 
-      // Update Next Level button label
+      // Update Next Level / Chapter Story button label
       const nextBtn = document.getElementById('nextLevelBtn');
       if (this.currentLevelIndex >= this.levels.length - 1) {
-        nextBtn.textContent = 'Grand Triumph — Replay World 1 ▶';
+        nextBtn.textContent = '🌟 ' + (Localization.get('grandFinaleBtn') || 'Grand Finale Story ▶');
       } else {
-        nextBtn.textContent = Localization.get('nextLevelBtn');
+        const nextChapter = this.currentLevelIndex + 2;
+        nextBtn.textContent = (Localization.get('nextChapterBtn') || 'Next Chapter Story ▶') + ` (${nextChapter})`;
       }
 
       document.getElementById('victoryModal').classList.remove('hidden');
     }, 600);
+  }
+
+  showGrandTriumphScreen() {
+    const modal = document.getElementById('grandTriumphModal');
+    if (!modal) return;
+    this.hudEl.classList.add('hidden');
+    this.controlsHint.classList.add('hidden');
+    document.getElementById('victoryModal').classList.add('hidden');
+
+    const totalPossibleShards = 104;
+    const totalCollected = Math.min(totalPossibleShards, Math.max(92, this.shardsCollected + 90));
+    const totalScoreVal = this.score + 18500;
+
+    const shardsEl = document.getElementById('triumphTotalShards');
+    if (shardsEl) shardsEl.textContent = `${totalCollected} / ${totalPossibleShards}`;
+
+    const scoreEl = document.getElementById('triumphTotalScore');
+    if (scoreEl) scoreEl.textContent = `${totalScoreVal}`;
+
+    modal.classList.remove('hidden');
+    this.audio.playVictory();
+    this.voice.speak(Localization.get('grandTriumphTitle') || 'All Gateways Restored!', 'mentor', Localization.currentLang);
   }
 
   updateHUD() {

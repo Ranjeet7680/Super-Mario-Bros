@@ -242,7 +242,14 @@ export class Player {
         this.scaleY = 1.32;
         if (audio) audio.playJump();
         if (input && input.vibrate) input.vibrate(40, 0.2, 0.3);
-        if (particles) particles.spawnDust(this.x + this.width / 2, this.y + this.height);
+        if (particles) {
+          if (this.currentSurface === 'water') {
+            particles.spawnBurst(this.x + this.width / 2, this.y + this.height, '#E0F7FA', 10);
+            particles.spawnBurst(this.x + this.width / 2, this.y + this.height - 4, '#00E5FF', 6);
+          } else {
+            particles.spawnDust(this.x + this.width / 2, this.y + this.height);
+          }
+        }
       }
 
       // Variable jump height
@@ -277,7 +284,14 @@ export class Player {
       this.scaleX = 1.32;
       this.scaleY = 0.72;
       if (audio) audio.playLand();
-      if (particles) particles.spawnDust(this.x + this.width / 2, this.y + this.height);
+      if (particles) {
+        if (this.currentSurface === 'water') {
+          particles.spawnBurst(this.x + this.width / 2, this.y + this.height, '#E0F7FA', 14);
+          particles.spawnBurst(this.x + this.width / 2, this.y + this.height - 4, '#00E5FF', 8);
+        } else {
+          particles.spawnDust(this.x + this.width / 2, this.y + this.height);
+        }
+      }
     }
 
     // Smooth squash/stretch return to 1.0
@@ -879,9 +893,13 @@ export class Player {
       fgArmAngle = -1.1;
       fgElbowAngle = 1.2;
     } else if (this.state === 'idle' && this.idleActState === 'lookAround') {
-      // Hand to chin exploration pose
-      fgArmAngle = -1.4;
-      fgElbowAngle = 1.6;
+      // Natural adventurer hand-on-hip explorer pose
+      fgArmAngle = 0.35 + Math.sin(t * 2.0) * 0.08;
+      fgElbowAngle = 1.25;
+    } else if (this.state === 'idle' && this.idleActState === 'adjustGear') {
+      // Gentle satchel strap touch
+      fgArmAngle = -0.55;
+      fgElbowAngle = 1.35;
     }
 
     ctx.rotate(fgArmAngle);

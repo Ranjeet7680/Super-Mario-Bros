@@ -26,6 +26,17 @@ export const Localization = {
       levelClear: 'GATEWAY RESTORED!',
       levelClearSub: 'Region Conquered • Regional Pathway Reconnected',
       nextLevelBtn: 'Next Level ▶',
+      nextChapterBtn: 'Next Chapter Story ▶',
+      startLevelAction: 'Enter Level ▶',
+      grandFinaleBtn: '🌟 Grand Finale Story ▶',
+      grandTriumphTitle: 'JHARKHAND UNIFIED — ALL 8 REGIONS RESTORED!',
+      grandTriumphSubtitle: 'The Rift of Echoes is Sealed • All 8 Regional Gateways Reconnected as One',
+      replayAllStory: '🎬 Replay Full Saga (Chapters 1–9)',
+      viewWorldMap: '🗺️ World Map',
+      watchStory: '🎬 Story',
+      storyTheaterTitle: 'Chronicles of Jharkhand — Story Theater',
+      watchAllChapters: '▶ Watch All Chapters (Saga)',
+      allChaptersTab: '▶ All Saga',
       playAgain: 'Play Again',
       controlsHint: '[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk',
       dialoguePrompt: 'Press [E] to Speak',
@@ -129,15 +140,74 @@ export const Localization = {
       victoryVoice: 'Gateway restored! Regional pathway reconnected!',
       shardVoice: 'Echo Shard acquired!',
 
-      // Cinematic Story Intro
+      // Cinematic Story Intro — Chapters 1 to 9 Titles
+      chapter1Title: 'Chapter I: The Awakening of Ranchi',
+      chapter2Title: 'Chapter II: The Roar of Hundru Falls',
+      chapter3Title: 'Chapter III: The Sunset Heights of Netarhat',
+      chapter4Title: 'Chapter IV: The Ancient Canopy of Betla',
+      chapter5Title: 'Chapter V: Sacred Chimes of Deoghar',
+      chapter6Title: 'Chapter VI: Steel Heart of Jamshedpur',
+      chapter7Title: 'Chapter VII: Subterranean Veins of Dhanbad',
+      chapter8Title: 'Chapter VIII: Tempest at Damodar Summit',
+      chapter9Title: 'Chapter IX: The Grand Reconnection (Grand Finale)',
+
+      // Chapter 1: Ranchi Plateau Gateway
       storyAct1Tag: 'ACT I: THE SACRED HOMELAND',
-      storyAct1Text: 'In the ancient highlands of Jharkhand, sacred Sal forests, the roaring Hundru waterfalls, and tribal valleys lived in eternal harmony, bound together by the eight sacred Torana Gateways.',
-      storyAct2Tag: 'ACT II: THE RIFT OF ECHOES',
+      storyAct1Text: 'In the ancient highlands of Jharkhand, sacred Sal forests, roaring Hundru waterfalls, and peaceful tribal valleys lived in eternal harmony, bound together by the eight sacred Torana Gateways.',
+      storyAct2Tag: 'ACT II: THE COSMIC FRACTURE',
       storyAct2Text: 'Without warning, a cosmic fracture—the Rift of Echoes—tore open the heavens! The sacred gateways shattered, locking the living memories of the land into crystalline Echo Shards and isolating each region in temporal silence.',
       storyAct3Tag: 'ACT III: THE ELDER MANDATE',
       storyAct3Text: 'At the Ranchi Plateau, Sage Guru Kripal summoned young adventurer Kabir: “The spirits of Bhagwan Birsa Munda and our ancestors have chosen you. Traverse the 8 sacred regions, recover the Echo Shards, and restore our gateways!”',
-      storyAct4Tag: 'ACT IV: RECONNECTING JHARKHAND',
+      storyAct4Tag: 'ACT IV: KABIR\'S RESOLVE',
       storyAct4Text: 'Fastening his saffron headband, Kabir gazed toward the plateau horizon: “With the soil of Jharkhand beneath my boots, I will restore every Torana and reconnect our homeland as one!”',
+
+      // Chapter 2: Hundru Falls Wilds
+      storyCh2Act1Tag: 'CHAPTER II • SCENE 1: THE ROAR OF SUBARNAREKHA',
+      storyCh2Act1Text: 'Leaving the Ranchi plateau behind, Kabir reaches Hundru Falls, where the sacred Subarnarekha river plunges 320 feet into a towering basalt gorge, its thundering mist concealing fractured gateway remnants.',
+      storyCh2Act2Tag: 'CHAPTER II • SCENE 2: RAPIDS OF THE CATARACT',
+      storyCh2Act2Text: 'Guru Kripal whispers through the spray: “The water currents are treacherous, Kabir! Leap across the wet river ledges, master the rushing torrents, and gather the crystalline water shards!”',
+
+      // Chapter 3: Netarhat Sunset Hills
+      storyCh3Act1Tag: 'CHAPTER III • SCENE 1: QUEEN OF CHOTANAGPUR',
+      storyCh3Act1Text: 'Ascending higher into the western highlands, Kabir beholds Netarhat bathed in fiery crimson and gold sunset. Here, ancient pine groves touch the evening clouds above rolling mountain valleys.',
+      storyCh3Act2Tag: 'CHAPTER III • SCENE 2: THE TWILIGHT PATHWAY',
+      storyCh3Act2Text: '“The highland winds test your resolve,” warns the elder. “Mystical cloud platforms drift on the mountain gales. Time your leaps with the twilight breeze to restore the third gateway!”',
+
+      // Chapter 4: Betla Forest Frontier
+      storyCh4Act1Tag: 'CHAPTER IV • SCENE 1: SHADOWS OF THE CHERO KINGS',
+      storyCh4Act1Text: 'Kabir enters the deep primeval Sal and bamboo wilderness of Betla, where the 16th-century stone fortress of the Chero Kings stands weathered beneath dense canopy foliage.',
+      storyCh4Act2Tag: 'CHAPTER IV • SCENE 2: GUARDIAN OF THE CANOPY',
+      storyCh4Act2Text: 'Forest creatures watch from the bamboo shadows as ancient tree springs bounce Kabir into high canopies. “Harm no creature, Kabir—move like the wind through the foliage!”',
+
+      // Chapter 5: Deoghar Heritage-City
+      storyCh5Act1Tag: 'CHAPTER V • SCENE 1: CITY OF SACRED SHRINES',
+      storyCh5Act1Text: 'Arriving at sacred Deoghar, towering red-flagged spires of Baba Baidyanath Dham pierce the dusk. Brass kalashas gleam with divine light while fragrant ghee lamps line the pilgrim steps.',
+      storyCh5Act2Tag: 'CHAPTER V • SCENE 2: RESONANCE OF THE BELLS',
+      storyCh5Act2Text: '“Listen closely, Kabir,” Guru Kripal speaks. “The ancient bronze temple bells chime in sacred rhythm. Leap across the consecrated courtyards and align your spirit with their chime!”',
+
+      // Chapter 6: Jamshedpur Industrial Run
+      storyCh6Act1Tag: 'CHAPTER VI • SCENE 1: FORGE OF FIRE AND IRON',
+      storyCh6Act1Text: 'Entering the steel heart of Jamshedpur, towering blast furnace chimneys pierce the night sky, their roaring fires melting iron into incandescent rivers of glowing gold and orange.',
+      storyCh6Act2Tag: 'CHAPTER VI • SCENE 2: PULSE OF THE CONVEYORS',
+      storyCh6Act2Text: 'Amidst flying welding sparks and mechanical steel cranes, Kabir must master moving industrial belts and high lifts. “The spirit of human craft and tireless labor drives this gateway forward!”',
+
+      // Chapter 7: Dhanbad Coal-Mine Depths
+      storyCh7Act1Tag: 'CHAPTER VII • SCENE 1: INTO THE BLACK SEAMS',
+      storyCh7Act1Text: 'Descending hundreds of feet below the earth into the coal veins of Dhanbad, timber arches groan under heavy stone ceilings while flickering carbide lamps cast eerie yellow shadows.',
+      storyCh7Act2Tag: 'CHAPTER VII • SCENE 2: THE UNDERGROUND TRACKS',
+      storyCh7Act2Text: 'Minecart wheels rumble along iron rails through deep tunnels. “Watch for falling coal timbers and shifting track levers, Kabir! Deep in the earth lies the seventh Echo Shard!”',
+
+      // Chapter 8: Damodar Storm Summit
+      storyCh8Act1Tag: 'CHAPTER VIII • SCENE 1: EYE OF THE TEMPEST',
+      storyCh8Act1Text: 'At the tempest summit of the Damodar reservoir, black storm clouds swirl violently. Purple-white lightning bolts crash into jagged cliff faces as howling gales whip across the precipice.',
+      storyCh8Act2Tag: 'CHAPTER VIII • SCENE 2: THE FINAL TRIAL',
+      storyCh8Act2Text: 'Before the eighth shattered Torana, storm sparks surge with raw power. Kabir sets his jaw: “Every trial has led to this summit. I will brave the lightning and reclaim the final shard!”',
+
+      // Chapter 9: Grand Finale — The Great Reconnection
+      storyCh9Act1Tag: 'CHAPTER IX • SCENE 1: THE HARMONIOUS CONVERGENCE',
+      storyCh9Act1Text: 'As Kabir places the eighth Echo Shard into the Torana summit, all eight gateways across Jharkhand ignite simultaneously! Radiant emerald and golden light pillars shoot into the heavens, permanently sealing the Rift of Echoes!',
+      storyCh9Act2Tag: 'CHAPTER IX • SCENE 2: GUARDIAN OF JHARKHAND',
+      storyCh9Act2Text: 'The sacred land is healed! Guru Kripal embraces Kabir amidst showers of marigold petals as tribal drums echo across the plateau. “You have reconnected Jharkhand, Kabir—our eternal Guardian of the Highlands!”',
 
       // Credits
       creditsTitle: 'PRODUCTION CREDITS',
@@ -196,6 +266,17 @@ export const Localization = {
       levelClear: 'प्रवेशद्वार पुनः स्थापित!',
       levelClearSub: 'क्षेत्र विजय पूर्ण • क्षेत्रीय मार्ग पुनः जुड़ा',
       nextLevelBtn: 'अगला स्तर ▶',
+      nextChapterBtn: 'अगला अध्याय कथा ▶',
+      startLevelAction: 'स्तर में प्रवेश ▶',
+      grandFinaleBtn: '🌟 महा-समापन कथा ▶',
+      grandTriumphTitle: 'झारखंड का पुनर्मिलन — आठों तोरण द्वार स्थापित!',
+      grandTriumphSubtitle: 'गूँज की दरार समाप्त हुई • संपूर्ण झारखंड एक पावन सूत्र में पुनः जुड़ गया',
+      replayAllStory: '🎬 पुनः संपूर्ण गाथा देखें (अध्याय १–९)',
+      viewWorldMap: '🗺️ विश्व मानचित्र',
+      watchStory: '🎬 कथा',
+      storyTheaterTitle: 'झारखंड की अमर गाथा — कथा रंगमंच',
+      watchAllChapters: '▶ सभी अध्याय देखें (संपूर्ण गाथा)',
+      allChaptersTab: '▶ संपूर्ण गाथा',
       playAgain: 'पुनः खेलें',
       controlsHint: '[A/D या ←/→] दौड़ें | [W या Space] छलांग | [Shift या K] डै़श | [S या ↓] तीव्र पतन | [E] बात करें',
       dialoguePrompt: 'बात करने के लिए [E] दबाएं',
@@ -299,15 +380,74 @@ export const Localization = {
       victoryVoice: 'तोरण द्वार पुनः स्थापित! मार्ग जुड़ गया!',
       shardVoice: 'गूँज टुकड़ा प्राप्त हुआ!',
 
-      // Cinematic Story Intro
+      // Cinematic Story Intro — Chapters 1 to 9 Titles
+      chapter1Title: 'अध्याय १: राँची का जागरण',
+      chapter2Title: 'अध्याय २: हुंडरू की गर्जना',
+      chapter3Title: 'अध्याय ३: नेतरहाट की स्वर्णिम संध्या',
+      chapter4Title: 'अध्याय ४: बेतला का प्राचीन अरण्य',
+      chapter5Title: 'अध्याय ५: देवघर की पावन घंटियां',
+      chapter6Title: 'अध्याय ६: जमशेदपुर का लौह हृदय',
+      chapter7Title: 'अध्याय ७: धनबाद की भूमिगत शिराएं',
+      chapter8Title: 'अध्याय ८: दामोदर का तूफानी शिखर',
+      chapter9Title: 'अध्याय ९: महा-पुनर्मिलन (भव्य समापन)',
+
+      // Chapter 1: Ranchi Plateau Gateway
       storyAct1Tag: 'अध्याय १: पावन मातृभूमि',
       storyAct1Text: 'झारखंड के पावन पठार पर, साल के घने वन, हुंडरू का गर्जना करता जलप्रपात और जनजातीय घाटियां आठ पावन तोरण द्वारों के पावन सूत्र से एक सूत्र में बंधी थीं।',
       storyAct2Tag: 'अध्याय २: गूँज की दरार',
       storyAct2Text: 'अचानक आकाश में एक रहस्यमयी दरार—गूँज की दरार—उभर आई! प्राचीन तोरण द्वार बिखर गए, जंगलों और नदियों की स्मृतियां चमकते गूँज टुकड़ों (Echo Shards) में कैद हो गईं।',
       storyAct3Tag: 'अध्याय ३: गुरु का आदेश',
       storyAct3Text: 'राँची के पठार पर, वरिष्ठ गुरु कृपाल ने साहसी कबीर को पुकारा: “भगवान बिरसा और हमारे पुरखों ने तुम्हें चुना है। आठों क्षेत्रों की यात्रा करो, गूँज के टुकड़े एकत्र करो और तोरण द्वारों को पुनः स्थापित करो!”',
-      storyAct4Tag: 'अध्याय ४: झारखंड का पुनर्मिलन',
+      storyAct4Tag: 'अध्याय ४: कबीर का संकल्प',
       storyAct4Text: 'अपना केसरिया पटका बाँधकर कबीर ने संकल्प लिया: “झारखंड की पावन माटी के बल पर, मैं सभी तोरण द्वारों को पुनः स्थापित कर पूरे झारखंड को पुनः जोड़ दूंगा!”',
+
+      // Chapter 2: Hundru Falls Wilds
+      storyCh2Act1Tag: 'अध्याय २ • दृश्य १: सुवर्णरेखा की गर्जना',
+      storyCh2Act1Text: 'राँची के पठार को पीछे छोड़ कबीर हुंडरू जलप्रपात पहुंचा, जहाँ पावन सुवर्णरेखा नदी ३२० फीट की ऊंचाई से बेसाल्ट चट्टानों पर गर्जना करते हुए गिरती है। जल के फुहारों में तोरण के टुकड़े छिपे हैं।',
+      storyCh2Act2Tag: 'अध्याय २ • दृश्य २: तीव्र धाराओं का वेग',
+      storyCh2Act2Text: 'जल-फुहारों के बीच गुरु कृपाल की वाणी गूँजी: “कबीर, जलधाराएं अत्यंत तीव्र हैं! भीगी शिलाओं पर संभलकर छलांग लगाओ, जल के वेग पर विजय पाओ और जल के गूँज टुकड़े एकत्र करो!”',
+
+      // Chapter 3: Netarhat Sunset Hills
+      storyCh3Act1Tag: 'अध्याय ३ • दृश्य १: छोटानागपुर की रानी',
+      storyCh3Act1Text: 'पश्चिम की ओर ऊंचाई पर बढ़ते हुए, कबीर ने नेतरहाट की पहाड़ियों को देखा जहाँ आकाश सिंदूरी और स्वर्णिम आभा में डूबा था। चीड़ और साल के वन पर्वतीय समीर में लहरा रहे थे।',
+      storyCh3Act2Tag: 'अध्याय ३ • दृश्य २: बादलों का रहस्यमयी मार्ग',
+      storyCh3Act2Text: '“पठारी हवाएं तुम्हारे साहस की परीक्षा ले रही हैं,” गुरुजी ने कहा। “हवा में तैरते बादलों के मंच केवल वीरों के लिए प्रकट होते हैं। संध्या की वायु के साथ तालमेल बिठाकर तीसरे द्वार को पुनः स्थापित करो!”',
+
+      // Chapter 4: Betla Forest Frontier
+      storyCh4Act1Tag: 'अध्याय ४ • दृश्य १: चेरो राजाओं का पावन दुर्ग',
+      storyCh4Act1Text: 'कबीर बेतला के प्राचीन सघन वन में प्रविष्ट हुआ, जहाँ घने बाँस और साल के वृक्षों की छाँव में १६वीं शताब्दी के चेरो राजाओं का भव्य प्रस्तर दुर्ग सदियों से अटल खड़ा है।',
+      storyCh4Act2Tag: 'अध्याय ४ • दृश्य २: अरण्य के प्रहरी',
+      storyCh4Act2Text: 'बाँस के झुरमुटों से वन के प्राणी कबीर की परीक्षा ले रहे हैं। “वन्य जीवों को पीड़ा दिए बिना हवा की भांति डालियों पर छलांग लगाओ, कबीर! प्रकृति का सम्मान ही तोरण द्वार की कुंजी है!”',
+
+      // Chapter 5: Deoghar Heritage-City
+      storyCh5Act1Tag: 'अध्याय ५ • दृश्य १: अमर धाम देवघर',
+      storyCh5Act1Text: 'पावन नगरी देवघर पहुँचते ही बाबा बैद्यनाथ धाम के भव्य लाल ध्वज आकाश को छूते दिखाई दिए। स्वर्णिम कलश जगमगा रहे थे और तीर्थ मार्ग पर घृत के दीप प्रज्वलित थे।',
+      storyCh5Act2Tag: 'अध्याय ५ • दृश्य २: महा-घंटों का दिव्य नाद',
+      storyCh5Act2Text: '“कबीर, ध्यान से सुनो,” गुरु कृपाल बोले। “मंदिर के विशाल कांस्य घंटे पावन लय में गूँज रहे हैं। प्रस्तर आंगनों पर तालबद्ध छलांग लगाते हुए पांचवें तोरण द्वार को जागृत करो!”',
+
+      // Chapter 6: Jamshedpur Industrial Run
+      storyCh6Act1Tag: 'अध्याय ६ • दृश्य १: अग्नि और इस्पात का नगर',
+      storyCh6Act1Text: 'जमशेदपुर के लौह नगर में विशाल धमन-भट्ठियों की चिमनियां आकाश को आलोकित कर रही थीं। पिघले हुए इस्पात की सुनहरी-नारंगी नदियां मानव के अदम्य परिश्रम और शिल्प का साक्षात्कार करा रही थीं।',
+      storyCh6Act2Tag: 'अध्याय ६ • दृश्य २: यंत्रों की तीव्र गति',
+      storyCh6Act2Text: 'उड़ती चिंगारियों और विशाल क्रेन के बीच कबीर को स्वचालित पट्टों पर संतुलन बनाना है। “मानव के अटूट पुरुषार्थ और शिल्प से ही यह औद्योगिक तोरण द्वार पुनः प्रज्वलित होगा!”',
+
+      // Chapter 7: Dhanbad Coal-Mine Depths
+      storyCh7Act1Tag: 'अध्याय ७ • दृश्य १: काले स्वर्ण की गहराइयां',
+      storyCh7Act1Text: 'धरती के सैकड़ों फीट नीचे धनबाद की कोयला खदानों में, भारी काष्ठ स्तंभों के सहारे काली चट्टानें खड़ी थीं। जलते कारबाइड दीपकों की पीली रोशनी रहस्यमयी परछाइयां बना रही थी।',
+      storyCh7Act2Tag: 'अध्याय ७ • दृश्य २: भूमिगत पटरियों की यात्रा',
+      storyCh7Act2Text: 'लोहे की पटरियों पर खदान की गाड़ियां गड़गड़ा रही थीं। “गिरती बल्लियों और बदलते ट्रैक से सावधान रहो, कबीर! पृथ्वी के इस गर्भ में ही सातवां पावन टुकड़ा छुपा है!”',
+
+      // Chapter 8: Damodar Storm Summit
+      storyCh8Act1Tag: 'अध्याय ८ • दृश्य १: महा-तूफान का केंद्र',
+      storyCh8Act1Text: 'दामोदर जलाशय के उच्चतम तूफानी शिखर पर काले बादलों का चक्रवात उमड़ रहा था। नील-लोहित तड़ित की बिजलियां नुकीली चोटियों पर कौंध रही थीं और प्रचंड झंझावात गूँज रहा था।',
+      storyCh8Act2Tag: 'अध्याय ८ • दृश्य २: अंतिम महा-साधना',
+      storyCh8Act2Text: 'आठवें भग्न तोरण के समक्ष विद्युत तरंगें वेग से नाच रही थीं। कबीर ने अपनी मुट्ठियां भींच लीं: “मेरी सम्पूर्ण यात्रा इसी पल के लिए थी। मैं इस महा-तूफान को पार कर अंतिम द्वार खोलूँगा!”',
+
+      // Chapter 9: Grand Finale — The Great Reconnection
+      storyCh9Act1Tag: 'अध्याय ९ • दृश्य १: अष्ट-तोरण महा-संगम',
+      storyCh9Act1Text: 'जैसे ही कबीर ने आठवां गूँज टुकड़ा स्थापित किया, पूरे झारखंड के आठों तोरण द्वार एक साथ दिव्य सुनहरी-हरित ज्योति से जगमगा उठे! आकाश में फैली गूँज की दरार सदा के लिए बंद हो गई!',
+      storyCh9Act2Tag: 'अध्याय ९ • दृश्य २: झारखंड के अमर रक्षक',
+      storyCh9Act2Text: 'समस्त भूमि रोगमुक्त और जागृत हो उठी! गेंदे के फूलों की वर्षा के बीच गुरु कृपाल ने कबीर को गले लगाया। मांदर की थाप पर पूरी धरती गा उठी: “तुमने झारखंड को पुनः जोड़ दिया, कबीर—हमारे अमर रक्षक!”',
 
       // Credits
       creditsTitle: 'निर्माण एवं श्रेय',
@@ -366,6 +506,17 @@ export const Localization = {
       levelClear: 'तोरण दुआर खुल गेलक! राउर विजय होल!',
       levelClearSub: 'इलाका कर रस्ता जुड़ गेल • झारखंड कर माटी धन्य होल',
       nextLevelBtn: 'आगिला स्तर ▶',
+      nextChapterBtn: 'आगिला खण्ड कर कहानी ▶',
+      startLevelAction: 'मैदान में उतरा ▶',
+      grandFinaleBtn: '🌟 महा-समापन कहानी ▶',
+      grandTriumphTitle: 'झारखंड जुड़ गेलक — आठो तोरण दुआर जगमग!',
+      grandTriumphSubtitle: 'गूँज कर दरार बंद भेल • आठो इलाका एके डोरी में फेरु से बंध गेलक',
+      replayAllStory: '🎬 फेरु से पूरा कहानी देखा (खण्ड १–९)',
+      viewWorldMap: '🗺️ इलाका नक्शा',
+      watchStory: '🎬 कहानी',
+      storyTheaterTitle: 'झारखंड कर अमर कहानी — कथा मंच',
+      watchAllChapters: '▶ सब खण्ड देखा (पूरा कहानी)',
+      allChaptersTab: '▶ पूरा कहानी',
       playAgain: 'फेरु खेलू',
       controlsHint: '[A/D या ←/→] दौड़ा | [W या Space] कूदा | [Shift या K] झपट्टा | [S या ↓] नीचा | [E] गोठियावा',
       dialoguePrompt: 'गोठियायेक ले [E] दबाऊ',
@@ -469,15 +620,74 @@ export const Localization = {
       victoryVoice: 'तोरण दुआर खुल गेलक! राउर विजय होल!',
       shardVoice: 'इको शार्ड मिल गेलक!',
 
-      // Cinematic Story Intro
+      // Cinematic Story Intro — Chapters 1 to 9 Titles
+      chapter1Title: 'पहिला खण्ड: राँची कर जागरण',
+      chapter2Title: 'दूसरा खण्ड: हुंडरू कर गरजता पानी',
+      chapter3Title: 'तीसरा खण्ड: नेतरहाट कर सुरुज डूबेक बेरा',
+      chapter4Title: 'चौथा खण्ड: बेतला कर प्राचीन सखुआ बन',
+      chapter5Title: 'पाँचवा खण्ड: देवघर कर पावन घंटी',
+      chapter6Title: 'छठा खण्ड: जमशेदपुर कर लोहा कारखाना',
+      chapter7Title: 'सातवा खण्ड: धनबाद कर कोइला खदान',
+      chapter8Title: 'आठवा खण्ड: दामोदर कर आंधी-तूफान',
+      chapter9Title: 'नववां खण्ड: झारखंड कर महा-पुनर्मिलन (महा-समापन)',
+
+      // Chapter 1: Ranchi Plateau Gateway
       storyAct1Tag: 'पहिला अध्याय: पावन माटी',
       storyAct1Text: 'झारखंड कर पावन पठार में, सखुआ कर घना बन, हुंडरू कर गरजता झरना आ सब भाई-बंधु आठ गो पावन तोरण दुआर से एके डोरी में बंधल रहैं।',
       storyAct2Tag: 'दूसरा अध्याय: गूँज कर दरार',
       storyAct2Text: 'एकाएक अकास में एक महा-विपत्ति—गूँज कर दरार—फाट उठलक! पावन तोरण दुआर टूट के बिखर गेलक, माटी कर इयाद इको शार्ड में जम गेल, आ हमर सब आठो इलाका अलग होइ गेल।',
       storyAct3Tag: 'तीसरा अध्याय: गुरु कर हुकुम',
       storyAct3Text: 'राँची कर पठार पर, सयान गुरु कृपाल कबीर बाबू के बोलवलें: “भगवान बिरसा आ हमर पुरखा कर आसीरबाद तोर साथे हे। आठो इलाका में जा, गूँज कर टुकड़ा मन के बटोर, आ पावन दीया के बार के रस्ता खोल!”',
-      storyAct4Tag: 'चौथा अध्याय: माटी कर पुनर्मिलन',
+      storyAct4Tag: 'चौथा अध्याय: कबीर कर संकल्प',
       storyAct4Text: 'अपन केसरिया पगड़ी बाँध के, कबीर बाबू संकल्प लेलें: “झारखंड कर माटी कर शक्ति से, हम सब तोरण दुआर के फेरु से जोड़ब, आ पूरा झारखंड के एके बनाय देब! जोहार झारखंड!”',
+
+      // Chapter 2: Hundru Falls Wilds
+      storyCh2Act1Tag: 'दूसरा खण्ड • दृश्य १: सुवर्णरेखा कर गर्जन',
+      storyCh2Act1Text: 'राँची पठार से आगू बढ़ के कबीर बाबू हुंडरू जलप्रपात पहुँचलें, जहाँ सुवर्णरेखा नदी ३२० फीट ऊपर से चट्टान पर दहाड़ मार के गिरेला। पानी कर कुहासा में तोरण कर टुकड़ा लुकायल हे।',
+      storyCh2Act2Tag: 'दूसरा खण्ड • दृश्य २: झरना कर तेज धार',
+      storyCh2Act2Text: 'पानी कर बौछार में गुरु कृपाल कहलें: “कबीर बाबू, पानी कर धार बड़ा तेज हे रे! भींजल पाथर पर संभल के कूदा, तेज धार के पार करा आ पानी कर गूँज टुकड़ा मन के बटोरा!”',
+
+      // Chapter 3: Netarhat Sunset Hills
+      storyCh3Act1Tag: 'तीसरा खण्ड • दृश्य १: छोटानागपुर कर रानी',
+      storyCh3Act1Text: 'ऊपर नेतरहाट कर पहाड़ चढ़ते-चढ़ते कबीर बाबू देखलें कि पूरा अकास सिंदूर आ सोना नियर चमकत रहे। चीड़ आ सखुआ कर गाछ पछिया हवा में झूम उठल रहे।',
+      storyCh3Act2Tag: 'तीसरा खण्ड • दृश्य २: बादर कर रस्ता',
+      storyCh3Act2Text: '“पहाड़ कर ठंढा हवा तोर हिम्मत परखेला,” गुरुजी कहलें। “हवा में तैरत बादर कर डाँड़ा खाली साहसी बेटा मन के दिसेला। संझा बेरा में संभल के तीसरा तोरण दुआर के खोला!”',
+
+      // Chapter 4: Betla Forest Frontier
+      storyCh4Act1Tag: 'चौथा खण्ड • दृश्य १: चेरो राजा कर पुरान किला',
+      storyCh4Act1Text: 'कबीर बाबू बेतला कर घना जंगल में ढुकलें, जहाँ बाँस आ सखुआ कर छतरी तर १६वीं सदी कर चेरो राजा मन कर पाथर वाला किला आजो सीना तान के खड़ा हे।',
+      storyCh4Act2Tag: 'चौथा खण्ड • दृश्य २: जंगल कर पहरेदार',
+      storyCh4Act2Text: 'बाँस कर झुरमुट से हाथी आ बाघ कबीर बाबू के देखत हैं। “कोनो जीव-जंतु के दुख नखे देवेक, कबीर! हवा नियर गाछ कर डाली पर कूदा आ जंगल कर तोरण दुआर के खोला!”',
+
+      // Chapter 5: Deoghar Heritage-City
+      storyCh5Act1Tag: 'पाँचवा खण्ड • दृश्य १: बाबा धाम देवघर',
+      storyCh5Act1Text: 'पवित्र देवघर पहुँचते बाबा बैद्यनाथ धाम कर लाल झंडा अकास छूवत लउकल। सोना कर कलश जगमग करत रहे आ रस्ता भर घीव कर दीया जरत रहे।',
+      storyCh5Act2Tag: 'पाँचवा खण्ड • दृश्य २: पावन घंटी कर नाद',
+      storyCh5Act2Text: '“कान लगाय के सुना, कबीर,” गुरु कृपाल बोललें। “मंदिर कर बड़का कांसा घंटी ताल में बाजत हे। पाथर कर आँगन पर लय में कूद के पाँचवा तोरण दुआर के जगावा!”',
+
+      // Chapter 6: Jamshedpur Industrial Run
+      storyCh6Act1Tag: 'छठा खण्ड • दृश्य १: लोहा आ आग कर नगर',
+      storyCh6Act1Text: 'जमशेदपुर कर कारखाना में बड़का-बड़का भट्ठी अकास के उजर कर देले रहे। पिघलल लोहा कर लाल-पियर नदी झारखंडी पौरुष आ मेहनत कर गवाही देत रहे।',
+      storyCh6Act2Tag: 'छठा खण्ड • दृश्य २: मशीन कर धड़कन',
+      storyCh6Act2Text: 'उड़त चिंगारी आ बड़का क्रेन कर बीच कबीर बाबू के चलत पट्टा पर संभल के दौड़ेक हे। “इंसान कर मेहनत आ बुद्धि से ही ई लोहा कर तोरण दुआर फेरु से जगेगा!”',
+
+      // Chapter 7: Dhanbad Coal-Mine Depths
+      storyCh7Act1Tag: 'सातवा खण्ड • दृश्य १: करिया सोना कर गहराई',
+      storyCh7Act1Text: 'धरती कर सैकड़ों हाथ नीचे धनबाद कर कोइला खदान में, काठ कर खंभा भारी पाथर के थामल रहे। करबाइड बत्ती कर पीयर रोशनी में करिया चट्टान चमकत रहे।',
+      storyCh7Act2Tag: 'सातवा खण्ड • दृश्य २: खदान कर रेलगाड़ी',
+      storyCh7Act2Text: 'लोहा कर पटरी पर कोइला कर गाड़ी सरसरा के दौड़त रहे। “गिरता काठ आ बदलता पटरी से होसियार रहा, कबीर बाबू! ई पाताल में ही सातवां पावन टुकड़ा गड़ल हे!”',
+
+      // Chapter 8: Damodar Storm Summit
+      storyCh8Act1Tag: 'आठवा खण्ड • दृश्य १: दामोदर कर महा-तूफान',
+      storyCh8Act1Text: 'दामोदर बाँध कर सबले ऊँच चोटी पर करिया मेघ घुमड़त रहे। चमचमाती बिजली पाथर पर टूट पड़त रहे आ साँय-साँय पछिया हवा देह कँपावत रहे।',
+      storyCh8Act2Tag: 'आठवा खण्ड • दृश्य २: अंतिम परीक्षा',
+      storyCh8Act2Text: 'आठवां टूटैल तोरण दुआर कर सामने बिजली कर शोला भड़क उठलक। कबीर बाबू अपन छाती ठोक के कहलें: “हमर सब परीक्षा इहे बेरा ले रहे। ई तूफान के चीर के अंतिम दुआर हम खोलब!”',
+
+      // Chapter 9: Grand Finale — The Great Reconnection
+      storyCh9Act1Tag: 'नववां खण्ड • दृश्य १: आठो तोरण कर मिलन',
+      storyCh9Act1Text: 'जइसे ही कबीर बाबू आठवां गूँज टुकड़ा बइठवलें, पूरा झारखंड कर आठो तोरण दुआर एक साथ हरियर आ सोनहरा ज्योति से जगमगा उठलक! अकास कर दरार हमेशा ले मिट गेलक!',
+      storyCh9Act2Tag: 'नववां खण्ड • दृश्य २: छोटानागपुर कर अमर सपूत',
+      storyCh9Act2Text: 'हमर पावन धरती जाग उठलक! गेंदा फूल कर बरखा में गुरु कृपाल कबीर बाबू के छाती से लगा लेलें। मांदर कर ताल पर सब बोले: “कबीर बाबू पूरा झारखंड के जोड़ देलें! जोहार झारखंड!”',
 
       // Credits
       creditsTitle: 'बनावेक वाला आ जोहार',

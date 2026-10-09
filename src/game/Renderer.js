@@ -546,28 +546,44 @@ export class WorldRenderer {
         }
         ctx.stroke();
 
-        // (d) Mid-tier Rock Shelf Splash Zones
-        const splashMid = Math.sin(this.time * 8 + i) * 4;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+        // (d) Mid-tier Rock Shelf Splash Zones (Soft realistic spray mist & foam ripples)
+        const splashMid = Math.sin(this.time * 8 + i) * 3;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
         ctx.beginPath();
-        ctx.arc(fallX + 12, 228 + splashMid, 14, 0, Math.PI * 2);
-        ctx.arc(fallX + fallWidth - 12, 242 - splashMid, 16, 0, Math.PI * 2);
+        ctx.ellipse(fallX + 14, 228 + splashMid, 16, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(fallX + fallWidth - 14, 242 - splashMid, 18, 6, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // (e) Billowing Foaming Mist Clouds at Plunge Pool Base
-        const mistPulse = Math.sin(this.time * 5 + i * 2.2) * 8;
-        ctx.fillStyle = 'rgba(224, 247, 250, 0.6)';
+        // Droplet mist glints
+        ctx.fillStyle = 'rgba(224, 247, 250, 0.75)';
+        for (let sp = 0; sp < 4; sp++) {
+          const dropX = fallX + 6 + sp * (fallWidth / 3.5) + Math.sin(this.time * 12 + sp) * 4;
+          const dropY = 232 + (sp % 2 === 0 ? splashMid : -splashMid) + Math.cos(this.time * 10 + sp) * 3;
+          ctx.beginPath();
+          ctx.arc(dropX, dropY, 2.0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // (e) Soft Layered Mist Clouds at Plunge Pool Base
+        const mistPulse = Math.sin(this.time * 4 + i * 2.2) * 6;
+        const poolGrad = ctx.createRadialGradient(
+          fallX + fallWidth * 0.5, this.height - 55, 10,
+          fallX + fallWidth * 0.5, this.height - 55, 55
+        );
+        poolGrad.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
+        poolGrad.addColorStop(0.5, 'rgba(178, 235, 242, 0.35)');
+        poolGrad.addColorStop(1, 'rgba(128, 222, 234, 0)');
+        ctx.fillStyle = poolGrad;
         ctx.beginPath();
-        ctx.arc(fallX + fallWidth * 0.5, this.height - 75 + mistPulse, 48, 0, Math.PI * 2);
-        ctx.arc(fallX + 4, this.height - 55 - mistPulse, 36, 0, Math.PI * 2);
-        ctx.arc(fallX + fallWidth - 2, this.height - 60 + mistPulse * 0.6, 40, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth * 0.5, this.height - 55 + mistPulse, 55, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.82)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
         ctx.beginPath();
-        ctx.arc(fallX + fallWidth * 0.5, this.height - 45, 32, 0, Math.PI * 2);
-        ctx.arc(fallX + 16, this.height - 35, 24, 0, Math.PI * 2);
-        ctx.arc(fallX + fallWidth - 16, this.height - 38, 26, 0, Math.PI * 2);
+        ctx.arc(fallX + 8, this.height - 40, 24, 0, Math.PI * 2);
+        ctx.arc(fallX + fallWidth - 8, this.height - 42, 26, 0, Math.PI * 2);
         ctx.fill();
 
         // (f) Shimmering 7-Color Prismatic Mist Rainbow Arc across the Gorge
@@ -680,6 +696,29 @@ export class WorldRenderer {
           ctx.beginPath();
           ctx.arc(screenX + 20, mY - 72, 10, 0, Math.PI * 2);
           ctx.stroke();
+        }
+      }
+    } else if (theme === 'hundru') {
+      // Rugged basalt canyon cliffs & gorge spires flanking Hundru cataract
+      ctx.fillStyle = '#08231D';
+      for (let i = 0; i < 12; i++) {
+        const spireWorldX = i * 290 + 50;
+        const screenX = spireWorldX - camX * 0.36;
+        if (screenX > -90 && screenX < this.width + 90) {
+          const sY = this.height - 120 + Math.sin(spireWorldX * 0.007) * 22;
+          ctx.beginPath();
+          ctx.moveTo(screenX - 10, this.height);
+          ctx.lineTo(screenX + 8, sY - 45);
+          ctx.lineTo(screenX + 38, sY - 55);
+          ctx.lineTo(screenX + 54, sY - 20);
+          ctx.lineTo(screenX + 68, this.height);
+          ctx.closePath();
+          ctx.fill();
+
+          // Emerald moss rim on top
+          ctx.fillStyle = '#1B5E20';
+          ctx.fillRect(screenX + 6, sY - 48, 34, 6);
+          ctx.fillStyle = '#08231D';
         }
       }
     } else {
@@ -942,9 +981,11 @@ export class WorldRenderer {
       const p = platforms[i];
       if (p.isAssist || p.moving || p.surfaceType === 'water' || p.surfaceType === 'conveyor') continue;
       if (p.width < 180) continue;
+      if (theme === 'hundru' && p.width < 320) continue; // In Hundru rocky gorge, anchor trees only on major bluffs
 
-      // Deterministic tree placement on this platform
-      const treeWorldX = p.x + Math.floor(p.width * 0.42);
+      // Deterministic tree placement on platform (avoids elder at spawn on section 1)
+      const xRatio = (p.x === 0) ? 0.72 : 0.45;
+      const treeWorldX = p.x + Math.floor(p.width * xRatio);
       const treeGroundY = p.y;
 
       // Cull against camera bounds

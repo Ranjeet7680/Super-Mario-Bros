@@ -95,12 +95,18 @@ export class AudioManager {
     noise.buffer = buffer;
 
     const filter = this.ctx.createBiquadFilter();
-    filter.type = surface === 'stone' ? 'highpass' : 'bandpass';
-    filter.frequency.setValueAtTime((surface === 'stone' ? 800 : 450) * pitch, now);
+    if (surface === 'water') {
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1200 * pitch, now);
+      filter.Q.setValueAtTime(3.0, now);
+    } else {
+      filter.type = surface === 'stone' ? 'highpass' : 'bandpass';
+      filter.frequency.setValueAtTime((surface === 'stone' ? 800 : 450) * pitch, now);
+    }
 
     const gain = this.ctx.createGain();
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    gain.gain.setValueAtTime(surface === 'water' ? 0.14 : 0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + (surface === 'water' ? 0.06 : 0.04));
 
     noise.connect(filter);
     filter.connect(gain);
@@ -392,6 +398,38 @@ export class AudioManager {
     gain.connect(this.sfxGain);
     osc.start(now);
     osc.stop(now + 0.07);
+  }
+
+  playStoryChime(index = 0) {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+    const chordFrequencies = [
+      [261.63, 329.63, 392.00, 523.25], // C major (Homeland)
+      [220.00, 261.63, 329.63, 440.00], // A minor (Fracture)
+      [196.00, 246.94, 293.66, 392.00], // G major (Mandate)
+      [293.66, 369.99, 440.00, 587.33], // D major (Resolve)
+      [261.63, 349.23, 392.00, 523.25], // F major (Hundru)
+      [329.63, 392.00, 493.88, 659.25], // E minor (Netarhat)
+      [246.94, 329.63, 392.00, 493.88], // B minor (Betla)
+      [261.63, 329.63, 440.00, 523.25], // C/A (Deoghar)
+      [220.00, 293.66, 369.99, 440.00], // Jamshedpur
+      [196.00, 261.63, 329.63, 392.00], // Dhanbad
+      [293.66, 349.23, 440.00, 587.33], // Damodar
+      [261.63, 329.63, 392.00, 523.25, 659.25, 783.99] // Grand Reconnection
+    ];
+    const chord = chordFrequencies[index % chordFrequencies.length];
+    chord.forEach((freq, i) => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = i % 2 === 0 ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(freq, now + i * 0.07);
+      gain.gain.setValueAtTime(0.18 / (i + 1), now + i * 0.07);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.07 + 1.6);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(now + i * 0.07);
+      osc.stop(now + i * 0.07 + 1.6);
+    });
   }
 
   playLogoSting() {

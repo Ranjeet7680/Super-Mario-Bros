@@ -182,14 +182,18 @@ export class SpringFlower {
 
     if (!player.isDead && Physics.checkAABB(player, this)) {
       if (player.vy >= 0) {
-        player.vy = -620; // Super launch upward
+        // High launch velocity to easily reach secret canopies (240-280px above)
+        player.vy = -800;
         player.isGrounded = false;
-        player.scaleX = 0.6;
-        player.scaleY = 1.45;
-        this.bounceTimer = 0.25;
+        player.canDash = true; // Refresh air dash for skilled aerial maneuvers
+        player.scaleX = 0.55;
+        player.scaleY = 1.5;
+        this.bounceTimer = 0.3;
         if (audio) audio.playJump();
         if (particles) {
-          particles.spawnBurst(this.x + this.width / 2, this.y + 10, '#FF4081', 12);
+          particles.spawnBurst(this.x + this.width / 2, this.y + 10, '#FF4081', 16);
+          particles.spawnBurst(this.x + this.width / 2, this.y + 6, '#FFEB3B', 8);
+          particles.spawnTextPopup(this.x + this.width / 2, this.y - 12, 'UP!', '#FF4081');
         }
       }
     }

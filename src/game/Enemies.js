@@ -22,7 +22,7 @@ export class PatrolBeetle {
     this.animTime = 0;
   }
 
-  update(dt, player, audio, particles) {
+  update(dt, player, audio, particles, camera = null) {
     if (this.isDead) {
       this.deathTimer += dt;
       return;
@@ -59,7 +59,7 @@ export class PatrolBeetle {
         this.die(audio, particles);
       } else {
         // Player damaged
-        player.takeDamage(1, audio);
+        player.takeDamage(1, audio, camera);
       }
     }
   }

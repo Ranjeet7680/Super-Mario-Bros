@@ -58,7 +58,8 @@ export const Level_1_1 = {
     { x: 2940, y: 430, width: 140, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 40, moveSpeed: 2.0, axis: 'y' },
     { x: 3140, y: 490, width: 220, height: 110, surfaceType: 'stone' },
 
-    // Assist mode recovery ledge
+    // Assist mode recovery ledges
+    { x: 1060, y: 515, width: 480, height: 40, surfaceType: 'ground', isAssist: true },
     { x: 2680, y: 505, width: 440, height: 45, surfaceType: 'ground', isAssist: true },
 
     // Section 8: Gateway Finale (Torana Arch) (3380 - 3800)
@@ -93,7 +94,7 @@ export const Level_1_1 = {
 
   enemies: {
     beetles: [
-      { x: 1250, y: 416, left: 1220, right: 1560 },
+      { x: 1280, y: 416, left: 1260, right: 1560 },
       { x: 2520, y: 496, left: 2500, right: 2680 },
       { x: 3200, y: 466, left: 3140, right: 3360 }
     ],
@@ -102,7 +103,7 @@ export const Level_1_1 = {
     ]
   },
 
-  npcElder: { x: 210, y: 440 },
+  npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2580, y: 92 },
   goalGateway: { x: 3580, y: 350 }
 };
@@ -123,38 +124,44 @@ export const Level_2_1 = {
     { x: 0, y: 490, width: 500, height: 110, surfaceType: 'stone' },
 
     // Section 2: Waterfall Spray Stepping Stones (540 - 1100)
-    { x: 540, y: 460, width: 160, height: 140, surfaceType: 'water', currentSpeed: 60 },
-    { x: 740, y: 410, width: 140, height: 190, surfaceType: 'water', currentSpeed: 80 },
-    { x: 920, y: 360, width: 180, height: 240, surfaceType: 'stone' },
-    { x: 700, y: 280, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 540, y: 470, width: 160, height: 130, surfaceType: 'water', currentSpeed: 45 },
+    { x: 690, y: 395, width: 100, height: 16, oneWay: true, surfaceType: 'wood' }, // Stepping wood ledge
+    { x: 770, y: 440, width: 150, height: 160, surfaceType: 'water', currentSpeed: 55 },
+    { x: 950, y: 400, width: 180, height: 200, surfaceType: 'stone' },
+
+    // Section 2 Assist platform
+    { x: 510, y: 520, width: 440, height: 35, surfaceType: 'stone', isAssist: true },
 
     // Section 3: The Great Cascade Lift (1140 - 1650)
-    { x: 1140, y: 470, width: 180, height: 130, surfaceType: 'stone' },
-    { x: 1360, y: 400, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 60, moveSpeed: 2.0, axis: 'y' },
-    { x: 1530, y: 340, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 70, moveSpeed: 1.8, axis: 'x' },
+    { x: 1160, y: 460, width: 180, height: 140, surfaceType: 'stone' },
+    { x: 1370, y: 400, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 60, moveSpeed: 2.0, axis: 'y' },
+    { x: 1540, y: 340, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 70, moveSpeed: 1.8, axis: 'x' },
     { x: 1220, y: 515, width: 440, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 4: Mid-Falls Shrine Checkpoint (1680 - 1980)
     { x: 1680, y: 450, width: 300, height: 150, surfaceType: 'stone' },
 
     // Section 5: Rapid Stream Crossing (2020 - 2600)
-    { x: 2020, y: 480, width: 180, height: 120, surfaceType: 'water', currentSpeed: 110 },
-    { x: 2240, y: 440, width: 160, height: 160, surfaceType: 'water', currentSpeed: -90 },
-    { x: 2440, y: 410, width: 160, height: 190, surfaceType: 'stone' },
+    { x: 2020, y: 480, width: 180, height: 120, surfaceType: 'water', currentSpeed: 75 },
+    { x: 2240, y: 450, width: 160, height: 150, surfaceType: 'water', currentSpeed: -65 },
+    { x: 2440, y: 420, width: 160, height: 180, surfaceType: 'stone' },
+
+    // Section 5 Assist platform
+    { x: 2000, y: 520, width: 450, height: 35, surfaceType: 'stone', isAssist: true },
 
     // Section 6: High Rainbow Mist Secret Path (Upper Falls Canopy)
-    { x: 2100, y: 200, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2280, y: 150, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2460, y: 120, width: 180, height: 16, oneWay: true, surfaceType: 'stone' },
+    { x: 2100, y: 220, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2280, y: 170, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2460, y: 130, width: 180, height: 16, oneWay: true, surfaceType: 'stone' },
 
     // Section 7: Swirling Pool Gauntlet (2650 - 3350)
-    { x: 2650, y: 500, width: 200, height: 100, surfaceType: 'stone' },
-    { x: 2890, y: 450, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 70, moveSpeed: 2.4, axis: 'x' },
-    { x: 3060, y: 400, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 60, moveSpeed: 2.0, axis: 'y' },
-    { x: 3230, y: 460, width: 180, height: 140, surfaceType: 'stone' },
+    { x: 2650, y: 490, width: 200, height: 110, surfaceType: 'stone' },
+    { x: 2890, y: 440, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 70, moveSpeed: 2.4, axis: 'x' },
+    { x: 3060, y: 390, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 60, moveSpeed: 2.0, axis: 'y' },
+    { x: 3230, y: 450, width: 180, height: 150, surfaceType: 'stone' },
 
     // Assist recovery
-    { x: 2750, y: 505, width: 440, height: 45, surfaceType: 'stone', isAssist: true },
+    { x: 2750, y: 510, width: 440, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 8: Subarnarekha Torana Outflow (3450 - 4000)
     { x: 3450, y: 460, width: 550, height: 140, surfaceType: 'stone' }
@@ -162,43 +169,43 @@ export const Level_2_1 = {
 
   checkpoints: [
     { id: 1, x: 1720, y: 390 },
-    { id: 2, x: 3270, y: 400 }
+    { id: 2, x: 3270, y: 390 }
   ],
 
   shards: [
-    { id: 0, x: 420, y: 440, isRare: false },
-    { id: 1, x: 610, y: 400, isRare: false },
-    { id: 2, x: 800, y: 350, isRare: false },
-    { id: 3, x: 990, y: 300, isRare: false },
-    { id: 4, x: 1200, y: 410, isRare: false },
-    { id: 5, x: 1420, y: 320, isRare: false },
+    { id: 0, x: 380, y: 430, isRare: false },
+    { id: 1, x: 610, y: 410, isRare: false },
+    { id: 2, x: 740, y: 345, isRare: false },
+    { id: 3, x: 1020, y: 340, isRare: false },
+    { id: 4, x: 1220, y: 400, isRare: false },
+    { id: 5, x: 1430, y: 320, isRare: false },
     { id: 6, x: 2110, y: 420, isRare: false },
     { id: 7, x: 2320, y: 380, isRare: false },
-    { id: 8, x: 2160, y: 150, isRare: true },
-    { id: 9, x: 2350, y: 100, isRare: true },
+    { id: 8, x: 2160, y: 160, isRare: true },
+    { id: 9, x: 2350, y: 110, isRare: true },
     { id: 10, x: 2530, y: 80, isRare: true },
-    { id: 11, x: 2950, y: 390, isRare: false },
-    { id: 12, x: 3120, y: 340, isRare: false }
+    { id: 11, x: 2950, y: 380, isRare: false },
+    { id: 12, x: 3120, y: 330, isRare: false }
   ],
 
   springs: [
     { x: 2040, y: 452 }, // Spring waterfall launcher
-    { x: 2680, y: 472 }
+    { x: 2680, y: 462 }
   ],
 
   enemies: {
     beetles: [
-      { x: 950, y: 336, left: 920, right: 1100 },
-      { x: 2470, y: 386, left: 2440, right: 2600 },
-      { x: 3260, y: 436, left: 3230, right: 3410 }
+      { x: 990, y: 376, left: 980, right: 1110 },
+      { x: 2470, y: 396, left: 2450, right: 2590 },
+      { x: 3260, y: 426, left: 3240, right: 3400 }
     ],
     chargers: [
       { x: 1780, y: 418, left: 1700, right: 1960 }
     ]
   },
 
-  npcElder: { x: 230, y: 440 },
-  loreTablet: { x: 2520, y: 72 },
+  npcElder: { x: 180, y: 440 },
+  loreTablet: { x: 2520, y: 82 },
   goalGateway: { x: 3750, y: 350 }
 };
 
@@ -221,7 +228,10 @@ export const Level_3_1 = {
     { x: 540, y: 450, width: 140, height: 150, surfaceType: 'wood' },
     { x: 720, y: 390, width: 130, height: 16, oneWay: true, surfaceType: 'wood', moving: true, moveRange: 50, moveSpeed: 1.6, axis: 'y' },
     { x: 900, y: 340, width: 160, height: 260, surfaceType: 'ground' },
-    { x: 670, y: 260, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 670, y: 360, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+
+    // Section 2 Assist platform
+    { x: 520, y: 515, width: 440, height: 40, surfaceType: 'ground', isAssist: true },
 
     // Section 3: Magnolia Gully (Wind Gusts) (1140 - 1650)
     { x: 1140, y: 420, width: 220, height: 180, surfaceType: 'ground' },
@@ -237,10 +247,13 @@ export const Level_3_1 = {
     { x: 2530, y: 380, width: 130, height: 16, oneWay: true, surfaceType: 'stone', moving: true, moveRange: 70, moveSpeed: 2.2, axis: 'x' },
     { x: 2710, y: 440, width: 170, height: 160, surfaceType: 'ground' },
 
+    // Section 5 Assist
+    { x: 2120, y: 515, width: 450, height: 40, surfaceType: 'ground', isAssist: true },
+
     // Section 6: High Cloud Peak Secret Route
-    { x: 2200, y: 210, width: 120, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2380, y: 160, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2560, y: 120, width: 190, height: 16, oneWay: true, surfaceType: 'stone' },
+    { x: 2200, y: 220, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2380, y: 170, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2560, y: 130, width: 190, height: 16, oneWay: true, surfaceType: 'stone' },
 
     // Section 7: Pine Needles Ridge (2920 - 3450)
     { x: 2920, y: 470, width: 190, height: 130, surfaceType: 'ground' },
@@ -282,7 +295,7 @@ export const Level_3_1 = {
 
   enemies: {
     beetles: [
-      { x: 1180, y: 396, left: 1150, right: 1350 },
+      { x: 1220, y: 396, left: 1190, right: 1350 },
       { x: 2950, y: 446, left: 2930, right: 3100 },
       { x: 3370, y: 456, left: 3350, right: 3520 }
     ],
@@ -291,8 +304,8 @@ export const Level_3_1 = {
     ]
   },
 
-  npcElder: { x: 220, y: 440 },
-  loreTablet: { x: 2620, y: 72 },
+  npcElder: { x: 180, y: 440 },
+  loreTablet: { x: 2620, y: 82 },
   goalGateway: { x: 3880, y: 350 }
 };
 
@@ -315,7 +328,10 @@ export const Level_4_1 = {
     { x: 540, y: 470, width: 170, height: 130, surfaceType: 'stone' },
     { x: 750, y: 430, width: 150, height: 170, surfaceType: 'stone' },
     { x: 940, y: 390, width: 170, height: 210, surfaceType: 'ground' },
-    { x: 640, y: 330, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 640, y: 360, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+
+    // Section 2 Assist
+    { x: 520, y: 515, width: 450, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 3: Ancient Chero Fort Ruins (1150 - 1700)
     { x: 1150, y: 440, width: 240, height: 160, surfaceType: 'stone' },
@@ -375,8 +391,8 @@ export const Level_4_1 = {
 
   enemies: {
     beetles: [
-      { x: 1200, y: 416, left: 1160, right: 1370 },
-      { x: 2300, y: 466, left: 2220, right: 2420 },
+      { x: 1210, y: 416, left: 1190, right: 1370 },
+      { x: 2300, y: 466, left: 2240, right: 2420 },
       { x: 3500, y: 446, left: 3460, right: 3620 }
     ],
     chargers: [
@@ -384,7 +400,7 @@ export const Level_4_1 = {
     ]
   },
 
-  npcElder: { x: 210, y: 440 },
+  npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2710, y: 82 },
   goalGateway: { x: 3950, y: 350 }
 };
@@ -409,6 +425,9 @@ export const Level_5_1 = {
     { x: 740, y: 470, width: 160, height: 130, surfaceType: 'stone' },
     { x: 930, y: 420, width: 180, height: 180, surfaceType: 'stone' },
     { x: 640, y: 370, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+
+    // Section 2 Assist
+    { x: 520, y: 525, width: 440, height: 35, surfaceType: 'stone', isAssist: true },
 
     // Section 3: Shikhara Temple Ledges (1150 - 1700)
     { x: 1150, y: 440, width: 220, height: 160, surfaceType: 'stone' },
@@ -469,7 +488,7 @@ export const Level_5_1 = {
 
   enemies: {
     beetles: [
-      { x: 1200, y: 416, left: 1160, right: 1350 },
+      { x: 1210, y: 416, left: 1190, right: 1350 },
       { x: 2760, y: 426, left: 2740, right: 2900 },
       { x: 3380, y: 446, left: 3350, right: 3510 }
     ],
@@ -478,7 +497,7 @@ export const Level_5_1 = {
     ]
   },
 
-  npcElder: { x: 220, y: 440 },
+  npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2670, y: 82 },
   goalGateway: { x: 3900, y: 350 }
 };
@@ -502,7 +521,10 @@ export const Level_6_1 = {
     { x: 540, y: 460, width: 220, height: 140, surfaceType: 'conveyor', currentSpeed: 100 },
     { x: 790, y: 420, width: 200, height: 180, surfaceType: 'conveyor', currentSpeed: -100 },
     { x: 1020, y: 380, width: 160, height: 220, surfaceType: 'stone' },
-    { x: 710, y: 320, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 710, y: 350, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+
+    // Section 2 Assist
+    { x: 520, y: 515, width: 450, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 3: High Crane Girder Ledges (1200 - 1700)
     { x: 1200, y: 450, width: 220, height: 150, surfaceType: 'stone' },
@@ -519,9 +541,9 @@ export const Level_6_1 = {
     { x: 2780, y: 450, width: 170, height: 150, surfaceType: 'stone' },
 
     // Section 6: High Gantry Secret Walkway
-    { x: 2240, y: 210, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2430, y: 160, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2630, y: 120, width: 190, height: 16, oneWay: true, surfaceType: 'stone' },
+    { x: 2240, y: 220, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2430, y: 170, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2630, y: 130, width: 190, height: 16, oneWay: true, surfaceType: 'stone' },
 
     // Section 7: Steam Turbine Bridges (2980 - 3550)
     { x: 2980, y: 490, width: 200, height: 110, surfaceType: 'conveyor', currentSpeed: -110 },
@@ -563,7 +585,7 @@ export const Level_6_1 = {
 
   enemies: {
     beetles: [
-      { x: 1250, y: 426, left: 1210, right: 1400 },
+      { x: 1260, y: 426, left: 1240, right: 1400 },
       { x: 2800, y: 426, left: 2780, right: 2930 },
       { x: 3420, y: 456, left: 3400, right: 3570 }
     ],
@@ -572,7 +594,7 @@ export const Level_6_1 = {
     ]
   },
 
-  npcElder: { x: 220, y: 440 },
+  npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2700, y: 72 },
   goalGateway: { x: 3980, y: 350 }
 };
@@ -596,7 +618,10 @@ export const Level_7_1 = {
     { x: 540, y: 470, width: 200, height: 130, surfaceType: 'wood' },
     { x: 770, y: 420, width: 170, height: 180, surfaceType: 'wood' },
     { x: 970, y: 380, width: 180, height: 220, surfaceType: 'stone' },
-    { x: 670, y: 330, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 670, y: 350, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+
+    // Section 2 Assist
+    { x: 520, y: 515, width: 450, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 3: Subterranean Pit Chasm (1180 - 1700)
     { x: 1180, y: 450, width: 220, height: 150, surfaceType: 'stone' },
@@ -613,9 +638,9 @@ export const Level_7_1 = {
     { x: 2790, y: 440, width: 180, height: 160, surfaceType: 'stone' },
 
     // Section 6: High Timber Scaffold Secret Cache
-    { x: 2250, y: 210, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2440, y: 160, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2640, y: 120, width: 190, height: 16, oneWay: true, surfaceType: 'stone' },
+    { x: 2250, y: 220, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2440, y: 170, width: 140, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2640, y: 130, width: 190, height: 16, oneWay: true, surfaceType: 'stone' },
 
     // Section 7: Collapsing Coal Shaft Ledges (3000 - 3600)
     { x: 3000, y: 480, width: 190, height: 120, surfaceType: 'stone' },
@@ -657,7 +682,7 @@ export const Level_7_1 = {
 
   enemies: {
     beetles: [
-      { x: 1230, y: 426, left: 1190, right: 1380 },
+      { x: 1250, y: 426, left: 1220, right: 1380 },
       { x: 2810, y: 416, left: 2790, right: 2950 },
       { x: 3440, y: 446, left: 3410, right: 3590 }
     ],
@@ -666,8 +691,8 @@ export const Level_7_1 = {
     ]
   },
 
-  npcElder: { x: 220, y: 440 },
-  loreTablet: { x: 2710, y: 72 },
+  npcElder: { x: 180, y: 440 },
+  loreTablet: { x: 2710, y: 82 },
   goalGateway: { x: 4050, y: 350 }
 };
 
@@ -690,7 +715,10 @@ export const Level_8_1 = {
     { x: 540, y: 460, width: 170, height: 140, surfaceType: 'water', currentSpeed: 90 },
     { x: 750, y: 410, width: 150, height: 190, surfaceType: 'stone' },
     { x: 940, y: 360, width: 180, height: 240, surfaceType: 'stone' },
-    { x: 650, y: 280, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 650, y: 360, width: 90, height: 16, oneWay: true, surfaceType: 'wood' },
+
+    // Section 2 Assist
+    { x: 520, y: 515, width: 450, height: 40, surfaceType: 'stone', isAssist: true },
 
     // Section 3: Gale Force Chasm (1160 - 1750)
     { x: 1160, y: 440, width: 220, height: 160, surfaceType: 'stone' },
@@ -707,9 +735,9 @@ export const Level_8_1 = {
     { x: 2830, y: 440, width: 190, height: 160, surfaceType: 'stone' },
 
     // Section 6: High Cloud Lightning Spire (Ultimate Secret Cache)
-    { x: 2280, y: 200, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
-    { x: 2470, y: 150, width: 140, height: 16, oneWay: true, surfaceType: 'stone' },
-    { x: 2670, y: 110, width: 200, height: 16, oneWay: true, surfaceType: 'stone' },
+    { x: 2280, y: 220, width: 130, height: 16, oneWay: true, surfaceType: 'wood' },
+    { x: 2470, y: 170, width: 140, height: 16, oneWay: true, surfaceType: 'stone' },
+    { x: 2670, y: 130, width: 200, height: 16, oneWay: true, surfaceType: 'stone' },
 
     // Section 7: The Master Rift Gauntlet (3040 - 3700)
     { x: 3040, y: 490, width: 200, height: 110, surfaceType: 'water', currentSpeed: -120 },
@@ -752,7 +780,7 @@ export const Level_8_1 = {
 
   enemies: {
     beetles: [
-      { x: 1210, y: 416, left: 1170, right: 1360 },
+      { x: 1230, y: 416, left: 1210, right: 1360 },
       { x: 2860, y: 416, left: 2840, right: 3000 },
       { x: 3700, y: 436, left: 3670, right: 3860 }
     ],
@@ -761,8 +789,8 @@ export const Level_8_1 = {
     ]
   },
 
-  npcElder: { x: 220, y: 440 },
-  loreTablet: { x: 2740, y: 62 },
+  npcElder: { x: 180, y: 440 },
+  loreTablet: { x: 2740, y: 82 },
   goalGateway: { x: 4200, y: 350 }
 };
 

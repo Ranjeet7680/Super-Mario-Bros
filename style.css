@@ -1083,3 +1083,106 @@ body {
   max-width: 820px;
   justify-content: flex-end;
 }
+
+/* Story Chapter Navigation Bar */
+.story-chapter-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  max-width: 820px;
+  width: 100%;
+  padding: 6px 8px;
+  background: rgba(14, 10, 20, 0.75);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 179, 0, 0.3);
+  scrollbar-width: thin;
+}
+
+.story-chapter-bar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.story-chapter-bar::-webkit-scrollbar-thumb {
+  background: rgba(255, 179, 0, 0.4);
+  border-radius: 2px;
+}
+
+.ch-tab {
+  background: rgba(255, 255, 255, 0.08);
+  color: #B0BEC5;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.ch-tab:hover {
+  background: rgba(255, 179, 0, 0.2);
+  color: #FFE082;
+  border-color: rgba(255, 179, 0, 0.4);
+}
+
+.ch-tab.active {
+  background: #E65100;
+  color: #FFFFFF;
+  border-color: #FFB300;
+  box-shadow: 0 0 10px rgba(230, 81, 0, 0.6);
+}
+
+/* Grand Triumph Modal */
+.grand-triumph-card {
+  max-width: 640px;
+  width: 90%;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(28, 16, 40, 0.95), rgba(14, 8, 20, 0.98));
+  border: 2px solid #FFB300;
+  box-shadow: 0 0 45px rgba(255, 179, 0, 0.4);
+}
+
+.triumph-header {
+  margin-bottom: 14px;
+}
+
+.triumph-crest {
+  font-size: 50px;
+  margin-bottom: 4px;
+  animation: pulseGlowBtn 2s infinite alternate ease-in-out;
+}
+
+.triumph-toranas-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 14px 0 18px 0;
+}
+
+.triumph-torana-pill {
+  background: rgba(0, 229, 255, 0.12);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  border-radius: 8px;
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #E0F7FA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.25);
+  transition: transform 0.2s;
+}
+
+.triumph-torana-pill:hover {
+  transform: translateY(-2px);
+  border-color: #FFD54F;
+  box-shadow: 0 0 12px rgba(255, 213, 79, 0.5);
+}
+
+.triumph-torana-pill span {
+  font-size: 16px;
+}
+

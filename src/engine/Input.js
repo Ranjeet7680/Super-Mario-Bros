@@ -24,6 +24,8 @@ export class Input {
       jumpDown: false,
       dash: false,
       dashDown: false,
+      jumpPad: false,
+      jumpPadDown: false,
       interact: false,
       interactDown: false,
       pause: false,
@@ -39,6 +41,7 @@ export class Input {
       down: false,
       jump: false,
       dash: false,
+      jumpPad: false,
       interact: false
     };
 
@@ -160,13 +163,13 @@ export class Input {
 
   getControlsPrompt() {
     if (this.controlMode === 'ps5' || (this.controlMode === 'auto' && this.isPS5)) {
-      return '[✕] Jump | [▢ or R1] Dash | [△] Talk | [▼ or L2] Fast Fall | [OPTIONS] Pause';
+      return '[✕] Jump | [L1] Jump Pad | [▢ / R1] Dash | [△] Talk | [▼ / L2] Fast Fall | [OPTIONS] Pause';
     } else if (this.controlMode === 'mobile') {
-      return '[◀ / ▶] Run | [⬆️] Jump | [⚡] Dash | [▼] Fast Fall | [🗣️] Talk';
+      return '[◀ / ▶] Run | [⬆️] Jump | [🌸] Jump Pad | [⚡] Dash | [▼] Fast Fall | [🗣️] Talk';
     } else if (this.controlMode === 'auto' && this.hasGamepad) {
-      return '[A / ✕] Jump | [X / ▢] Dash | [Y / △] Talk | [LB/RB] Fast Action | [START] Pause';
+      return '[A / ✕] Jump | [LB / ◯] Jump Pad | [X / ▢] Dash | [Y / △] Talk | [START] Pause';
     } else {
-      return '[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk';
+      return '[A/D or ←/→] Run | [W or Space] Jump (S+Jump High) | [C] Jump Pad | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk';
     }
   }
 
@@ -180,6 +183,7 @@ export class Input {
     const kDown = this.keys['KeyS'] || this.keys['ArrowDown'];
     const kJump = this.keys['Space'] || this.keys['KeyW'] || this.keys['ArrowUp'];
     const kDash = this.keys['ShiftLeft'] || this.keys['ShiftRight'] || this.keys['KeyK'] || this.keys['KeyX'];
+    const kJumpPad = this.keys['KeyC'] || this.keys['KeyJ'];
     const kInteract = this.keys['KeyE'] || this.keys['KeyF'];
     const kPause = this.keys['Escape'] || this.keys['KeyP'];
 
@@ -189,11 +193,12 @@ export class Input {
     const tDown = this.touchState.down;
     const tJump = this.touchState.jump;
     const tDash = this.touchState.dash;
+    const tJumpPad = this.touchState.jumpPad;
     const tInteract = this.touchState.interact;
 
     // 3. PlayStation 5 & Standard Gamepad Polling
     let gpLeft = false, gpRight = false, gpDown = false;
-    let gpJump = false, gpDash = false, gpInteract = false, gpPause = false;
+    let gpJump = false, gpDash = false, gpJumpPad = false, gpInteract = false, gpPause = false;
 
     if (navigator.getGamepads) {
       const gamepads = navigator.getGamepads();
@@ -208,24 +213,24 @@ export class Input {
         const axisY = gp.axes[1] || 0;
 
         // Directional controls: Left Analog Stick OR D-Pad
-        // PS5 D-Pad: buttons[14]=Left, buttons[15]=Right, buttons[12]=Up, buttons[13]=Down
         gpLeft = axisX < -deadZone || Boolean(gp.buttons[14]?.pressed);
         gpRight = axisX > deadZone || Boolean(gp.buttons[15]?.pressed);
-        gpDown = axisY > deadZone || Boolean(gp.buttons[13]?.pressed) || Boolean(gp.buttons[6]?.pressed); // Down or L2
+        gpDown = axisY > deadZone || Boolean(gp.buttons[13]?.pressed) || Boolean(gp.buttons[6]?.pressed);
 
-        // PS5 Button Map:
+        // PS5 & Standard Gamepad Button Map:
         // buttons[0] = Cross (✕) -> Jump
-        // buttons[1] = Circle (◯) -> Action / Dash
-        // buttons[2] = Square (▢) -> Dash / Attack
+        // buttons[1] = Circle (◯) -> Jump Pad / Action
+        // buttons[2] = Square (▢) -> Dash
         // buttons[3] = Triangle (△) -> Talk / Interact
-        // buttons[4] = L1 -> Dash / Dodge
+        // buttons[4] = L1 -> Jump Pad Ability
         // buttons[5] = R1 -> Dash
         // buttons[7] = R2 -> Dash
         // buttons[9] = Options / Start -> Pause
-        gpJump = Boolean(gp.buttons[0]?.pressed); // Cross
-        gpDash = Boolean(gp.buttons[2]?.pressed || gp.buttons[1]?.pressed || gp.buttons[4]?.pressed || gp.buttons[5]?.pressed || gp.buttons[7]?.pressed); // Square, Circle, L1, R1, R2
-        gpInteract = Boolean(gp.buttons[3]?.pressed); // Triangle
-        gpPause = Boolean(gp.buttons[9]?.pressed || gp.buttons[8]?.pressed); // Options / Share
+        gpJump = Boolean(gp.buttons[0]?.pressed);
+        gpDash = Boolean(gp.buttons[2]?.pressed || gp.buttons[5]?.pressed || gp.buttons[7]?.pressed);
+        gpJumpPad = Boolean(gp.buttons[4]?.pressed || gp.buttons[1]?.pressed);
+        gpInteract = Boolean(gp.buttons[3]?.pressed);
+        gpPause = Boolean(gp.buttons[9]?.pressed || gp.buttons[8]?.pressed);
       }
     }
 
@@ -236,12 +241,14 @@ export class Input {
     this.actions.down = Boolean(kDown || tDown || gpDown);
     this.actions.jump = Boolean(kJump || tJump || gpJump);
     this.actions.dash = Boolean(kDash || tDash || gpDash);
+    this.actions.jumpPad = Boolean(kJumpPad || tJumpPad || gpJumpPad);
     this.actions.interact = Boolean(kInteract || tInteract || gpInteract);
     this.actions.pause = Boolean(kPause || gpPause);
 
     // Frame-exact edge triggers
     this.actions.jumpDown = this.actions.jump && !this.prevActions.jump;
     this.actions.dashDown = this.actions.dash && !this.prevActions.dash;
+    this.actions.jumpPadDown = this.actions.jumpPad && !this.prevActions.jumpPad;
     this.actions.interactDown = this.actions.interact && !this.prevActions.interact;
     this.actions.pauseDown = this.actions.pause && !this.prevActions.pause;
 

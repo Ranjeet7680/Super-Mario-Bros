@@ -120,7 +120,7 @@ class GameApp {
     this.goalGateway = new GoalGateway(this.level.goalGateway.x, this.level.goalGateway.y);
 
     this.activeCheckpoint = { x: this.level.playerSpawn.x, y: this.level.playerSpawn.y };
-    this.player.resetToCheckpoint(this.level.playerSpawn.x, this.level.playerSpawn.y);
+    this.player.resetState(this.level.playerSpawn.x, this.level.playerSpawn.y);
     this.player.outfit = this.selectedOutfit;
     this.hasTalkedToElder = false;
     this.isRespawning = false;
@@ -170,6 +170,7 @@ class GameApp {
     this.hudWorld = document.getElementById('hudWorld');
     this.hudShards = document.getElementById('hudShards');
     this.hudHearts = document.getElementById('hudHearts');
+    this.hudJumpPad = document.getElementById('hudJumpPad');
     this.hudTime = document.getElementById('hudTime');
     this.hudScore = document.getElementById('hudScore');
     this.controlsHint = document.getElementById('controls-hint');
@@ -525,6 +526,7 @@ class GameApp {
     bindBtn('btnTouchDown', 'down');
     bindBtn('btnTouchJump', 'jump');
     bindBtn('btnTouchDash', 'dash');
+    bindBtn('btnTouchPad', 'jumpPad');
     bindBtn('btnTouchTalk', 'interact');
   }
 
@@ -593,6 +595,10 @@ class GameApp {
 
   beginGameplay() {
     this.appState = 'gameplay';
+    this.player.hasWon = false;
+    this.player.state = 'idle';
+    document.getElementById('victoryModal')?.classList.add('hidden');
+    document.getElementById('grandTriumphModal')?.classList.add('hidden');
     this.restartGame();
 
     // Show HUD & hint
@@ -635,6 +641,8 @@ class GameApp {
     this.score = 0;
     this.shardsCollected = 0;
     this.gameTime = 0;
+    this.player.hasWon = false;
+    this.player.state = 'idle';
     this.initLevel();
   }
 
@@ -857,8 +865,27 @@ class GameApp {
       });
     }
 
-    // Springs
-    for (const sp of this.springs) sp.update(dt, this.player, this.audio, this.particles);
+    // Deploy Jump Pad Ability (Key C / J / L1 / Touch Pad)
+    if (this.input.actions.jumpPadDown && this.player.canDeployJumpPad()) {
+      const padX = Math.round(this.player.x + (this.player.width - 38) / 2);
+      const padY = Math.round(this.player.y + this.player.height - 24);
+      const newPad = new SpringFlower(padX, padY, true);
+      this.springs.push(newPad);
+      this.player.useJumpPadAbility();
+      if (this.audio.playSpring) this.audio.playSpring(true);
+      this.particles.spawnBurst(padX + 19, padY + 12, '#FFD700', 18);
+      this.particles.spawnBurst(padX + 19, padY + 8, '#E91E63', 14);
+      this.particles.spawnTextPopup(padX + 19, padY - 14, 'JUMP PAD! 🌸', '#FFD700');
+      this.input.vibrate(140, 0.5, 0.8);
+    }
+
+    // Filter out expired temporary player jump pads
+    this.springs = this.springs.filter(sp => !sp.isTemporary || sp.lifetime > 0);
+
+    // Springs (with interactive High Jump mechanics)
+    for (const sp of this.springs) {
+      sp.update(dt, this.player, this.audio, this.particles, this.input, this.camera);
+    }
 
     // Enemies
     for (const beetle of this.beetles) beetle.update(dt, this.player, this.audio, this.particles, this.camera);
@@ -959,6 +986,16 @@ class GameApp {
       hearts += (i < this.player.health) ? '❤️' : '🖤';
     }
     this.hudHearts.textContent = hearts;
+
+    if (this.hudJumpPad) {
+      if (this.player.jumpPadTimer <= 0) {
+        this.hudJumpPad.textContent = '🌸 Pad: READY [C]';
+        this.hudJumpPad.classList.add('ready');
+      } else {
+        this.hudJumpPad.textContent = `🌸 Pad: ${this.player.jumpPadTimer.toFixed(1)}s`;
+        this.hudJumpPad.classList.remove('ready');
+      }
+    }
   }
 
   render() {

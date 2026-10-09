@@ -177,23 +177,40 @@ export class AudioManager {
     osc.stop(now + 0.14);
   }
 
-  playSpring() {
+  playSpring(isSuper = false) {
     if (!this.initialized || this.isMuted) return;
     const now = this.ctx.currentTime;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(220, now);
-    osc.frequency.exponentialRampToValueAtTime(880, now + 0.26);
+    osc.type = isSuper ? 'sawtooth' : 'triangle';
+    const startFreq = isSuper ? 260 : 220;
+    const endFreq = isSuper ? 1320 : 880;
+    osc.frequency.setValueAtTime(startFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(endFreq, now + (isSuper ? 0.35 : 0.26));
 
-    gain.gain.setValueAtTime(0.48, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.32);
+    gain.gain.setValueAtTime(isSuper ? 0.55 : 0.48, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + (isSuper ? 0.42 : 0.32));
 
     osc.connect(gain);
     gain.connect(this.sfxGain);
     osc.start(now);
-    osc.stop(now + 0.32);
+    osc.stop(now + (isSuper ? 0.42 : 0.32));
+
+    if (isSuper) {
+      // Harmonic crystal overtone for High Jump
+      const osc2 = this.ctx.createOscillator();
+      const gain2 = this.ctx.createGain();
+      osc2.type = 'sine';
+      osc2.frequency.setValueAtTime(520, now);
+      osc2.frequency.exponentialRampToValueAtTime(2090, now + 0.38);
+      gain2.gain.setValueAtTime(0.35, now);
+      gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+      osc2.connect(gain2);
+      gain2.connect(this.sfxGain);
+      osc2.start(now);
+      osc2.stop(now + 0.45);
+    }
   }
 
   playDash() {

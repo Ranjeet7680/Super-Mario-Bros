@@ -38,7 +38,7 @@ export const Localization = {
       watchAllChapters: '▶ Watch All Chapters (Saga)',
       allChaptersTab: '▶ All Saga',
       playAgain: 'Play Again',
-      controlsHint: '[A/D or ←/→] Run | [W or Space] Jump | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk',
+      controlsHint: '[A/D or ←/→] Run | [W or Space] Jump (S+Jump High) | [C] Jump Pad | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk',
       dialoguePrompt: 'Press [E] to Speak',
       skipText: '[Space / E] Next',
       pause: 'PAUSED',
@@ -128,7 +128,7 @@ export const Localization = {
       tipHeader: 'Gameplay Guide:',
       tip1: 'Press Down (S / ↓ or L2) while airborne to perform a fast-fall descent.',
       tip2: 'Dash (Shift / K or ▢) grants temporary invulnerability and can destroy grounded enemies.',
-      tip3: 'Look for bouncy Palas flowers—they propel you into secret high canopies!',
+      tip3: 'Hold Jump on Palas Jump Pads or press [C] to summon a Jump Pad for a massive High Jump!',
       tip4: 'Lit Checkpoint Lanterns save your progress and restore your courage.',
 
       // Title Card

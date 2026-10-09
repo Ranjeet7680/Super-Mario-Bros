@@ -609,7 +609,22 @@ body {
 
 .jump-btn { background: rgba(230, 81, 0, 0.85); border-color: #FFB74D; }
 .dash-btn { background: rgba(0, 188, 212, 0.85); border-color: #80DEEA; }
+.pad-btn { background: rgba(233, 30, 99, 0.85); border-color: #F48FB1; font-size: 24px; }
 .talk-btn { background: rgba(255, 193, 7, 0.85); border-color: #FFE082; }
+
+.hud-ability {
+  background: rgba(233, 30, 99, 0.22) !important;
+  border: 1px solid rgba(244, 143, 177, 0.5) !important;
+  color: #F8BBD0 !important;
+  transition: all 0.2s ease;
+}
+
+.hud-ability.ready {
+  background: rgba(233, 30, 99, 0.45) !important;
+  border-color: #FF4081 !important;
+  color: #FFF !important;
+  box-shadow: 0 0 10px rgba(233, 30, 99, 0.6);
+}
 
 /* ==========================================================================
    Modals (World Map, Character Viewer, Settings, Credits, Victory)

@@ -167,33 +167,79 @@ export class CheckpointLantern {
 }
 
 export class SpringFlower {
-  constructor(x, y) {
+  constructor(x, y, isTemporary = false) {
     this.x = x;
     this.y = y;
-    this.width = 36;
+    this.width = 38;
     this.height = 28;
     this.bounceTimer = 0;
+    this.isTemporary = isTemporary;
+    this.lifetime = isTemporary ? 14.0 : Infinity;
+    this.glowTime = Math.random() * Math.PI * 2;
   }
 
-  update(dt, player, audio, particles) {
+  update(dt, player, audio, particles, input = null, camera = null) {
+    this.glowTime += dt;
     if (this.bounceTimer > 0) {
       this.bounceTimer -= dt;
     }
+    if (this.isTemporary) {
+      this.lifetime -= dt;
+    }
 
     if (!player.isDead && Physics.checkAABB(player, this)) {
-      if (player.vy >= 0) {
-        // High launch velocity to easily reach secret canopies (240-280px above)
-        player.vy = -800;
-        player.isGrounded = false;
-        player.canDash = true; // Refresh air dash for skilled aerial maneuvers
-        player.scaleX = 0.55;
-        player.scaleY = 1.5;
-        this.bounceTimer = 0.3;
-        if (audio) audio.playJump();
-        if (particles) {
-          particles.spawnBurst(this.x + this.width / 2, this.y + 10, '#FF4081', 16);
-          particles.spawnBurst(this.x + this.width / 2, this.y + 6, '#FFEB3B', 8);
-          particles.spawnTextPopup(this.x + this.width / 2, this.y - 12, 'UP!', '#FF4081');
+      if (player.vy >= -60) { // Coming down or landing on spring
+        const isHoldingJump = Boolean(
+          (input && input.actions && (input.actions.jump || input.actions.jumpDown)) ||
+          player.jumpBufferTimer > 0
+        );
+        const isFastFalling = Boolean(input && input.actions && input.actions.down);
+
+        if (isHoldingJump || isFastFalling) {
+          // --- HIGH JUMP / SUPER SPRING ABILITY ---
+          const launchVy = isFastFalling ? -1180 : -1060;
+          player.vy = launchVy;
+          player.isGrounded = false;
+          player.canDash = true; // Air dash reset for aerial maneuvers
+          player.scaleX = 0.42;
+          player.scaleY = 1.78;
+          player.highJumpTrailTimer = 0.9;
+          this.bounceTimer = 0.45;
+
+          if (audio) {
+            if (audio.playSpring) audio.playSpring(true);
+            else if (audio.playJump) audio.playJump();
+          }
+          if (camera) camera.addShake(isFastFalling ? 6.0 : 4.0);
+          if (input && input.vibrate) input.vibrate(200, 0.7, 1.0);
+
+          if (particles) {
+            particles.spawnBurst(this.x + this.width / 2, this.y + 10, '#FFD700', 22);
+            particles.spawnBurst(this.x + this.width / 2, this.y + 6, '#00E5FF', 14);
+            particles.spawnBurst(this.x + this.width / 2, this.y + 14, '#FF4081', 12);
+            const label = isFastFalling ? 'MEGA BOUNCE! ⚡' : 'HIGH JUMP! 🚀';
+            particles.spawnTextPopup(this.x + this.width / 2, this.y - 18, label, '#FFD700');
+          }
+        } else {
+          // --- REGULAR SPRING BOUNCE ---
+          player.vy = -780;
+          player.isGrounded = false;
+          player.canDash = true;
+          player.scaleX = 0.55;
+          player.scaleY = 1.5;
+          this.bounceTimer = 0.3;
+
+          if (audio) {
+            if (audio.playSpring) audio.playSpring(false);
+            else if (audio.playJump) audio.playJump();
+          }
+          if (input && input.vibrate) input.vibrate(80, 0.3, 0.4);
+
+          if (particles) {
+            particles.spawnBurst(this.x + this.width / 2, this.y + 10, '#FF4081', 14);
+            particles.spawnBurst(this.x + this.width / 2, this.y + 6, '#FFEB3B', 8);
+            particles.spawnTextPopup(this.x + this.width / 2, this.y - 12, 'BOUNCE! 🌸', '#FF4081');
+          }
         }
       }
     }
@@ -202,24 +248,71 @@ export class SpringFlower {
   draw(ctx) {
     ctx.save();
     ctx.translate(this.x + this.width / 2, this.y + this.height);
-    const squish = this.bounceTimer > 0 ? 0.5 : 1.0;
-    ctx.scale(1.0 + (1 - squish) * 0.4, squish);
 
-    // Stem
+    // Fade effect for temporary spawned player jump pad
+    if (this.isTemporary && this.lifetime < 3.0) {
+      ctx.globalAlpha = Math.max(0.2, (this.lifetime / 3.0) * (0.6 + Math.sin(this.glowTime * 12) * 0.4));
+    }
+
+    const squish = this.bounceTimer > 0 ? 0.42 : 1.0;
+    ctx.scale(1.0 + (1 - squish) * 0.45, squish);
+
+    // 1. Spring Coiled Base (Mechanical / Botanical hybrid)
+    ctx.strokeStyle = '#795548';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(-6, -4);
+    ctx.lineTo(6, -7);
+    ctx.lineTo(-6, -11);
+    ctx.lineTo(6, -14);
+    ctx.stroke();
+
+    // 2. Botanical Leaf Platform
     ctx.fillStyle = '#2E7D32';
-    ctx.fillRect(-4, -10, 8, 10);
-
-    // Petals (Vibrant Lotus / Palas flower pink-red)
-    ctx.fillStyle = '#E91E63';
     ctx.beginPath();
-    ctx.ellipse(0, -18, 16, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(-10, -8, 8, 4, -0.2, 0, Math.PI * 2);
+    ctx.ellipse(10, -8, 8, 4, 0.2, 0, Math.PI * 2);
     ctx.fill();
 
-    // Spring Pollen center
-    ctx.fillStyle = '#FFEB3B';
+    // 3. High Jump Energy Halo (Subtle pulse showing High Jump capability)
+    const haloGlow = 0.22 + Math.sin(this.glowTime * 4) * 0.14;
+    ctx.fillStyle = `rgba(255, 215, 0, ${haloGlow})`;
     ctx.beginPath();
-    ctx.arc(0, -18, 6, 0, Math.PI * 2);
+    ctx.ellipse(0, -20, 22, 10, 0, 0, Math.PI * 2);
     ctx.fill();
+
+    // 4. Petals (Vibrant Lotus / Palas flower pink-red with golden rim)
+    ctx.fillStyle = this.isTemporary ? '#9C27B0' : '#E91E63';
+    ctx.beginPath();
+    ctx.ellipse(0, -20, 18, 11, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Petal Highlights
+    ctx.fillStyle = this.isTemporary ? '#CE93D8' : '#F48FB1';
+    ctx.beginPath();
+    ctx.ellipse(0, -21, 14, 7, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 5. Spring Pollen / Jump Pad Core
+    ctx.fillStyle = '#FFD54F';
+    ctx.beginPath();
+    ctx.arc(0, -20, 6.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Concentric Energy Pip
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.arc(0, -20, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Upward High Jump chevron arrow hint on pad
+    ctx.strokeStyle = 'rgba(230, 81, 0, 0.85)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-4, -18);
+    ctx.lineTo(0, -23);
+    ctx.lineTo(4, -18);
+    ctx.stroke();
 
     ctx.restore();
   }

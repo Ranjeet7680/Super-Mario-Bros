@@ -79,11 +79,52 @@ export class Player {
     this.stepLeftFoot = true;
     this.sparkleTimer = 0;
 
+    // Jump Pad Ability & High Jump
+    this.jumpPadCooldown = 3.5;
+    this.jumpPadTimer = 0;
+    this.highJumpTrailTimer = 0;
+
     // Outfit Customization (from Character Architecture)
     this.outfit = 'classic'; // 'classic', 'sohrai', 'night'
 
     // Surface info
     this.currentSurface = 'ground';
+  }
+
+  canDeployJumpPad() {
+    return this.jumpPadTimer <= 0 && !this.isDead && !this.hasWon;
+  }
+
+  useJumpPadAbility() {
+    this.jumpPadTimer = this.jumpPadCooldown;
+    this.scaleX = 1.35;
+    this.scaleY = 0.72;
+  }
+
+  resetState(x, y) {
+    this.x = x;
+    this.y = y;
+    this.vx = 0;
+    this.vy = 0;
+    this.health = this.maxHealth;
+    this.isDead = false;
+    this.hasWon = false;
+    this.state = 'idle';
+    this.invulnerableTimer = 0;
+    this.isDashing = false;
+    this.dashTimer = 0;
+    this.dashCooldownTimer = 0;
+    this.canDash = true;
+    this.jumpPadTimer = 0;
+    this.highJumpTrailTimer = 0;
+    this.idleActTimer = 0;
+    this.idleActState = 'breathe';
+    this.dashGhostTrail = [];
+    this.jumpBufferTimer = 0;
+    this.coyoteTimer = 0;
+    this.jumpHoldTimer = 0;
+    this.scaleX = 1.0;
+    this.scaleY = 1.0;
   }
 
   resetToCheckpoint(checkpointX, checkpointY) {
@@ -93,11 +134,20 @@ export class Player {
     this.vy = 0;
     this.health = this.maxHealth;
     this.isDead = false;
+    this.hasWon = false;
     this.invulnerableTimer = 1.0;
     this.state = 'idle';
     this.idleActTimer = 0;
     this.idleActState = 'breathe';
+    this.isDashing = false;
+    this.dashTimer = 0;
+    this.dashCooldownTimer = 0;
+    this.canDash = true;
+    this.jumpPadTimer = 0;
+    this.highJumpTrailTimer = 0;
     this.dashGhostTrail = [];
+    this.scaleX = 1.0;
+    this.scaleY = 1.0;
   }
 
   takeDamage(amount = 1, audio = null, camera = null) {
@@ -147,6 +197,18 @@ export class Player {
     // Invulnerability decay
     if (this.invulnerableTimer > 0) {
       this.invulnerableTimer -= dt;
+    }
+
+    // Jump Pad ability cooldown & High Jump trail decay
+    if (this.jumpPadTimer > 0) {
+      this.jumpPadTimer -= dt;
+    }
+    if (this.highJumpTrailTimer > 0) {
+      this.highJumpTrailTimer -= dt;
+      if (particles && Math.random() < 0.5) {
+        particles.spawnBurst(this.x + this.width / 2 + (Math.random() - 0.5) * 14, this.y + this.height * 0.9, '#FFD700', 1);
+        particles.spawnBurst(this.x + this.width / 2, this.y + this.height * 0.6, '#00E5FF', 1);
+      }
     }
 
     // Dash cooldown decay
@@ -233,23 +295,42 @@ export class Player {
 
       // Jump Execution (Buffer + Coyote)
       if (this.jumpBufferTimer > 0 && this.coyoteTimer > 0) {
-        this.vy = this.jumpForce;
-        this.jumpHoldTimer = this.maxJumpHoldTime;
+        const isCrouchHighJump = Boolean(input && input.actions && input.actions.down);
+        if (isCrouchHighJump) {
+          // Charged Spring High Jump from crouch
+          this.vy = -560; // 50% higher than regular jump (-380)
+          this.jumpHoldTimer = this.maxJumpHoldTime * 1.4;
+          this.scaleX = 0.58;
+          this.scaleY = 1.55;
+          this.highJumpTrailTimer = 0.65;
+          if (audio) {
+            if (audio.playSpring) audio.playSpring(true);
+            else if (audio.playJump) audio.playJump();
+          }
+          if (input && input.vibrate) input.vibrate(80, 0.4, 0.7);
+          if (particles) {
+            particles.spawnBurst(this.x + this.width / 2, this.y + this.height, '#FFD700', 14);
+            particles.spawnTextPopup(this.x + this.width / 2, this.y - 14, 'HIGH JUMP! ⚡', '#FFD700');
+          }
+        } else {
+          this.vy = this.jumpForce;
+          this.jumpHoldTimer = this.maxJumpHoldTime;
+          this.scaleX = 0.72; // Squash launch
+          this.scaleY = 1.32;
+          if (audio) audio.playJump();
+          if (input && input.vibrate) input.vibrate(40, 0.2, 0.3);
+          if (particles) {
+            if (this.currentSurface === 'water') {
+              particles.spawnBurst(this.x + this.width / 2, this.y + this.height, '#E0F7FA', 10);
+              particles.spawnBurst(this.x + this.width / 2, this.y + this.height - 4, '#00E5FF', 6);
+            } else {
+              particles.spawnDust(this.x + this.width / 2, this.y + this.height);
+            }
+          }
+        }
         this.coyoteTimer = 0;
         this.jumpBufferTimer = 0;
         this.isGrounded = false;
-        this.scaleX = 0.72; // Squash launch
-        this.scaleY = 1.32;
-        if (audio) audio.playJump();
-        if (input && input.vibrate) input.vibrate(40, 0.2, 0.3);
-        if (particles) {
-          if (this.currentSurface === 'water') {
-            particles.spawnBurst(this.x + this.width / 2, this.y + this.height, '#E0F7FA', 10);
-            particles.spawnBurst(this.x + this.width / 2, this.y + this.height - 4, '#00E5FF', 6);
-          } else {
-            particles.spawnDust(this.x + this.width / 2, this.y + this.height);
-          }
-        }
       }
 
       // Variable jump height
@@ -701,7 +782,90 @@ export class Player {
 
     ctx.restore(); // End scarf
 
-    // 9. Head, Styled Hair & Expressive Face
+    // 9. Foreground Arm (Right Arm with rolled sleeve & Kada - rendered behind face)
+    ctx.save();
+    const fgArmX = w * 0.12;
+    const fgArmY = -h * 0.62 + torsoBob;
+    ctx.translate(fgArmX, fgArmY);
+
+    let fgArmAngle = armCycle * 0.65;
+    let fgElbowAngle = 0.35;
+
+    if (this.state === 'victory') {
+      // Triumphant skyward fist pump!
+      fgArmAngle = -2.1;
+      fgElbowAngle = 0.45;
+    } else if (this.state === 'dash') {
+      // Swept back aerodynamic
+      fgArmAngle = 1.2;
+      fgElbowAngle = 0.2;
+    } else if (this.state === 'hurt') {
+      // Recoil defensive block
+      fgArmAngle = -0.8;
+      fgElbowAngle = 1.1;
+    } else if (this.state === 'idle') {
+      if (this.idleActState === 'lookAround') {
+        // Natural adventurer hand-on-hip explorer pose
+        fgArmAngle = 0.25 + Math.sin(t * 2.0) * 0.05;
+        fgElbowAngle = 0.85;
+      } else if (this.idleActState === 'adjustGear') {
+        // Gentle satchel strap touch at waist level
+        fgArmAngle = 0.35 + Math.sin(t * 3.0) * 0.05;
+        fgElbowAngle = 0.95;
+      } else {
+        // Natural relaxed arm breathing along the side
+        fgArmAngle = 0.08 + Math.sin(t * 2.5) * 0.03;
+        fgElbowAngle = 0.25;
+      }
+    }
+
+    ctx.rotate(fgArmAngle);
+
+    // Upper Arm (Tunic sleeve)
+    ctx.fillStyle = tunicColor;
+    ctx.beginPath();
+    ctx.roundRect(-3.5, 0, 7, 11, 3);
+    ctx.fill();
+    // Sleeve rolled cuff
+    ctx.fillStyle = tunicTrim;
+    ctx.fillRect(-4, 9, 8, 2.5);
+
+    // Forearm
+    ctx.translate(0, 10);
+    ctx.rotate(fgElbowAngle);
+    ctx.fillStyle = skinTone;
+    ctx.beginPath();
+    ctx.roundRect(-2.8, 0, 5.8, 9, 2);
+    ctx.fill();
+
+    // Traditional Brass / Steel Kada (Wrist Bangle)
+    ctx.fillStyle = '#FFD54F';
+    ctx.fillRect(-3.2, 7, 6.4, 2);
+
+    // Sculpted Hand & Fingers
+    ctx.fillStyle = skinTone;
+    ctx.beginPath();
+    if (this.state === 'victory') {
+      // Closed celebratory fist
+      ctx.roundRect(-3.5, 9, 7, 7, 3);
+      ctx.fill();
+      // Victory gleam star
+      ctx.fillStyle = '#FFFFFF';
+      const gleam = 2 + Math.sin(t * 12) * 1;
+      ctx.fillRect(-gleam * 0.5, 6 - gleam * 0.5, gleam, gleam);
+    } else {
+      // Natural gripping adventurer hand
+      ctx.arc(0, 11.5, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+      // Thumb
+      ctx.beginPath();
+      ctx.arc(2.2, 10, 1.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.restore(); // End Foreground Arm
+
+    // 10. Head, Styled Hair & Expressive Face (rendered over arm so face is always unobstructed)
     ctx.save();
     const headX = 0;
     const headY = -h * 0.83 + torsoBob;
@@ -871,83 +1035,6 @@ export class Player {
 
     ctx.restore(); // End Head
 
-    // 10. Foreground Arm (Right Arm with rolled sleeve & Kada)
-    ctx.save();
-    const fgArmX = w * 0.05;
-    const fgArmY = -h * 0.65 + torsoBob;
-    ctx.translate(fgArmX, fgArmY);
-
-    let fgArmAngle = armCycle * 0.7;
-    let fgElbowAngle = 0.4;
-
-    if (this.state === 'victory') {
-      // Triumphant skyward fist pump!
-      fgArmAngle = -2.3;
-      fgElbowAngle = 0.5;
-    } else if (this.state === 'dash') {
-      // Swept back aerodynamic
-      fgArmAngle = 1.3;
-      fgElbowAngle = 0.2;
-    } else if (this.state === 'hurt') {
-      // Recoil defensive block
-      fgArmAngle = -1.1;
-      fgElbowAngle = 1.2;
-    } else if (this.state === 'idle' && this.idleActState === 'lookAround') {
-      // Natural adventurer hand-on-hip explorer pose
-      fgArmAngle = 0.35 + Math.sin(t * 2.0) * 0.08;
-      fgElbowAngle = 1.25;
-    } else if (this.state === 'idle' && this.idleActState === 'adjustGear') {
-      // Gentle satchel strap touch
-      fgArmAngle = -0.55;
-      fgElbowAngle = 1.35;
-    }
-
-    ctx.rotate(fgArmAngle);
-
-    // Upper Arm (Tunic sleeve)
-    ctx.fillStyle = tunicColor;
-    ctx.beginPath();
-    ctx.roundRect(-4, 0, 7.5, 11, 3);
-    ctx.fill();
-    // Sleeve rolled cuff
-    ctx.fillStyle = tunicTrim;
-    ctx.fillRect(-4.5, 9, 8.5, 2.5);
-
-    // Forearm
-    ctx.translate(0, 10);
-    ctx.rotate(fgElbowAngle);
-    ctx.fillStyle = skinTone;
-    ctx.beginPath();
-    ctx.roundRect(-3, 0, 6.5, 9, 2);
-    ctx.fill();
-
-    // Traditional Brass / Steel Kada (Wrist Bangle)
-    ctx.fillStyle = '#FFD54F';
-    ctx.fillRect(-3.5, 7, 7.5, 2);
-
-    // Sculpted Hand & Fingers
-    ctx.fillStyle = skinTone;
-    ctx.beginPath();
-    if (this.state === 'victory') {
-      // Closed celebratory fist
-      ctx.roundRect(-3.5, 9, 7, 7, 3);
-      ctx.fill();
-      // Victory gleam star
-      ctx.fillStyle = '#FFFFFF';
-      const gleam = 2 + Math.sin(t * 12) * 1;
-      ctx.fillRect(-gleam * 0.5, 6 - gleam * 0.5, gleam, gleam);
-    } else {
-      // Natural gripping adventurer hand
-      ctx.arc(0, 12, 3.8, 0, Math.PI * 2);
-      ctx.fill();
-      // Thumb
-      ctx.beginPath();
-      ctx.arc(2.5, 10.5, 1.8, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.restore(); // End Foreground Arm
-
     // 11. Victory Aura & Celebration Sparkles
     if (this.state === 'victory') {
       for (let i = 0; i < 4; i++) {
@@ -961,6 +1048,34 @@ export class Player {
         ctx.arc(sx, sy, 2.2, 0, Math.PI * 2);
         ctx.fill();
       }
+    }
+
+    // 12. High Jump / Super Spring Ascending Aero Rings
+    if (this.highJumpTrailTimer > 0) {
+      const ringAlpha = Math.min(1.0, this.highJumpTrailTimer * 1.6);
+      ctx.save();
+      // Outer gold ripple
+      ctx.strokeStyle = `rgba(255, 215, 0, ${ringAlpha * 0.75})`;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.ellipse(0, -h * 0.12, w * 0.65, 7, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner cyan streak ring
+      ctx.strokeStyle = `rgba(0, 229, 255, ${ringAlpha * 0.6})`;
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.ellipse(0, -h * 0.28, w * 0.45, 5, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Trailing upward sparkles
+      for (let s = 0; s < 3; s++) {
+        const sparkY = -h * 0.1 - (s * 8);
+        const sparkX = Math.sin(t * 12 + s) * 10;
+        ctx.fillStyle = s % 2 === 0 ? '#FFD54F' : '#00E5FF';
+        ctx.fillRect(sparkX - 1.5, sparkY - 1.5, 3, 3);
+      }
+      ctx.restore();
     }
 
     ctx.restore(); // End Player Canvas Transform

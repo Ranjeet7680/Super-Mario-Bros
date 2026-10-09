@@ -827,7 +827,6 @@ export const Level_8_1 = {
   loreTablet: { x: 2740, y: 82 },
   goalGateway: { x: 4200, y: 350 }
 };
-};
 
 export const LevelRegistry = [
   Level_1_1,

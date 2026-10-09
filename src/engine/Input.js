@@ -50,10 +50,31 @@ export class Input {
     this.hasGamepad = false;
     this.isPS5 = false;
     this.gamepadId = '';
+    this.isTouchActive = this.isTouchScreen();
 
     this.initKeyboard();
     this.initGamepad();
+    this.initTouchDetection();
     this.applyControlMode();
+  }
+
+  isTouchScreen() {
+    return ('ontouchstart' in window) || 
+           (navigator.maxTouchPoints > 0) || 
+           (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+  }
+
+  initTouchDetection() {
+    window.addEventListener('touchstart', () => {
+      this.isTouchActive = true;
+      if (this.controlMode === 'auto') {
+        const touchEl = document.getElementById('touch-controls');
+        if (touchEl && !touchEl.classList.contains('force-visible')) {
+          touchEl.classList.remove('force-hidden');
+          touchEl.classList.add('force-visible');
+        }
+      }
+    }, { passive: true, once: false });
   }
 
   setControlMode(mode) {
@@ -82,9 +103,14 @@ export class Input {
       touchEl.classList.remove('force-visible');
       touchEl.classList.add('force-hidden');
     } else {
-      // Auto: Let media queries handle it or show on touch device
-      touchEl.classList.remove('force-visible');
-      touchEl.classList.remove('force-hidden');
+      // Auto: Automatically activate for touchscreen devices
+      if (this.isTouchScreen()) {
+        touchEl.classList.remove('force-hidden');
+        touchEl.classList.add('force-visible');
+      } else {
+        touchEl.classList.remove('force-visible');
+        touchEl.classList.remove('force-hidden');
+      }
     }
   }
 
@@ -139,9 +165,17 @@ export class Input {
   }
 
   /**
-   * PlayStation 5 DualSense Haptic Feedback / Gamepad Vibration
+   * Universal Haptic Feedback: Mobile Phone Vibration + PS5 DualSense Gamepad Haptics
    */
   vibrate(duration = 120, weakMagnitude = 0.4, strongMagnitude = 0.5) {
+    // 1. Mobile Phone Native Vibration
+    if (navigator.vibrate) {
+      try {
+        navigator.vibrate(Math.min(duration, 40));
+      } catch (e) {}
+    }
+
+    // 2. PlayStation 5 DualSense / Gamepad Vibration
     if (!navigator.getGamepads) return;
     const gamepads = navigator.getGamepads();
     if (!gamepads) return;
@@ -164,8 +198,8 @@ export class Input {
   getControlsPrompt() {
     if (this.controlMode === 'ps5' || (this.controlMode === 'auto' && this.isPS5)) {
       return '[✕] Jump | [L1] Jump Pad | [▢ / R1] Dash | [△] Talk | [▼ / L2] Fast Fall | [OPTIONS] Pause';
-    } else if (this.controlMode === 'mobile') {
-      return '[◀ / ▶] Run | [⬆️] Jump | [🌸] Jump Pad | [⚡] Dash | [▼] Fast Fall | [🗣️] Talk';
+    } else if (this.controlMode === 'mobile' || (this.controlMode === 'auto' && this.isTouchActive)) {
+      return '[◀ / ▶] Run | [⬆️] Jump | [⚡] Dash | [🌸] Jump Pad | [▼] Fast Fall | [🗣️] Talk';
     } else if (this.controlMode === 'auto' && this.hasGamepad) {
       return '[A / ✕] Jump | [LB / ◯] Jump Pad | [X / ▢] Dash | [Y / △] Talk | [START] Pause';
     } else {

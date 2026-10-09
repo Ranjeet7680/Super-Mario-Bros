@@ -641,27 +641,89 @@ export class WorldRenderer {
         }
       }
     } else if (theme === 'deoghar') {
-      // Baidyanath Temple Shikharas (Spire Silhouettes)
+      // Baidyanath Temple Shikharas (Spire Silhouettes with Panchshul & Pataka Flags)
       ctx.fillStyle = '#3E2723';
       for (let i = 0; i < 12; i++) {
         const shrineWorldX = i * 310 + 90;
         const screenX = shrineWorldX - camX * 0.42;
         if (screenX > -80 && screenX < this.width + 80) {
           const sY = this.height - 165;
-          // Main Shikhara cone
+          // Main Shikhara tiered spire
           ctx.beginPath();
           ctx.moveTo(screenX, sY);
-          ctx.lineTo(screenX + 18, sY - 65);
+          ctx.lineTo(screenX + 18, sY - 72);
           ctx.lineTo(screenX + 36, sY);
           ctx.closePath();
           ctx.fill();
 
+          // Sanctum entrance arch
+          ctx.fillStyle = 'rgba(255, 179, 0, 0.4)';
+          ctx.fillRect(screenX + 12, sY - 24, 12, 24);
+
           // Golden Kalash pinnacle finial
           ctx.fillStyle = '#FFD54F';
           ctx.beginPath();
-          ctx.arc(screenX + 18, sY - 70, 4.5, 0, Math.PI * 2);
+          ctx.arc(screenX + 18, sY - 76, 5, 0, Math.PI * 2);
           ctx.fill();
+
+          // Sacred Baba Baidyanath Panchshul (5-pronged brass trident)
+          ctx.strokeStyle = '#FFE082';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(screenX + 18, sY - 76);
+          ctx.lineTo(screenX + 18, sY - 92);
+          ctx.moveTo(screenX + 12, sY - 86);
+          ctx.lineTo(screenX + 24, sY - 86);
+          ctx.stroke();
+
+          // Sacred Red Temple Pataka flag fluttering
+          ctx.fillStyle = '#D50000';
+          ctx.beginPath();
+          ctx.moveTo(screenX + 18, sY - 90);
+          ctx.lineTo(screenX + 30, sY - 87);
+          ctx.lineTo(screenX + 18, sY - 84);
+          ctx.closePath();
+          ctx.fill();
+
           ctx.fillStyle = '#3E2723';
+        }
+      }
+    } else if (theme === 'ranchi') {
+      // Ranchi Hilltop Pahari Mandir & Jagannath Temple Silhouettes
+      ctx.fillStyle = '#283593';
+      for (let i = 0; i < 6; i++) {
+        const mandirWorldX = i * 620 + 240;
+        const screenX = mandirWorldX - camX * 0.38;
+        if (screenX > -100 && screenX < this.width + 100) {
+          const mY = this.height - 180;
+          // Hillock plinth
+          ctx.beginPath();
+          ctx.ellipse(screenX + 25, mY + 10, 45, 18, 0, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Mandir Shikhara
+          ctx.beginPath();
+          ctx.moveTo(screenX + 8, mY + 5);
+          ctx.lineTo(screenX + 25, mY - 55);
+          ctx.lineTo(screenX + 42, mY + 5);
+          ctx.closePath();
+          ctx.fill();
+
+          // Golden Chakra & Saffron Flag
+          ctx.fillStyle = '#FFD54F';
+          ctx.beginPath();
+          ctx.arc(screenX + 25, mY - 60, 4, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#FF6F00';
+          ctx.beginPath();
+          ctx.moveTo(screenX + 25, mY - 62);
+          ctx.lineTo(screenX + 36, mY - 59);
+          ctx.lineTo(screenX + 25, mY - 56);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.fillStyle = '#283593';
         }
       }
     } else if (theme === 'betla') {

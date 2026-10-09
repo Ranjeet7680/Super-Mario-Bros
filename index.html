@@ -2,30 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>RRR — Jharkhand Quest | 2D Platform Adventure</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="shortcut icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/game_logo_badge.png">
+  <meta property="og:title" content="RRR — Jharkhand Quest">
+  <meta property="og:description" content="Rewind. Reimagine. Reconnect. 2D Action Platformer exploring the sacred culture and natural heritage of Jharkhand.">
+  <meta property="og:image" content="assets/game_logo_banner.png">
+  <meta name="theme-color" content="#FF9100">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="game-wrapper">
 
+    <!-- Mobile Orientation Notice Banner -->
+    <div id="orientationHint" class="orientation-hint hidden">
+      <div class="orientation-hint-content">
+        <span class="orientation-icon">🔄</span>
+        <span class="orientation-text">Rotate device to Landscape for best adventure!</span>
+        <button id="dismissOrientationBtn" class="orientation-dismiss-btn" title="Dismiss">✕</button>
+      </div>
+    </div>
+
     <!-- 1. BOOT / LOGO SCREEN (Section 03 of Architecture Bible) -->
     <div id="bootScreen" class="screen-overlay">
       <div class="logo-anim-container">
+        <div class="boot-logo-emblem-wrap">
+          <div class="boot-logo-flare"></div>
+          <img src="assets/game_logo_badge.png" alt="RRR: Jharkhand Quest Game Logo" class="boot-game-logo" id="bootGameLogo">
+        </div>
         <div class="logo-line"></div>
-        <div class="logo-letters">
-          <span class="letter-r" id="letR1">R</span>
-          <span class="letter-r" id="letR2">R</span>
-          <span class="letter-r" id="letR3">R</span>
-        </div>
-        <div class="logo-subtitles">
-          <span class="pulse-tag" id="tagRewind">REWIND</span>
-          <span class="pulse-tag" id="tagReimagine">REIMAGINE</span>
-          <span class="pulse-tag" id="tagReconnect">RECONNECT</span>
-        </div>
-        <div class="logo-jharkhand-title">JHARKHAND QUEST</div>
         <div class="logo-brand-author">A Game Experience by RAJRANJEET7680</div>
-        <button id="skipBootBtn" class="skip-btn">[Click or Space to Skip]</button>
+        <button id="skipBootBtn" class="skip-btn">[Click, Tap, or Space to Continue]</button>
       </div>
     </div>
 
@@ -54,7 +63,7 @@
           <p id="storyText" class="story-text">Long ago, the sacred soil of Jharkhand flourished in eternal harmony...</p>
         </div>
         <div class="story-actions">
-          <button id="storyNextBtn" class="primary-btn pulse-glow">[Space / Enter] Next ▶</button>
+          <button id="storyNextBtn" class="primary-btn pulse-glow">Next ▶</button>
           <button id="storySkipBtn" class="secondary-btn">Skip Story ✕</button>
         </div>
       </div>
@@ -66,8 +75,11 @@
       <!-- Lobby Header -->
       <div class="lobby-topbar">
         <div class="lobby-brand">
-          <span class="brand-badge">RRR</span>
-          <span class="brand-title" data-i18n="gameTitle">RRR — JHARKHAND QUEST</span>
+          <img src="assets/game_logo_badge.png" alt="RRR Jharkhand Quest" class="brand-logo-img">
+          <div class="brand-text-col">
+            <span class="brand-title" data-i18n="gameTitle">RRR — JHARKHAND QUEST</span>
+            <span class="brand-tagline">REWIND • REIMAGINE • RECONNECT</span>
+          </div>
         </div>
         <div class="lobby-controls">
           <button id="lobbyControlToggle" class="hud-btn" title="Toggle Input Mode">🎮 Controls: AUTO</button>
@@ -80,6 +92,9 @@
 
       <!-- Lobby Centerpiece / Overlook -->
       <div class="lobby-center">
+        <div class="lobby-crest-wrap">
+          <img src="assets/game_logo_banner_transparent.png" alt="RRR Jharkhand Quest" class="lobby-crest-img">
+        </div>
         <div class="lobby-chapter-tag" data-i18n="lobbySubtitle">Chapter I: The Rift of Echoes Awakens</div>
         <h1 class="lobby-heading" data-i18n="lobbyTitle">RANCHI BASE CAMP</h1>
         
@@ -163,18 +178,22 @@
       <span data-i18n="controlsHint">[A/D or ←/→] Run | [W or Space] Jump (S+Jump High) | [C] Jump Pad | [Shift or K] Dash | [S or ↓] Fast Fall | [E] Talk</span>
     </footer>
 
-    <!-- Mobile Virtual Touch Controls -->
+    <!-- Mobile Virtual Touch Controls (Ergonomic Console Arcade Layout) -->
     <div id="touch-controls">
-      <div class="touch-dpad">
-        <button id="btnTouchLeft" class="touch-btn">◀</button>
-        <button id="btnTouchDown" class="touch-btn">▼</button>
-        <button id="btnTouchRight" class="touch-btn">▶</button>
+      <div class="touch-dpad" id="touchDpadZone">
+        <button id="btnTouchLeft" class="touch-btn dpad-btn" aria-label="Run Left" title="Run Left">◀</button>
+        <button id="btnTouchDown" class="touch-btn dpad-btn" aria-label="Crouch / Fast Fall" title="Fast Fall">▼</button>
+        <button id="btnTouchRight" class="touch-btn dpad-btn" aria-label="Run Right" title="Run Right">▶</button>
       </div>
-      <div class="touch-actions">
-        <button id="btnTouchPad" class="touch-btn round-btn pad-btn" title="Jump Pad Ability">🌸</button>
-        <button id="btnTouchTalk" class="touch-btn round-btn talk-btn">🗣️</button>
-        <button id="btnTouchDash" class="touch-btn round-btn dash-btn">⚡</button>
-        <button id="btnTouchJump" class="touch-btn round-btn jump-btn">⬆️</button>
+      <div class="touch-actions" id="touchActionsZone">
+        <div class="touch-sub-actions">
+          <button id="btnTouchTalk" class="touch-btn round-btn talk-btn" aria-label="Talk / Read Lore" title="Talk / Lore">🗣️</button>
+          <button id="btnTouchPad" class="touch-btn round-btn pad-btn" aria-label="Jump Pad Ability" title="Jump Pad Ability">🌸</button>
+        </div>
+        <div class="touch-primary-actions">
+          <button id="btnTouchDash" class="touch-btn round-btn dash-btn" aria-label="Sonic Dash" title="Dash">⚡</button>
+          <button id="btnTouchJump" class="touch-btn round-btn jump-btn" aria-label="Jump Leap" title="Jump">⬆️</button>
+        </div>
       </div>
     </div>
 
@@ -422,6 +441,9 @@
         <div class="modal-header">
           <h2 data-i18n="creditsTitle">PRODUCTION CREDITS</h2>
           <button id="closeCreditsBtn" class="close-x-btn">✕</button>
+        </div>
+        <div class="credits-logo-hero">
+          <img src="assets/game_logo_banner_transparent.png" alt="RRR Jharkhand Quest Logo" class="credits-logo-img">
         </div>
         <div class="credits-body">
           <div class="credit-row" data-i18n="devLead">Lead Architecture & Development: RAJRANJEET7680</div>

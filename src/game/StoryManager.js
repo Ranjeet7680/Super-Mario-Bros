@@ -164,6 +164,23 @@ export class StoryManager {
       });
     });
 
+    // Mobile tap on dialogue to advance story
+    const storyBox = document.querySelector('.story-dialogue-box');
+    if (storyBox) {
+      storyBox.addEventListener('click', () => {
+        if (this.isActive) {
+          if (this.audio) this.audio.playBtnClick();
+          this.nextAct();
+        }
+      });
+      storyBox.addEventListener('touchstart', () => {
+        if (this.isActive) {
+          if (this.audio) this.audio.playBtnClick();
+          this.nextAct();
+        }
+      }, { passive: true });
+    }
+
     window.addEventListener('keydown', (e) => {
       if (!this.isActive) return;
       if (e.code === 'Space' || e.code === 'Enter') {

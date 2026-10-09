@@ -103,6 +103,11 @@ export const Level_1_1 = {
     ]
   },
 
+  temples: [
+    { x: 1780, y: 350, templeType: 'jagannath', name: 'Pahari Mandir Ranchi', deity: 'Lord Shiva' },
+    { x: 2520, y: 20, templeType: 'dewri', name: 'Dewri Mandir Tamar', deity: '16-Armed Durga' }
+  ],
+
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2580, y: 92 },
   goalGateway: { x: 3580, y: 350 }
@@ -204,6 +209,10 @@ export const Level_2_1 = {
     ]
   },
 
+  temples: [
+    { x: 1820, y: 330, templeType: 'baidyanath', name: 'Hundru Shiv Mandir', deity: 'Lord Shiva' }
+  ],
+
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2520, y: 82 },
   goalGateway: { x: 3750, y: 350 }
@@ -304,6 +313,10 @@ export const Level_3_1 = {
     ]
   },
 
+  temples: [
+    { x: 1800, y: 330, templeType: 'jagannath', name: 'Netarhat Surya Mandir', deity: 'Surya Dev' }
+  ],
+
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2620, y: 82 },
   goalGateway: { x: 3880, y: 350 }
@@ -399,6 +412,10 @@ export const Level_4_1 = {
       { x: 2450, y: 458, left: 2250, right: 2720 }
     ]
   },
+
+  temples: [
+    { x: 1840, y: 330, templeType: 'maluti', name: 'Maluti Terracotta Mandir', deity: 'Maa Mauliksha' }
+  ],
 
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2710, y: 82 },
@@ -497,6 +514,11 @@ export const Level_5_1 = {
     ]
   },
 
+  temples: [
+    { x: 1960, y: 340, templeType: 'baidyanath', name: 'Baba Baidyanath Dham', deity: 'Baidyanath Jyotirlinga' },
+    { x: 3720, y: 340, templeType: 'baidyanath', name: 'Basukinath Dham', deity: 'Lord Shiva' }
+  ],
+
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2670, y: 82 },
   goalGateway: { x: 3900, y: 350 }
@@ -594,6 +616,10 @@ export const Level_6_1 = {
     ]
   },
 
+  temples: [
+    { x: 1820, y: 330, templeType: 'dewri', name: 'Rankini Mandir', deity: 'Maa Rankini' }
+  ],
+
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2700, y: 72 },
   goalGateway: { x: 3980, y: 350 }
@@ -690,6 +716,10 @@ export const Level_7_1 = {
       { x: 1920, y: 428, left: 1840, right: 2110 }
     ]
   },
+
+  temples: [
+    { x: 1820, y: 330, templeType: 'dewri', name: 'Shakti Mandir Dhanbad', deity: 'Maa Durga' }
+  ],
 
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2710, y: 82 },
@@ -789,9 +819,14 @@ export const Level_8_1 = {
     ]
   },
 
+  temples: [
+    { x: 2020, y: 340, templeType: 'rajrappa', name: 'Rajrappa Chhinnamasta Dham', deity: 'Maa Chhinnamasta Shakti Peeth' }
+  ],
+
   npcElder: { x: 180, y: 440 },
   loreTablet: { x: 2740, y: 82 },
   goalGateway: { x: 4200, y: 350 }
+};
 };
 
 export const LevelRegistry = [

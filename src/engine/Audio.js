@@ -346,6 +346,52 @@ export class AudioManager {
     });
   }
 
+  /**
+   * Consecrated Indian Bronze Temple Bell (घंटा / Ghanta)
+   * Deep metallic strike with rich harmonic singing resonance
+   */
+  playTempleBell(pitch = 1.0) {
+    if (!this.initialized || this.isMuted) return;
+    const now = this.ctx.currentTime;
+
+    const baseFreq = 432 * pitch;
+    const partials = [
+      { mult: 1.0, gain: 0.55, decay: 2.8 },
+      { mult: 1.503, gain: 0.35, decay: 2.2 },
+      { mult: 2.0, gain: 0.30, decay: 1.8 },
+      { mult: 2.76, gain: 0.20, decay: 1.4 },
+      { mult: 4.02, gain: 0.15, decay: 1.0 },
+      { mult: 5.4, gain: 0.10, decay: 0.7 }
+    ];
+
+    // Metallic clapper strike transient
+    const strike = this.ctx.createOscillator();
+    const strikeGain = this.ctx.createGain();
+    strike.type = 'triangle';
+    strike.frequency.setValueAtTime(1180 * pitch, now);
+    strike.frequency.exponentialRampToValueAtTime(baseFreq, now + 0.04);
+    strikeGain.gain.setValueAtTime(0.35, now);
+    strikeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+    strike.connect(strikeGain);
+    strikeGain.connect(this.sfxGain);
+    strike.start(now);
+    strike.stop(now + 0.06);
+
+    // Resonant bronze singing harmonics
+    partials.forEach(p => {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(baseFreq * p.mult, now);
+      gain.gain.setValueAtTime(p.gain * 0.7, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + p.decay);
+      osc.connect(gain);
+      gain.connect(this.sfxGain);
+      osc.start(now);
+      osc.stop(now + p.decay);
+    });
+  }
+
   playStoryChime(act = 0) {
     if (!this.initialized || this.isMuted) return;
     const now = this.ctx.currentTime;

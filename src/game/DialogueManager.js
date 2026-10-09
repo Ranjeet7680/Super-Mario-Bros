@@ -22,10 +22,13 @@ export class DialogueManager {
     this.onCompleteCallback = null;
     this.lastAdvanceTime = 0;
 
-    // Global click / keyboard advance to prevent any dialogue freeze
+    // Global click / keyboard / touch advance to prevent any dialogue freeze
     window.addEventListener('click', () => {
       if (this.isActive) this.next();
     });
+    window.addEventListener('touchstart', () => {
+      if (this.isActive) this.next();
+    }, { passive: true });
     window.addEventListener('keydown', (e) => {
       if (this.isActive && ['Space', 'Enter', 'Escape', 'KeyE', 'KeyF'].includes(e.code)) {
         e.preventDefault();

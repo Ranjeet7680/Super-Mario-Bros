@@ -14,7 +14,7 @@ import { Camera } from './engine/Camera.js';
 import { Physics } from './engine/Physics.js';
 import { Player } from './game/Player.js';
 import { PatrolBeetle, ForestCharger } from './game/Enemies.js';
-import { EchoShard, CheckpointLantern, SpringFlower, NpcElder, LoreTablet, GoalGateway } from './game/Entities.js';
+import { EchoShard, CheckpointLantern, SpringFlower, NpcElder, LoreTablet, GoalGateway, TempleShrine } from './game/Entities.js';
 import { LevelRegistry } from './game/LevelData.js';
 import { Localization } from './game/Localization.js';
 import { DialogueManager } from './game/DialogueManager.js';
@@ -63,6 +63,7 @@ class GameApp {
     this.springs = [];
     this.beetles = [];
     this.chargers = [];
+    this.temples = [];
     this.npcElder = null;
     this.loreTablet = null;
     this.goalGateway = null;
@@ -115,6 +116,7 @@ class GameApp {
     this.beetles = this.level.enemies.beetles.map(b => new PatrolBeetle(b.x, b.y, b.left, b.right));
     this.chargers = this.level.enemies.chargers.map(c => new ForestCharger(c.x, c.y, c.left, c.right));
 
+    this.temples = (this.level.temples || []).map(t => new TempleShrine(t.x, t.y, t.templeType, t.name, t.deity));
     this.npcElder = new NpcElder(this.level.npcElder.x, this.level.npcElder.y);
     this.loreTablet = new LoreTablet(this.level.loreTablet.x, this.level.loreTablet.y);
     this.goalGateway = new GoalGateway(this.level.goalGateway.x, this.level.goalGateway.y);
@@ -158,10 +160,19 @@ class GameApp {
       setTimeout(goToLobby, 800);
     }, { once: true });
 
-    // Auto-advance after 3.6s
+    window.addEventListener('keydown', (e) => {
+      if (this.appState === 'boot' && (e.code === 'Space' || e.code === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        this.audio.resumeContext();
+        this.audio.playLogoSting();
+        setTimeout(goToLobby, 400);
+      }
+    }, { once: true });
+
+    // Auto-advance after 3.8s
     setTimeout(() => {
       if (this.appState === 'boot') goToLobby();
-    }, 3600);
+    }, 3800);
   }
 
   initUI() {
@@ -495,7 +506,131 @@ class GameApp {
   }
 
   initTouchControls() {
-    const bindBtn = (id, action) => {
+    // 1. Mobile Orientation Notice Helper
+    const hintEl = document.getElementById('orientationHint');
+    const dismissBtn = document.getElementById('dismissOrientationBtn');
+    let orientationDismissed = false;
+
+    const checkOrientation = () => {
+      if (!hintEl) return;
+      const isPortrait = window.innerHeight > window.innerWidth && window.innerWidth <= 840;
+      if (isPortrait && !orientationDismissed) {
+        hintEl.classList.remove('hidden');
+        hintEl.classList.add('visible');
+      } else {
+        hintEl.classList.remove('visible');
+        hintEl.classList.add('hidden');
+      }
+    };
+
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    dismissBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      orientationDismissed = true;
+      hintEl?.classList.remove('visible');
+      hintEl?.classList.add('hidden');
+    });
+    checkOrientation();
+
+    // 2. Prevent right-click / context menu on touch controls
+    const touchControls = document.getElementById('touch-controls');
+    touchControls?.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // 3. Ergonomic D-Pad with multi-touch slide & drag tracking
+    const dpadZone = document.getElementById('touchDpadZone');
+    const btnLeft = document.getElementById('btnTouchLeft');
+    const btnDown = document.getElementById('btnTouchDown');
+    const btnRight = document.getElementById('btnTouchRight');
+
+    const updateDpadTouches = (touches) => {
+      let activeLeft = false;
+      let activeDown = false;
+      let activeRight = false;
+
+      if (dpadZone && touches) {
+        const leftRect = btnLeft?.getBoundingClientRect();
+        const downRect = btnDown?.getBoundingClientRect();
+        const rightRect = btnRight?.getBoundingClientRect();
+
+        for (let i = 0; i < touches.length; i++) {
+          const t = touches[i];
+          const x = t.clientX;
+          const y = t.clientY;
+
+          if (leftRect && x >= leftRect.left - 10 && x <= leftRect.right + 6 && y >= leftRect.top - 15 && y <= leftRect.bottom + 15) {
+            activeLeft = true;
+          }
+          if (downRect && x >= downRect.left - 6 && x <= downRect.right + 6 && y >= downRect.top - 10 && y <= downRect.bottom + 20) {
+            activeDown = true;
+          }
+          if (rightRect && x >= rightRect.left - 6 && x <= rightRect.right + 10 && y >= rightRect.top - 15 && y <= rightRect.bottom + 15) {
+            activeRight = true;
+          }
+        }
+      }
+
+      // Update input states and trigger subtle tactile click on direction shift
+      if (activeLeft !== this.input.touchState.left) {
+        this.input.setTouch('left', activeLeft);
+        btnLeft?.classList.toggle('active', activeLeft);
+        if (activeLeft) this.input.vibrate(15);
+      }
+      if (activeDown !== this.input.touchState.down) {
+        this.input.setTouch('down', activeDown);
+        btnDown?.classList.toggle('active', activeDown);
+        if (activeDown) this.input.vibrate(15);
+      }
+      if (activeRight !== this.input.touchState.right) {
+        this.input.setTouch('right', activeRight);
+        btnRight?.classList.toggle('active', activeRight);
+        if (activeRight) this.input.vibrate(15);
+      }
+    };
+
+    if (dpadZone) {
+      const handleDpadTouch = (e) => {
+        e.preventDefault();
+        this.audio.resumeContext();
+        this.audio.startBGM();
+        updateDpadTouches(e.touches);
+      };
+
+      const handleDpadEnd = (e) => {
+        e.preventDefault();
+        updateDpadTouches(e.touches);
+      };
+
+      dpadZone.addEventListener('touchstart', handleDpadTouch, { passive: false });
+      dpadZone.addEventListener('touchmove', handleDpadTouch, { passive: false });
+      dpadZone.addEventListener('touchend', handleDpadEnd, { passive: false });
+      dpadZone.addEventListener('touchcancel', handleDpadEnd, { passive: false });
+    }
+
+    // Individual D-Pad mouse click fallbacks for desktop/hybrid testing
+    const bindMouseDpad = (btn, action) => {
+      if (!btn) return;
+      btn.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        this.input.setTouch(action, true);
+        btn.classList.add('active');
+        this.input.vibrate(15);
+      });
+      btn.addEventListener('mouseup', () => {
+        this.input.setTouch(action, false);
+        btn.classList.remove('active');
+      });
+      btn.addEventListener('mouseleave', () => {
+        this.input.setTouch(action, false);
+        btn.classList.remove('active');
+      });
+    };
+    bindMouseDpad(btnLeft, 'left');
+    bindMouseDpad(btnDown, 'down');
+    bindMouseDpad(btnRight, 'right');
+
+    // 4. Action Buttons (Jump, Dash, Jump Pad, Talk) with Haptic Tap Feedback
+    const bindActionBtn = (id, action) => {
       const el = document.getElementById(id);
       if (!el) return;
 
@@ -504,30 +639,29 @@ class GameApp {
         this.audio.resumeContext();
         this.audio.startBGM();
         this.input.setTouch(action, true);
+        el.classList.add('active');
+        this.input.vibrate(18);
       };
 
       const release = (e) => {
         e.preventDefault();
         this.input.setTouch(action, false);
+        el.classList.remove('active');
       };
 
       el.addEventListener('touchstart', press, { passive: false });
       el.addEventListener('touchend', release, { passive: false });
       el.addEventListener('touchcancel', release, { passive: false });
 
-      // Mouse support for desktop testing and hybrid touch laptops
       el.addEventListener('mousedown', press);
       el.addEventListener('mouseup', release);
       el.addEventListener('mouseleave', release);
     };
 
-    bindBtn('btnTouchLeft', 'left');
-    bindBtn('btnTouchRight', 'right');
-    bindBtn('btnTouchDown', 'down');
-    bindBtn('btnTouchJump', 'jump');
-    bindBtn('btnTouchDash', 'dash');
-    bindBtn('btnTouchPad', 'jumpPad');
-    bindBtn('btnTouchTalk', 'interact');
+    bindActionBtn('btnTouchJump', 'jump');
+    bindActionBtn('btnTouchDash', 'dash');
+    bindActionBtn('btnTouchPad', 'jumpPad');
+    bindActionBtn('btnTouchTalk', 'interact');
   }
 
   updateLocalizationUI() {
@@ -902,6 +1036,16 @@ class GameApp {
       this.particles.spawnTextPopup(this.loreTablet.x + 20, this.loreTablet.y - 20, '+1000 Secret!', '#FFEA00');
     });
 
+    // Sacred Jharkhand Temples & Consecrated Bells
+    for (const temple of this.temples) {
+      temple.update(dt, this.player, this.input, this.audio, this.particles, (t) => {
+        this.score += 500;
+        this.input.vibrate(280, 0.45, 0.75);
+        const blessingMsg = `🕉️ ${t.name}: ${Localization.get('templeBlessed') || 'Blessing Received! (+1 Life)'}`;
+        this.showBanner(blessingMsg, 3.5);
+      });
+    }
+
     // Goal Gateway
     this.goalGateway.update(dt, this.player, this.audio, () => {
       this.player.hasWon = true;
@@ -1019,10 +1163,11 @@ class GameApp {
     // 3. Goal Gateway Arch
     this.goalGateway.draw(this.ctx);
 
-    // 4. Interactive Entities
+    // 4. Interactive Entities & Sacred Temples
     this.loreTablet.draw(this.ctx);
     this.npcElder.draw(this.ctx, this.player);
 
+    for (const temple of this.temples) temple.draw(this.ctx, this.player);
     for (const cp of this.checkpoints) cp.draw(this.ctx);
     for (const sp of this.springs) sp.draw(this.ctx);
     for (const s of this.shards) s.draw(this.ctx);
